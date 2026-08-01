@@ -836,3 +836,7 @@ CANCELLED / COMPLETED 为终态
 
 
 
+
+### 3.4 实现辅助表：`auth_sessions`
+
+为落实 API 契约中的“退出登录后当前令牌失效”和“重置密码后旧认证失效”，工程实现增加 `auth_sessions`。它不承载用户资料，只保存令牌的服务端会话标识、所属用户、过期时间和撤销时间；前台永不读取该表。后端认证实现时，JWT 的 `jti` 必须与未撤销、未过期的会话匹配。索引：主键 `id`；外键 `user_id → users.id`；`(user_id, revoked_at, expires_at)` 与 `expires_at` 用于当前用户会话撤销和清理任务。
