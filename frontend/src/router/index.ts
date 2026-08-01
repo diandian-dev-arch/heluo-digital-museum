@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import PagePlaceholderView from '../views/PagePlaceholderView.vue'
+import ExploreView from '../views/ExploreView.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
-  { path: '/explore', name: 'explore', component: PagePlaceholderView, meta: { title: '探索馆藏', description: '文物、文章与主题内容将在这里呈现。' } },
+  { path: '/explore', name: 'explore', component: ExploreView },
   { path: '/exhibits', name: 'exhibits', component: PagePlaceholderView, meta: { title: '数字展厅', description: '自创 GLB 模型将在 Three.js 展厅中加载。' } },
   { path: '/appointment', name: 'appointment', component: PagePlaceholderView, meta: { title: '预约参观', description: '登录后选择时段、填写联系人信息并提交预约。' } },
   { path: '/shop', name: 'shop', component: PagePlaceholderView, meta: { title: '河洛文创', description: '浏览原创文创、维护购物车并完成模拟支付。' } },
@@ -17,3 +18,4 @@ export default createRouter({
   history: createWebHistory(),
   routes,
 })
+
