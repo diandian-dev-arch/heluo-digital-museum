@@ -1,2 +1,0 @@
--- Flyway migrations belong here.
--- The first migration will create the schema defined in docs/04-data-and-permissions.md.
