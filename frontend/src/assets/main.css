@@ -35,3 +35,7 @@ h2 { font-family: Georgia, "Songti SC", serif; }
 .placeholder-page { margin-top: 5rem; max-width: 680px; }
 .placeholder-page .el-alert { margin: 2rem 0; }
 @media (max-width: 720px) { .site-header { gap: 1rem; padding: 0 1rem; } nav { display: none; } .el-main { padding: 0 1rem 3rem; } .hero { padding: 5rem 0 3rem; } .feature-grid { grid-template-columns: 1fr; } }
+.hero--visual { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr); align-items:center; gap:3rem; max-width:none; }
+.hero-copy-block { max-width:680px; }
+.hero-image { width:100%; min-height:420px; object-fit:cover; box-shadow:18px 18px 0 #d9cfbd; }
+@media (max-width:720px) { .hero--visual { grid-template-columns:1fr; gap:2rem; } .hero-image { min-height:280px; box-shadow:10px 10px 0 #d9cfbd; } }
