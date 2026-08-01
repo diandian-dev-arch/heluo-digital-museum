@@ -1,0 +1,1 @@
+<template><section class="placeholder-page"><p class="eyebrow">VISIT BOOKING</p><h1>预约参观</h1><p>选择开放时段，填写联系人信息。预约确认、取消与到馆完成状态将同步到个人中心。</p><el-alert title="当前后端已具备公开时段查询与登录用户预约创建能力。" type="success" :closable="false"/></section></template>
