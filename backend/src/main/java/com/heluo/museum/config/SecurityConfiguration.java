@@ -26,7 +26,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/health", "/actuator/health").permitAll()
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/**", "/api/v1/artifacts/**", "/api/v1/articles/**", "/api/v1/exhibits-3d/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/v1/categories/**", "/api/v1/artifacts/**", "/api/v1/articles/**",
+                                "/api/v1/exhibits/**", "/api/v1/products/**", "/api/v1/search",
+                                "/api/v1/appointment-slots/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(basic -> basic.disable())
                 .formLogin(form -> form.disable())
