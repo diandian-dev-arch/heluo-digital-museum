@@ -31,7 +31,18 @@ public class AuthController {
     long id=((Number)row.get("id")).longValue(); var token=jwt.issue(id); jdbc.update("insert into auth_sessions(id,user_id,expires_at) values(?,?,?)",token.id(),id,Timestamp.from(token.expiresAt())); jdbc.update("update users set last_login_at=current_timestamp(3) where id=?",id);
     return ApiResponse.ok(Map.of("accessToken",token.value(),"expiresAt",token.expiresAt().toString(),"user",Map.of("id",id,"username",body.username(),"nickname",row.get("nickname"),"roles",new String[]{"USER"})),"login");
   }
-  private String blank(String value){return value==null||value.isBlank()?null:value.trim();}
+  @GetMapping("/me")
+  public ApiResponse<Map<String,Object>> me(org.springframework.security.core.Authentication auth) {
+    long id=(Long)auth.getPrincipal(); var row=jdbc.queryForMap("select username,nickname,email,phone,status from users where id=?",id);
+    var roles=jdbc.queryForList("select r.code from roles r join user_roles ur on ur.role_id=r.id where ur.user_id=?",String.class,id);
+    return ApiResponse.ok(Map.of("id",id,"username",row.get("username"),"nickname",row.get("nickname"),"email",row.get("email")==null?"":row.get("email"),"phone",row.get("phone")==null?"":row.get("phone"),"status",row.get("status"),"roles",roles),"me");
+  }
+  @PostMapping("/logout")
+  public ApiResponse<Map<String,String>> logout(org.springframework.security.core.Authentication auth,@RequestHeader("Authorization") String header) {
+    String token=header.substring(7); String jti=io.jsonwebtoken.Jwts.parser().verifyWith(io.jsonwebtoken.security.Keys.hmacShaKeyFor(jwt.secretBytes())).build().parseSignedClaims(token).getPayload().getId();
+    jdbc.update("update auth_sessions set revoked_at=current_timestamp(3) where id=? and user_id=?",jti,(Long)auth.getPrincipal()); return ApiResponse.ok(Map.of("status","logged_out"),"logout");
+  }  private String blank(String value){return value==null||value.isBlank()?null:value.trim();}
   public record Register(@NotBlank @Pattern(regexp="[A-Za-z0-9_]{3,32}") String username,@NotBlank @Size(min=8,max=72) String password,@NotBlank @Size(max=50) String nickname,@jakarta.validation.constraints.Email String email,@Size(max=20) String phone){}
   public record Login(@NotBlank String username,@NotBlank String password){}
 }
+

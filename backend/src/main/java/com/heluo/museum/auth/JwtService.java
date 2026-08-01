@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 public class JwtService {
   private final String secret;
   public JwtService(@Value("${museum.security.jwt-secret:}") String secret) { this.secret = secret; }
+  public byte[] secretBytes() { return secret.getBytes(StandardCharsets.UTF_8); }
   public Token issue(long userId) {
     if (secret.length() < 32) throw new IllegalStateException("MUSEUM_JWT_SECRET must be at least 32 characters");
     String id = UUID.randomUUID().toString(); Instant expires = Instant.now().plus(8, ChronoUnit.HOURS);
@@ -23,3 +24,4 @@ public class JwtService {
   }
   public record Token(String id, String value, Instant expiresAt) {}
 }
+
