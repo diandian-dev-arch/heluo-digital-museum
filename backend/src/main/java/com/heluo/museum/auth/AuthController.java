@@ -43,6 +43,9 @@ public class AuthController {
     jdbc.update("update auth_sessions set revoked_at=current_timestamp(3) where id=? and user_id=?",jti,(Long)auth.getPrincipal()); return ApiResponse.ok(Map.of("status","logged_out"),"logout");
   }  private String blank(String value){return value==null||value.isBlank()?null:value.trim();}
   public record Register(@NotBlank @Pattern(regexp="[A-Za-z0-9_]{3,32}") String username,@NotBlank @Size(min=8,max=72) String password,@NotBlank @Size(max=50) String nickname,@jakarta.validation.constraints.Email String email,@Size(max=20) String phone){}
+  public record Profile(@NotBlank @Size(max=50) String nickname,@jakarta.validation.constraints.Email String email,@Size(max=20) String phone){}
   public record Login(@NotBlank String username,@NotBlank String password){}
 }
+
+
 
