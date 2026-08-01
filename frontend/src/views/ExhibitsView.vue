@@ -1,0 +1,1 @@
+<template><section class="placeholder-page"><p class="eyebrow">DIGITAL EXHIBITION</p><h1>数字展厅</h1><p>自主创作的河洛青铜鼎模型将作为首个互动展项。当前已完成模型资产与公开接口准备。</p><el-alert title="交互式 Three.js 加载将在模型浏览器验收完成后接入。" type="info" :closable="false"/><RouterLink to="/appointment">预约线下参观 →</RouterLink></section></template>
