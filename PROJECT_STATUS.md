@@ -10,19 +10,19 @@
 | 需求范围确认 | 已完成 | 项目组已手动确认 v0.1 功能与非功能需求基线。 |
 | 产品/交互设计 | 进行中 | 页面流程与视觉方向已确认；原创图片和青铜鼎 GLB 已准备，待 Web 优化和 Three.js 浏览器验收。 |
 | 数据库与接口设计 | 已完成（文档） | 完整 ER 图、数据模型、REST API 契约、错误码和状态机已完成；待工程实现与 OpenAPI 核对。 |
-| 前端工程 | 未开始 | 已具备工程脚手架计划，待创建 Vue 3 工程。 |
-| 后端工程 | 未开始 | 已具备工程脚手架计划，待创建 Spring Boot、Flyway 和测试工程。 |
-| 测试与部署 | 已完成（计划） | 测试矩阵、质量门禁、Docker/CI 验收要求已明确，待工程落地。 |
+| 前端工程 | 已完成（工程骨架） | Vue 3 + TypeScript + Vite、路由、测试、构建和容器镜像已验证；待实现业务页面。 |
+| 后端工程 | 已完成（工程骨架） | Spring Boot 3、健康检查、基础安全边界、H2 测试、MySQL/Flyway 配置和容器镜像已验证；待实现迁移与业务模块。 |
+| 测试与部署 | 进行中 | 前后端基础测试、Docker Compose 和 GitHub Actions CI 已落地；待完整容器启动与业务测试。 |
 
 ## 当前任务：工程基线与脚手架准备
 
 - [x] 完成并确认需求、用户故事、架构、数据模型、ER 图和 API 契约。
 - [x] 完成测试计划、工程脚手架实施计划和文档一致性审计。
 - [x] 自创图片、3D 模型、资产说明和源文件已纳入项目目录。
-- [ ] 创建 Git 基线提交并标记 `baseline-v0.1.0`。
-- [ ] 创建 Vue 3 + TypeScript + Vite 前端工程。
-- [ ] 创建 Spring Boot 3 + Maven 后端工程。
-- [ ] 配置 MySQL、Flyway、Docker Compose、CI 和开发邮件测试方案。
+- [x] 创建 Git 基线提交并标记 `baseline-v0.1.0`（`4d5eaf3`）。
+- [x] 创建并验证 Vue 3 + TypeScript + Vite 前端工程。
+- [x] 创建并验证 Spring Boot 3 + Maven 后端工程。
+- [x] 配置 MySQL/Flyway 基础连接、Docker Compose 和 GitHub Actions CI；开发邮件捕获方案待邮件模块实现时接入。
 
 ## 下一步（严格顺序）
 

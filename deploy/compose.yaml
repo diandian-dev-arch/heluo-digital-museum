@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-museum}
+      MYSQL_USER: ${MYSQL_USER:-museum_app}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in deploy/.env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in deploy/.env}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [museum-network]
+
+  backend:
+    build:
+      context: ../backend
+    environment:
+      MUSEUM_DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-museum}?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
+      MUSEUM_DB_USERNAME: ${MYSQL_USER:-museum_app}
+      MUSEUM_DB_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in deploy/.env}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: [museum-network]
+
+  frontend:
+    build:
+      context: ../frontend
+    depends_on: [backend]
+    ports:
+      - "${MUSEUM_WEB_PORT:-8088}:80"
+    networks: [museum-network]
+
+networks:
+  museum-network:
+
+volumes:
+  mysql-data:
