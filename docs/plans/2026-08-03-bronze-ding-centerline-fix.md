@@ -42,4 +42,6 @@
 - 已生成 v5.5 源文件、导出 GLB 和运行时副本；`assets/` 与 `frontend/public/` GLB 均为 5,213,372 B，SHA-256 均为 `1D59DDD7B40A27737180869D25E5DA51D3B530A32DE91C251A29D064808B7299`。
 - `corepack pnpm typecheck`、`corepack pnpm test -- --run`（10 个测试文件、38 项）、`corepack pnpm build` 与 `mvn test -q`（10 项）均通过；Fresh H2 成功应用 V18。
 - Docker 前后端已重建：首页和 `/media/models/heluo-bronze-ding-v5.5.glb` 返回 HTTP `200`，API health 返回 `UP`，生产 MySQL 日志确认 Flyway 已到 V18。
-- 尚未单独执行正侧背视觉截图、实体/点云浏览器交互和 v5.5 真机体验；这些属于后续人工验收项。
+- Blender 正视渲染确认中轴浮雕下段与上段对齐；生产页面实体模式画布完成渲染，控制台无错误。
+- 生产页面已复验实体/点云切换，以及左侧、背面、正面预设切换；每个终态均正确设置 `aria-pressed="true"`，控制台无错误。
+- v5.5 真机体验仍属于后续人工验收项。

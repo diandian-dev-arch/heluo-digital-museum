@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>河洛数字展厅 UI 概念</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      --ink: #173b34;
+      --muted: #64736f;
+      --paper: #f4f2ec;
+      --panel: rgba(250, 249, 244, .88);
+      --panel-solid: #f5f3ed;
+      --line: rgba(24, 58, 51, .16);
+      --accent: #a53a2b;
+      --accent-ink: #fffaf3;
+      --metal: #94754a;
+      --header: rgba(247, 247, 242, .88);
+      --stage-filter: saturate(.8) contrast(.92) brightness(1.02);
+      --stage-overlay: linear-gradient(90deg, rgba(238,242,238,.2), rgba(224,232,228,.08) 54%, rgba(232,236,231,.3));
+      --shadow: 0 20px 50px rgba(28, 48, 43, .12);
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Microsoft YaHei UI", "Noto Sans SC", system-ui, sans-serif;
+    }
+    button, a { font: inherit; }
+    button { color: inherit; }
+    .app { width: 1600px; height: 900px; overflow: hidden; background: var(--paper); }
+    .topbar {
+      position: relative; z-index: 20; display: grid; grid-template-columns: 280px 1fr auto;
+      height: 68px; align-items: center; padding: 0 42px; border-bottom: 1px solid var(--line);
+      background: var(--header); backdrop-filter: blur(20px) saturate(145%);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .seal { display: grid; width: 35px; height: 35px; place-items: center; border: 1px solid currentColor; border-radius: 50%; font-family: Georgia, serif; font-size: 17px; }
+    .brand strong { display: block; font-family: Georgia, "SimSun", serif; font-size: 16px; font-weight: 600; }
+    .brand small { display: block; margin-top: 2px; color: var(--muted); font-size: 8px; letter-spacing: .16em; }
+    nav { display: flex; align-items: center; gap: 42px; }
+    nav a { position: relative; color: inherit; font-size: 13px; text-decoration: none; }
+    nav a.active { font-weight: 700; }
+    nav a.active::after { position: absolute; right: 0; bottom: -10px; left: 0; height: 2px; background: var(--accent); content: ""; }
+    .account { display: flex; align-items: center; gap: 20px; font-size: 11px; }
+    .account b { color: var(--accent); font-weight: 600; }
+    .scene { position: relative; height: 626px; overflow: hidden; background: var(--paper); }
+    .environment { position: absolute; inset: 0; background: #e8ebe7 url('../../../frontend/public/media/editorial/exhibit-ding-moonlight.webp') 50% 54% / cover no-repeat; filter: var(--stage-filter); transform: scale(1.01); }
+    .environment::after { position: absolute; inset: 0; background: var(--stage-overlay); content: ""; }
+    .scene-code { position: absolute; z-index: 4; top: 30px; left: 42px; display: flex; align-items: center; gap: 10px; font: 600 14px Georgia, "SimSun", serif; color: var(--metal); }
+    .scene-code i { width: 22px; height: 1px; background: currentColor; opacity: .55; }
+    .back { position: absolute; z-index: 5; top: 28px; right: 42px; min-height: 34px; padding: 0 13px; border: 1px solid var(--line); border-radius: 4px; background: color-mix(in srgb, var(--panel-solid) 72%, transparent); backdrop-filter: blur(12px); }
+    .tools { position: absolute; z-index: 6; top: 182px; left: 34px; display: grid; width: 54px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); box-shadow: 0 12px 34px rgba(28,48,43,.09); backdrop-filter: blur(18px); }
+    .tools button { display: grid; height: 58px; place-items: center; gap: 1px; border: 0; border-bottom: 1px solid var(--line); background: transparent; }
+    .tools button:last-child { border-bottom: 0; }
+    .tools b { font-size: 20px; font-weight: 400; line-height: 1; }
+    .tools span { color: var(--muted); font-size: 9px; }
+    .artifact-caption { position: absolute; z-index: 5; bottom: 22px; left: 118px; width: 230px; padding-left: 15px; border-left: 2px solid var(--accent); }
+    .artifact-caption small { color: var(--muted); font-size: 9px; }
+    .artifact-caption strong { display: block; margin-top: 5px; font: 500 18px Georgia, "SimSun", serif; }
+    .panel { position: absolute; z-index: 7; top: 72px; right: 42px; width: 346px; padding: 24px 25px 22px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); box-shadow: var(--shadow); backdrop-filter: blur(22px) saturate(130%); }
+    .eyebrow { margin: 0 0 11px; color: var(--accent); font-size: 9px; font-weight: 700; letter-spacing: .12em; }
+    .panel h1 { margin: 0; padding-bottom: 18px; border-bottom: 1px solid var(--line); font: 600 24px/1.25 Georgia, "SimSun", serif; }
+    .meta { display: grid; grid-template-columns: 54px 1fr; gap: 8px 12px; margin: 16px 0 0; font-size: 11px; }
+    .meta dt { color: var(--metal); font-weight: 700; }
+    .meta dd { margin: 0; color: var(--muted); line-height: 1.65; }
+    .description { margin: 15px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--muted); font: 11px/1.75 Georgia, "SimSun", serif; }
+    .mode { display: grid; grid-template-columns: 1fr 1fr; margin-top: 17px; padding: 3px; border: 1px solid var(--line); border-radius: 6px; background: color-mix(in srgb, var(--ink) 4%, transparent); }
+    .mode span { display: grid; min-height: 31px; place-items: center; border-radius: 4px; font-size: 10px; }
+    .mode .selected { background: var(--ink); color: var(--accent-ink); box-shadow: 0 6px 14px rgba(15, 38, 33, .15); }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+    .actions button { min-height: 38px; border: 1px solid var(--ink); border-radius: 5px; background: transparent; font-size: 10px; }
+    .actions .primary { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+    .dock { position: relative; z-index: 10; display: grid; grid-template-columns: 1.1fr 1.25fr .7fr; height: 206px; gap: 28px; padding: 23px 42px 24px; border-top: 1px solid var(--line); background: var(--panel-solid); }
+    .dock section { min-width: 0; }
+    .dock section + section { padding-left: 28px; border-left: 1px solid var(--line); }
+    .dock h2 { margin: 0 0 18px; font-size: 11px; }
+    .dock h2 span { margin-left: 12px; color: var(--muted); font-weight: 400; }
+    .route-line { position: relative; display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; margin-top: 9px; }
+    .route-line::before { position: absolute; top: 5px; right: 7%; left: 7%; height: 1px; background: var(--line); content: ""; }
+    .stop { position: relative; z-index: 1; text-align: center; }
+    .stop i { display: block; width: 10px; height: 10px; margin: 0 auto 12px; border: 1px solid var(--metal); border-radius: 50%; background: var(--panel-solid); }
+    .stop.active i { border-color: var(--accent); background: var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 12%, transparent); }
+    .stop span { color: var(--muted); font-size: 8px; white-space: nowrap; }
+    .views { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .view { height: 88px; overflow: hidden; border: 1px solid transparent; border-radius: 6px; background: color-mix(in srgb, var(--ink) 8%, transparent); }
+    .view.active { border-color: var(--accent); box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 10%, transparent); }
+    .view img { display: block; width: 100%; height: 63px; object-fit: cover; object-position: center 58%; filter: saturate(.75) contrast(.95); }
+    .view span { display: block; padding-top: 5px; color: var(--muted); font-size: 8px; text-align: center; }
+    .source-box { display: grid; height: 110px; align-content: center; padding: 15px 18px; border-radius: 7px; background: color-mix(in srgb, var(--ink) 6%, var(--panel-solid)); }
+    .source-box b { color: var(--accent); font: 500 22px Georgia, serif; }
+    .source-box small { margin-top: 7px; color: var(--muted); font-size: 8px; }
+    .source-box p { margin: 4px 0 0; font-size: 10px; line-height: 1.5; }
+
+    body.theme-2 {
+      --ink: #eee6d7; --muted: #a9b2aa; --paper: #08110e; --panel: rgba(12,28,23,.82);
+      --panel-solid: #0b1713; --line: rgba(202,169,102,.19); --accent: #c69a4f; --accent-ink: #10120f;
+      --metal: #c6a466; --header: rgba(5,13,10,.9); --stage-filter: saturate(.74) contrast(1.12) brightness(.66);
+      --stage-overlay: linear-gradient(90deg, rgba(4,14,11,.84), rgba(4,10,8,.12) 45%, rgba(4,14,11,.76));
+      --shadow: 0 24px 60px rgba(0,0,0,.36);
+    }
+    body.theme-2 .environment { background-color: #07100d; background-image: url('../../../frontend/public/media/exhibits/heluo-bronze-ding-v5.4-cover.webp'); background-size: 56% auto; background-position: 46% 44%; }
+    body.theme-2 .panel { border-color: rgba(198,154,79,.28); }
+    body.theme-2 .mode .selected { background: var(--accent); color: #10120f; }
+
+    body.theme-3 {
+      --ink: #233b43; --muted: #66777d; --paper: #e9eef0; --panel: rgba(241,246,246,.86);
+      --panel-solid: #edf2f2; --line: rgba(35,59,67,.17); --accent: #39766d; --accent-ink: #f5f8f6;
+      --metal: #9b7448; --header: rgba(238,244,244,.9); --stage-filter: saturate(.52) contrast(.92) hue-rotate(8deg);
+      --stage-overlay: linear-gradient(90deg, rgba(223,235,237,.55), rgba(204,221,223,.08) 52%, rgba(210,225,226,.5));
+      --shadow: 0 22px 52px rgba(27,55,62,.13);
+    }
+    body.theme-3 .environment { background-image: url('../../../frontend/public/media/editorial/exhibit-ding-moonlight.webp'); }
+    body.theme-3 .panel { border-top: 3px solid var(--accent); }
+    body.theme-3 .scene-code { color: var(--accent); }
+
+    body.theme-4 {
+      --ink: #263f38; --muted: #6d746f; --paper: #f6f4ef; --panel: rgba(252,250,245,.94);
+      --panel-solid: #faf8f3; --line: rgba(38,63,56,.16); --accent: #a93f32; --accent-ink: #fffaf3;
+      --metal: #8a6844; --header: rgba(250,248,243,.94); --stage-filter: saturate(.66) contrast(.94) brightness(1.04);
+      --stage-overlay: linear-gradient(90deg, rgba(248,246,240,.7), transparent 48%, rgba(244,241,233,.66));
+      --shadow: 0 18px 46px rgba(40,52,48,.1);
+    }
+    body.theme-4 .panel { top: 54px; right: 0; width: 382px; height: 518px; border-width: 0 0 0 1px; border-radius: 0; box-shadow: none; }
+    body.theme-4 .scene { border-bottom: 5px solid var(--accent); }
+    body.theme-4 .artifact-caption { bottom: 40px; left: 138px; }
+    body.theme-4 .tools { left: 54px; border-radius: 4px; }
+
+    body.theme-5 {
+      --ink: #e9e6df; --muted: #b8b8b4; --paper: #1b2023; --panel: rgba(31,38,40,.79);
+      --panel-solid: #22282a; --line: rgba(215,206,190,.16); --accent: #5d9a87; --accent-ink: #f2f0e9;
+      --metal: #c19158; --header: rgba(24,29,31,.88); --stage-filter: saturate(.66) contrast(1.02) brightness(.64) hue-rotate(10deg);
+      --stage-overlay: linear-gradient(105deg, rgba(33,39,44,.7), rgba(78,66,85,.18) 48%, rgba(16,39,35,.64));
+      --shadow: 0 24px 64px rgba(0,0,0,.32);
+    }
+    body.theme-5 .panel { top: 66px; background: rgba(40,45,48,.72); }
+    body.theme-5 .panel h1 { color: #f2ece0; }
+    body.theme-5 .mode .selected { background: var(--accent); color: #f6f3ec; }
+    body.theme-5 .scene-code { color: var(--metal); }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><span class="seal">河</span><span><strong>河洛数字博物馆</strong><small>HELUO DIGITAL MUSEUM</small></span></div>
+      <nav><a href="#">探索馆藏</a><a class="active" href="#">数字展厅</a><a href="#">预约参观</a><a href="#">河洛文创</a><a href="#">内容管理</a></nav>
+      <div class="account"><span>EN</span><b>博物馆管理员</b></div>
+    </header>
+    <section class="scene">
+      <div class="environment"></div>
+      <div class="scene-code"><span>06</span><i></i><span>深墨青铜厅</span></div>
+      <button class="back">← 返回展厅</button>
+      <div class="tools" aria-label="3D 查看工具">
+        <button><b>↻</b><span>旋转</span></button><button><b>＋</b><span>放大</span></button><button><b>−</b><span>缩小</span></button><button><b>⌂</b><span>重置</span></button>
+      </div>
+      <div class="artifact-caption"><small>BRONZE RITUAL VESSEL</small><strong>商周礼器 · 鼎</strong></div>
+      <aside class="panel">
+        <p class="eyebrow">COLLECTION 06</p>
+        <h1>三足青铜鼎 · 1962.281</h1>
+        <dl class="meta"><dt>来源</dt><dd>Cleveland Museum of Art · 1962.281</dd><dt>材质</dt><dd>古青铜 PBR 网页重制</dd></dl>
+        <p class="description">保留原始器型与纹样并重制数字材质，可旋转、缩放并切换点云解构视图。</p>
+        <div class="mode"><span class="selected">实体</span><span>点云</span></div>
+        <div class="actions"><button class="primary">查看关联文物</button><button>预约参观</button></div>
+      </aside>
+    </section>
+    <footer class="dock">
+      <section><h2>展览导览 <span>1 / 6</span></h2><div class="route-line"><div class="stop active"><i></i><span>器形概览</span></div><div class="stop"><i></i><span>鼎之结构</span></div><div class="stop"><i></i><span>纹样细节</span></div><div class="stop"><i></i><span>材质层次</span></div><div class="stop"><i></i><span>点云解构</span></div><div class="stop"><i></i><span>来源说明</span></div></div></section>
+      <section><h2>视角切换</h2><div class="views"><div class="view active"><img src="../../../frontend/public/media/exhibits/heluo-bronze-ding-v5.4-cover.webp"><span>正面</span></div><div class="view"><img src="../../../frontend/public/media/exhibits/heluo-bronze-ding-v5.4-cover.webp"><span>左侧</span></div><div class="view"><img src="../../../frontend/public/media/exhibits/heluo-bronze-ding-v5.4-cover.webp"><span>右侧</span></div><div class="view"><img src="../../../frontend/public/media/exhibits/heluo-bronze-ding-v5.4-cover.webp"><span>背面</span></div><div class="view"><img src="../../../frontend/public/media/exhibits/heluo-bronze-ding-v5.4-cover.webp"><span>俯视</span></div></div></section>
+      <section><h2>模型来源</h2><div class="source-box"><b>⌁</b><small>OPEN ACCESS / CC0</small><p>Cleveland Museum of Art<br>1962.281</p></div></section>
+    </footer>
+  </main>
+  <script>
+    const theme = Math.min(5, Math.max(1, Number(new URLSearchParams(location.search).get('theme')) || 1))
+    document.body.className = `theme-${theme}`
+  </script>
+</body>
+</html>
