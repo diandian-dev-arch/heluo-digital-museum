@@ -1,0 +1,121 @@
+:root {
+  --cursor-dot-size: 6px;
+  --cursor-ring-size: 30px;
+  --cursor-ring-interactive-size: 38px;
+  --cursor-ring-action-size: 40px;
+  --cursor-dot-interactive-scale: .666667;
+  --cursor-ring-interactive-scale: 1.266667;
+  --cursor-ring-action-scale: 1.333333;
+  --cursor-dot-pressed-scale: .72;
+  --cursor-ring-pressed-scale: .86;
+  --cursor-ring-width: 1px;
+  --cursor-dot-color: var(--color-action-strong);
+  --cursor-ring-color: color-mix(in oklch, var(--color-rule-strong) 82%, transparent);
+  --cursor-ring-action: var(--color-action);
+  --cursor-ring-danger: var(--color-danger);
+  --pointer-spotlight-radius: 180px;
+  --pointer-spotlight-strength: .04;
+  --pointer-perspective: 1200px;
+  --motion-pointer-state: 120ms;
+  --motion-pointer-settle: 240ms;
+  --ease-pointer: cubic-bezier(.16, 1, .3, 1);
+  --z-cursor: 130;
+}
+
+.pointer-cursor {
+  position: fixed;
+  z-index: var(--z-cursor);
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms var(--ease-pointer);
+}
+
+.pointer-cursor.is-visible { opacity: 1; }
+.pointer-cursor__dot,
+.pointer-cursor__ring {
+  --cursor-intent-scale: 1;
+  --cursor-press-scale: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  translate: -50% -50%;
+  transform-origin: center;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+.pointer-cursor__dot {
+  width: var(--cursor-dot-size);
+  height: var(--cursor-dot-size);
+}
+.pointer-cursor__ring {
+  width: var(--cursor-ring-size);
+  height: var(--cursor-ring-size);
+}
+.pointer-cursor__dot::before,
+.pointer-cursor__ring::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  content: "";
+  transform: scale(var(--cursor-intent-scale)) scale(var(--cursor-press-scale));
+  transition: transform var(--motion-pointer-state) var(--ease-pointer), border-color var(--motion-pointer-state) var(--ease-pointer);
+  will-change: transform;
+}
+.pointer-cursor__dot::before { background: var(--cursor-dot-color); }
+.pointer-cursor__ring::before { border: var(--cursor-ring-width) solid var(--cursor-ring-color); }
+.pointer-cursor[data-intent="link"] .pointer-cursor__dot,
+.pointer-cursor[data-intent="action"] .pointer-cursor__dot,
+.pointer-cursor[data-intent="danger"] .pointer-cursor__dot { --cursor-intent-scale: var(--cursor-dot-interactive-scale); }
+.pointer-cursor[data-intent="link"] .pointer-cursor__ring,
+.pointer-cursor[data-intent="danger"] .pointer-cursor__ring { --cursor-intent-scale: var(--cursor-ring-interactive-scale); }
+.pointer-cursor[data-intent="action"] .pointer-cursor__ring { --cursor-intent-scale: var(--cursor-ring-action-scale); }
+.pointer-cursor[data-intent="action"] .pointer-cursor__ring::before { border-color: var(--cursor-ring-action); }
+.pointer-cursor[data-intent="danger"] .pointer-cursor__ring::before { border-color: var(--cursor-ring-danger); }
+.pointer-cursor[data-intent="native"],
+.pointer-cursor[data-intent="media"] { opacity: 0; }
+.pointer-cursor.is-pressed .pointer-cursor__dot { --cursor-press-scale: var(--cursor-dot-pressed-scale); }
+.pointer-cursor.is-pressed .pointer-cursor__ring { --cursor-press-scale: var(--cursor-ring-pressed-scale); }
+.pointer-cursor.is-pressed .pointer-cursor__dot::before,
+.pointer-cursor.is-pressed .pointer-cursor__ring::before { transition-duration: 80ms; }
+
+html.pointer-motion-enabled .app-shell { cursor: none; }
+html.pointer-motion-enabled .app-shell :where(p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, pre, code) { cursor: text; }
+html.pointer-motion-enabled .app-shell :where(a, button, [role="button"], [data-cursor]),
+html.pointer-motion-enabled .app-shell :where(a, button, [role="button"], [data-cursor]) * { cursor: none; }
+html.pointer-motion-enabled .app-shell :where(input, textarea, select, [contenteditable="true"], [data-cursor="native"], [data-cursor="native"] *, [data-cursor="media"], [data-cursor="media"] *, .three-viewer, .three-viewer *) { cursor: revert; }
+html.pointer-motion-enabled .three-canvas canvas { cursor: grab; }
+html.pointer-motion-enabled .three-canvas canvas:active { cursor: grabbing; }
+
+[data-pointer-surface] {
+  --pointer-x: 50%;
+  --pointer-y: 50%;
+  --pointer-light: 0;
+  isolation: isolate;
+  transform-origin: center;
+}
+[data-pointer-surface]::before {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  background: radial-gradient(circle var(--pointer-spotlight-radius) at var(--pointer-x) var(--pointer-y), oklch(98% .006 158 / calc(var(--pointer-light) * var(--pointer-spotlight-strength))), transparent 72%);
+  content: "";
+  opacity: var(--pointer-light);
+  pointer-events: none;
+}
+[data-pointer-active="true"] { will-change: transform; }
+
+html[data-motion-tier="static"] [data-pointer-surface] { transform: none !important; }
+html[data-motion-tier="static"] [data-pointer-surface]::before { display: none !important; }
+
+@media (pointer: coarse), (hover: none), (prefers-reduced-motion: reduce), (prefers-contrast: more), (forced-colors: active) {
+  .pointer-cursor { display: none !important; }
+  [data-pointer-surface] { transform: none !important; }
+  [data-pointer-surface]::before { display: none !important; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [data-pointer-surface]::before { display: none; }
+  [data-pointer-active="true"] { outline: 1px solid var(--color-rule-strong); outline-offset: -1px; }
+}

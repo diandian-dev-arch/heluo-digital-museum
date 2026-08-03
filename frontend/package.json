@@ -7,18 +7,26 @@
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "preview": "vite preview",
+    "perf:pointer": "node scripts/performance-audit.mjs",
+    "perf:pointer-size": "node scripts/pointer-size-audit.mjs",
+    "qa:pointer-pages": "node scripts/page-mapping-audit.mjs",
+    "uat:android": "node scripts/android-device-audit.mjs",
     "typecheck": "vue-tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
+    "@fontsource-variable/noto-serif-sc": "^5.3.0",
     "element-plus": "^2.14.3",
+    "motion-v": "^2.3.0",
     "pinia": "^4.0.2",
+    "three": "^0.185.1",
     "vue": "^3.5.40",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
+    "@types/three": "^0.185.1",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "@vue/tsconfig": "^0.9.1",
