@@ -12,4 +12,4 @@
 | `jade-pig-dragon.webp` | 馆藏策展网格玉器主视觉。 |
 | `shop-object-studio.webp` | 商城器物工作室环境。 |
 
-所有图片均不包含页面可读文字，只承担主视觉或环境展示；文本、交互和业务数据由 Vue、API 与 Three.js 渲染。当前 3D 生产模型为 `frontend/public/media/models/heluo-bronze-ding-v5.4.glb`，v5.2 仅作人工回退。
+所有图片均不包含页面可读文字，只承担主视觉或环境展示；文本、交互和业务数据由 Vue、API 与 Three.js 渲染。当前 3D 生产模型为 `frontend/public/media/models/heluo-bronze-ding-v5.5.glb`，v5.2 仅作人工回退。

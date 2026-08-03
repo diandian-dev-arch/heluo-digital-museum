@@ -48,4 +48,4 @@
 - `corepack pnpm build`：通过；保留既有 Rollup 注释和 Three.js 大分包警告。
 - `mvn test -q`：10 项测试通过。
 - 分组提交：`b7137de feat(backend): complete museum workflows`、`fb71068 feat(frontend): deliver curated museum experience`、`0b71887 style(frontend): remove trailing whitespace`、`4615ac3 feat(assets): curate museum visual resources`。
-- `heluo-bronze-ding-v5.5` 及其中心线校正计划处于待实施状态，未接入运行时、未纳入本次提交，也未被删除。
+- `heluo-bronze-ding-v5.5` 在交付整理期间完成并另行验证、提交；该独立变更保留了 v5.4 回退资产，未与本次清理提交混合。

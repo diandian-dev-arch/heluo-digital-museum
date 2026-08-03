@@ -20,12 +20,12 @@ class BootstrapDataInitializerTests {
     private JdbcTemplate jdbc;
 
     @Test
-    void freshDatabaseUsesCurrentV54WebAssets() {
+    void freshDatabaseUsesCurrentV55WebAssets() {
         var exhibit = jdbc.queryForMap("select model_url,model_source_ref,model_size_bytes,cover_image_url from exhibits_3d where slug=?",
                 "heluo-bronze-ding-3d");
 
-        assertThat(exhibit.get("model_url")).isEqualTo("/media/models/heluo-bronze-ding-v5.4.glb");
-        assertThat(exhibit.get("model_source_ref")).isEqualTo("MODEL-HELUO-BRONZE-DING-V5-4-CMA-1962-281-CC0");
+        assertThat(exhibit.get("model_url")).isEqualTo("/media/models/heluo-bronze-ding-v5.5.glb");
+        assertThat(exhibit.get("model_source_ref")).isEqualTo("MODEL-HELUO-BRONZE-DING-V5-5-CMA-1962-281-CC0-CENTERLINE-FIX");
         assertThat(((Number) exhibit.get("model_size_bytes")).longValue()).isEqualTo(5213372L);
         assertThat(exhibit.get("cover_image_url")).isEqualTo("/media/exhibits/heluo-bronze-ding-v5.4-cover.webp");
     }
