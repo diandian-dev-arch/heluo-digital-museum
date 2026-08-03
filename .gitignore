@@ -28,6 +28,11 @@ uploads/
 coverage/
 playwright-report/
 test-results/
+/.qa-*.png
+/artifacts/
+/model-workbench-output*/
+/.hallmark/
+/.impeccable/
 
 # Blender automatic recovery copies
 *.blend1

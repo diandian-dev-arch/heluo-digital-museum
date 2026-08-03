@@ -1,24 +1,61 @@
 # 河洛数字博物馆
 
-一个包含前台数字展览与后台管理系统的课程项目。
+面向 18～30 岁年轻文化探索者的课程项目：用户先在线浏览馆藏、文章和自创 3D 展项，再预约线下参观；同时提供文创商城与模拟支付、管理员运营后台。
 
-## 当前阶段
+## 当前实现
 
-项目启动：先完成需求、架构、权限、接口和测试文档，再创建前后端工程。
+- 前台：馆藏/文章分类浏览、关键词搜索、详情、3D 展厅、预约、注册登录、个人中心、购物车、订单和模拟支付。
+- 后台：内容、3D 展项、用户、预约时段与预约、商品、订单、基础统计和操作日志。
+- 技术：Vue 3 + TypeScript + Vite、Spring Boot 3（Java 17）、MySQL 8、Flyway、Docker Compose。
+- 第一版边界：仅模拟支付；管理员不能公开注册；邮件在本地环境记录为开发邮件日志。
 
-## 计划功能
+> 开发演示数据均明确标为概念内容；3D 模型和图片仅引用项目组自创资产。正式展示前需要核对史实文案和资产台账。
 
-- 前台：馆藏/文章浏览与搜索、3D 展厅、预约参观、文创商城、订单、中文/英文切换。
-- 后台：馆藏、文章、3D 展项、预约、商品、订单、用户和数据统计管理。
-- 第一版边界：模拟支付；管理员不开放注册；至少一个稳定可演示的 3D 模型。
+## 本地启动（推荐）
 
-## 技术方向（待 ADR-001 确认）
+前提：Docker Desktop 已启动。
 
-Vue 3 + TypeScript + Spring Boot 3 + MySQL + Docker Compose。
+```powershell
+Set-Location "C:\Users\Jie\Documents\博物馆"
+Copy-Item "deploy\.env.example" "deploy\.env"
+docker compose --env-file deploy\.env -f deploy\compose.yaml up --build -d
+docker compose --env-file deploy\.env -f deploy\compose.yaml ps
+```
 
-## 开发入口
+访问：
 
-1. 查看 [项目状态](PROJECT_STATUS.md)。
-2. 查看 [需求追踪表](docs/01-requirements-traceability.md)。
-3. 每项开发任务先在 `docs/plans/` 编写实施计划。
-4. 完成实现、测试、文档更新后才允许进入下一项任务。
+- 前台：<http://localhost:8088>
+- 健康检查：<http://localhost:8088/api/v1/health>
+
+管理员初始化信息由本机 `deploy\.env` 中的 `MUSEUM_BOOTSTRAP_ADMIN_*` 配置决定；该文件被 Git 忽略，不能提交。
+
+停止服务：
+
+```powershell
+docker compose --env-file deploy\.env -f deploy\compose.yaml down
+```
+
+## 本地开发与检查
+
+```powershell
+# 前端
+Set-Location frontend
+pnpm install
+pnpm typecheck
+pnpm test
+pnpm build
+
+# 后端
+Set-Location ..\backend
+mvn test
+```
+
+## 项目文档
+
+- [项目状态与下一步](PROJECT_STATUS.md)
+- [需求追踪表](docs/01-requirements-traceability.md)
+- [数据模型与权限](docs/04-data-and-permissions.md)
+- [API 契约](docs/05-api-design.md)
+- [测试与验收计划](docs/06-test-plan.md)
+
+未经用户确认，不提交或推送本项目的 Git 变更。

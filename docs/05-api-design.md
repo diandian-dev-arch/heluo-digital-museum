@@ -1,7 +1,7 @@
 # REST API 契约
 
-- 文档版本：v1.0
-- 最后更新：2026-08-01
+- 文档版本：v1.1
+- 最后更新：2026-08-03
 - 数据依据：[数据模型与权限](04-data-and-permissions.md)、[完整 ER 图](07-er-diagram.md)、[需求追踪表](01-requirements-traceability.md)。
 - 实现依据：后端以 OpenAPI 生成最终机器可读接口文档；本文件是编码前的产品/API 契约。
 
@@ -17,7 +17,7 @@ Content-Type: application/json; charset=utf-8
 金额：JSON 中以字符串表示，例如 "99.00"，避免浮点误差
 ```
 
-- 所有写操作要求 `Content-Type: application/json`；模拟支付还要求 `Idempotency-Key` 请求头。
+- 所有写操作要求 `Content-Type: application/json`；创建订单和模拟支付均要求 `Idempotency-Key` 请求头。两类请求各自使用稳定且不超过 64 字符的键。
 - 前端不得传入或信任 `userId`、角色、管理员标记、商品金额、库存或状态等服务端决定的字段。
 - 列表接口使用 `page`（从 1 开始）和 `size`（默认 20，最大 100）；无分页的下拉选项接口会明确说明。
 - `keyword` 只搜索第一版已确认的标题和摘要；服务端会去除首尾空格，空关键词返回 422。
@@ -91,7 +91,7 @@ Content-Type: application/json; charset=utf-8
 | POST | `/auth/logout` | 已登录 | 无 | 当前令牌失效确认。 |
 | GET | `/auth/me` | 已登录 | 无 | 当前用户资料、角色、账号状态。 |
 | PATCH | `/users/me` | 已登录 | 可改 `nickname`、`email`、`phone` | 更新后的个人资料。 |
-| POST | `/auth/password-reset/request` | 公开 | `username`、`email` | 始终返回 202 通用提示，避免账号枚举。 |
+| POST | `/auth/password-reset/request` | 公开 | `username`、`email` | 始终返回 202 通用提示，避免账号枚举；匹配账号仅将一次性重置链接投递至 SMTP 邮件正文。 |
 | POST | `/auth/password-reset/confirm` | 公开 | `resetToken`、`newPassword` | 密码已更新；旧认证失效。 |
 
 注册约束：用户名 3～32 位英文字母/数字/下划线；密码强度由后端统一校验；公开注册永远只授予 `USER`。找回密码仅发送到已绑定邮箱，未绑定邮箱由管理员人工重置。
@@ -170,13 +170,13 @@ Content-Type: application/json; charset=utf-8
 | POST | `/cart/items` | 用户 | `productId`、`quantity` | 添加或累加商品；每种最多 10 件。 |
 | PATCH | `/cart/items/{id}` | 用户 | `quantity` | 修改自己的购物车项数量。 |
 | DELETE | `/cart/items/{id}` | 用户 | 无 | 删除自己的购物车项。 |
-| POST | `/orders` | 用户 | `cartItemIds`、`notificationEmail` | 创建待支付订单；锁定库存；30 分钟过期。 |
+| POST | `/orders` | 用户 | Header `Idempotency-Key`；`cartItemIds`、`notificationEmail` | 创建待支付订单；锁定库存；30 分钟过期；同一用户重复键返回原订单。 |
 | GET | `/orders` | 用户 | `page`、`size`、`status?` | 当前用户订单列表。 |
 | GET | `/orders/{id}` | 用户/管理员 | `id` | 用户仅可读自己的订单。 |
 | POST | `/orders/{id}/cancel` | 用户 | `reason?` | 取消自己的待支付订单，释放锁定库存。 |
 | POST | `/orders/{id}/mock-payment` | 用户 | Header `Idempotency-Key` | 模拟支付成功、扣减库存、发送状态邮件。 |
 
-创建订单时必须以当前上架商品价格重新计算，忽略客户端价格；通知邮箱必填并存为订单快照。`mock-payment` 对同一幂等键重复调用返回同一支付结果，不再次扣库存。
+创建订单时必须以当前上架商品价格重新计算，忽略客户端价格；通知邮箱必填并存为订单快照。创建订单会锁定指定购物车项，避免并发请求重复锁库；前端在订单创建前持久化结算键和支付键，网络失败后继续原订单支付。`mock-payment` 对同一幂等键重复调用返回同一支付结果，不再次扣库存。
 
 ### 5.2 管理后台接口
 
