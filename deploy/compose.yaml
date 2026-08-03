@@ -1,4 +1,12 @@
 services:
+  mailpit:
+    image: axllent/mailpit:v1.27.7
+    environment:
+      MP_MAX_MESSAGES: 500
+    ports:
+      - "${MUSEUM_MAIL_WEB_PORT:-8025}:8025"
+    networks: [museum-network]
+
   mysql:
     image: mysql:8.4
     environment:
@@ -22,9 +30,24 @@ services:
       MUSEUM_DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-museum}?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai
       MUSEUM_DB_USERNAME: ${MYSQL_USER:-museum_app}
       MUSEUM_DB_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in deploy/.env}
+      MUSEUM_JWT_SECRET: ${MUSEUM_JWT_SECRET:?set MUSEUM_JWT_SECRET in deploy/.env}
+      MUSEUM_BOOTSTRAP_ENABLED: ${MUSEUM_BOOTSTRAP_ENABLED:-false}
+      MUSEUM_BOOTSTRAP_ADMIN_USERNAME: ${MUSEUM_BOOTSTRAP_ADMIN_USERNAME:-}
+      MUSEUM_BOOTSTRAP_ADMIN_PASSWORD: ${MUSEUM_BOOTSTRAP_ADMIN_PASSWORD:-}
+      MUSEUM_BOOTSTRAP_ADMIN_EMAIL: ${MUSEUM_BOOTSTRAP_ADMIN_EMAIL:-}
+      MUSEUM_SMTP_HOST: ${MUSEUM_SMTP_HOST:-mailpit}
+      MUSEUM_SMTP_PORT: ${MUSEUM_SMTP_PORT:-1025}
+      MUSEUM_SMTP_USERNAME: ${MUSEUM_SMTP_USERNAME:-}
+      MUSEUM_SMTP_PASSWORD: ${MUSEUM_SMTP_PASSWORD:-}
+      MUSEUM_SMTP_AUTH: ${MUSEUM_SMTP_AUTH:-false}
+      MUSEUM_SMTP_STARTTLS: ${MUSEUM_SMTP_STARTTLS:-false}
+      MUSEUM_MAIL_FROM: ${MUSEUM_MAIL_FROM:-no-reply@heluo.local}
+      MUSEUM_PUBLIC_BASE_URL: ${MUSEUM_PUBLIC_BASE_URL:-http://localhost:${MUSEUM_WEB_PORT:-8088}}
     depends_on:
       mysql:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     networks: [museum-network]
 
   frontend:

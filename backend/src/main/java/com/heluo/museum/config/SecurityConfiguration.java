@@ -18,7 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiguration {
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter,
+                                            RestAuthenticationEntryPoint authenticationEntryPoint,
+                                            RestAccessDeniedHandler accessDeniedHandler) throws Exception {
         return http
                 .cors(cors -> {})
                 .csrf(csrf -> csrf.disable())
@@ -30,7 +32,11 @@ public class SecurityConfiguration {
                                 "/api/v1/categories/**", "/api/v1/artifacts/**", "/api/v1/articles/**",
                                 "/api/v1/exhibits/**", "/api/v1/products/**", "/api/v1/search",
                                 "/api/v1/appointment-slots/**").permitAll()
+                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
+                .exceptionHandling(errors -> errors
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
                 .httpBasic(basic -> basic.disable())
                 .formLogin(form -> form.disable())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

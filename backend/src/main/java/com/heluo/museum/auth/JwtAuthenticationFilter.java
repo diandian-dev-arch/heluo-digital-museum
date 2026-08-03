@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     if(header!=null&&header.startsWith("Bearer ")&&secret.length()>=32) try {
       SecretKey key=Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)); Claims c=Jwts.parser().verifyWith(key).build().parseSignedClaims(header.substring(7)).getPayload();
       long id=Long.parseLong(c.getSubject()); String jti=c.getId();
-      Integer active=jdbc.queryForObject("select count(*) from auth_sessions where id=? and user_id=? and revoked_at is null and expires_at>current_timestamp(3)",Integer.class,jti,id);
+      Integer active=jdbc.queryForObject("select count(*) from auth_sessions s join users u on u.id=s.user_id where s.id=? and s.user_id=? and s.revoked_at is null and s.expires_at>current_timestamp(3) and u.status='ACTIVE' and u.deleted_at is null",Integer.class,jti,id);
       if(active!=null&&active==1){List<String> roles=jdbc.queryForList("select r.code from roles r join user_roles ur on ur.role_id=r.id where ur.user_id=?",String.class,id); var authorities=roles.stream().map(r->new SimpleGrantedAuthority("ROLE_"+r)).toList(); SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(id,null,authorities));}
     } catch(Exception ignored) { SecurityContextHolder.clearContext(); }
     chain.doFilter(request,response);

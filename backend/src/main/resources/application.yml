@@ -12,6 +12,14 @@ spring:
   flyway:
     enabled: true
     baseline-on-migrate: false
+  mail:
+    host: ${MUSEUM_SMTP_HOST:}
+    port: ${MUSEUM_SMTP_PORT:1025}
+    username: ${MUSEUM_SMTP_USERNAME:}
+    password: ${MUSEUM_SMTP_PASSWORD:}
+    properties:
+      mail.smtp.auth: ${MUSEUM_SMTP_AUTH:false}
+      mail.smtp.starttls.enable: ${MUSEUM_SMTP_STARTTLS:false}
 management:
   endpoints:
     web:
@@ -27,3 +35,14 @@ museum:
   security:
     jwt-secret: ${MUSEUM_JWT_SECRET:}
     access-token-ttl: ${MUSEUM_ACCESS_TOKEN_TTL:PT8H}
+  bootstrap:
+    enabled: ${MUSEUM_BOOTSTRAP_ENABLED:false}
+    admin-username: ${MUSEUM_BOOTSTRAP_ADMIN_USERNAME:}
+    admin-password: ${MUSEUM_BOOTSTRAP_ADMIN_PASSWORD:}
+    admin-email: ${MUSEUM_BOOTSTRAP_ADMIN_EMAIL:}
+  mail:
+    from: ${MUSEUM_MAIL_FROM:no-reply@heluo.local}
+    public-base-url: ${MUSEUM_PUBLIC_BASE_URL:http://localhost:8088}
+  orders:
+    expiry-initial-delay-ms: ${MUSEUM_ORDER_EXPIRY_INITIAL_DELAY_MS:60000}
+    expiry-scan-ms: ${MUSEUM_ORDER_EXPIRY_SCAN_MS:60000}
