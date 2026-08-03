@@ -703,4 +703,3 @@ onBeforeUnmount(() => { initializationVersion += 1; cleanup?.() })
     <div v-if="error" class="three-fallback" role="alert" aria-live="assertive"><img :src="coverImageUrl" :alt="alt" decoding="async" /><p>{{ error }}</p><button type="button" @click="initialize">重试加载</button></div>
   </div>
 </template>
-
