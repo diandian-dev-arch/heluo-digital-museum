@@ -1,0 +1,57 @@
+{
+  "source_api": "https://openaccess-api.clevelandart.org/api/artworks/1960.288",
+  "artwork_url": "https://clevelandart.org/art/1960.288",
+  "accession_number": "1960.288",
+  "title": "Tripod Cauldron (Ding)",
+  "license": "CC0",
+  "images": [
+    {
+      "label": "main",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_print.jpg",
+      "file": "main.jpg",
+      "sha256": "df08707890afd8aa7b4219821100369af70c8bc3c1eb6ccb71e7f1c7da362066"
+    },
+    {
+      "label": "alt0",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_alt0_print.jpg",
+      "file": "alt0.jpg",
+      "sha256": "a6bb3266383ebc34aa8d89ff751bddd86a5380fd7373141e28c667a96da6d9db"
+    },
+    {
+      "label": "alt1",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_alt1_print.jpg",
+      "file": "alt1.jpg",
+      "sha256": "0d69d4dfd2162ebfc086530a9eaaa7e8c762fb9bcedc6d1607deef08a00bc343"
+    },
+    {
+      "label": "alt2",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_alt2_print.jpg",
+      "file": "alt2.jpg",
+      "sha256": "4b39cd2fe3025d903c96433d29b61d737d09c8a56e989058f06904dfdeb00f8a"
+    },
+    {
+      "label": "alt3",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_alt3_print.jpg",
+      "file": "alt3.jpg",
+      "sha256": "2407d2fce41c3b8564dd6d5148cdd1bbbce6cd2cf03757d1d3d09c0094fcba41"
+    },
+    {
+      "label": "alt4",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_alt4_print.jpg",
+      "file": "alt4.jpg",
+      "sha256": "c7fd844e89f0c4bdd40b399fb4f7d6ffaac6db7c59719c243bfb3165d6a46fb8"
+    },
+    {
+      "label": "alt5",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_alt5_print.jpg",
+      "file": "alt5.jpg",
+      "sha256": "9a85e31b5824a20f9a3f4c5feedd800084b642fdf8c8c35fd8650d2fbbc45d6a"
+    },
+    {
+      "label": "alt6",
+      "url": "https://openaccess-cdn.clevelandart.org/1960.288/1960.288_alt6_print.jpg",
+      "file": "alt6.jpg",
+      "sha256": "24aafbb719341067ed563f21f09eaadf1bd9501d313426645fcfa05e47efeda2"
+    }
+  ]
+}

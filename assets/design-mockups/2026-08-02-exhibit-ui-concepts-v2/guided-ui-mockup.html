@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>河洛数字展厅 UI 方案 C</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      color-scheme: dark;
+      --bg: #050b09;
+      --surface: #08120f;
+      --surface-2: #0d1814;
+      --surface-3: #12201b;
+      --line: rgba(223, 188, 126, .15);
+      --line-strong: rgba(223, 188, 126, .32);
+      --text: #eee6d7;
+      --muted: #a89f90;
+      --bronze: #d7a654;
+      --jade: #2e9b7e;
+    }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: var(--bg); }
+    body { font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; color: var(--text); }
+    button { font: inherit; letter-spacing: 0; }
+    .canvas { position: relative; width: 2048px; height: 1136px; overflow: hidden; background: #06100d; }
+    .canvas::before { position: absolute; z-index: 0; top: 76px; right: 372px; bottom: 198px; left: 286px; background: #06100d url("stage-crop.png") center / cover no-repeat; content: ""; }
+    .topbar { position: absolute; z-index: 20; inset: 0 0 auto; display: flex; height: 76px; align-items: center; padding: 0 44px; border-bottom: 1px solid var(--line); background: rgba(3, 9, 7, .98); }
+    .brand { display: flex; width: 310px; align-items: center; gap: 14px; }
+    .seal { display: grid; width: 38px; height: 38px; place-items: center; border: 1px solid #d7c8aa; border-radius: 50%; color: #d7c8aa; font: 600 19px "Noto Serif SC", serif; }
+    .brand strong { display: block; font: 600 19px "Noto Serif SC", serif; }
+    .brand small { display: block; margin-top: 3px; color: #8f8b80; font-size: 9px; }
+    .topnav { display: flex; height: 100%; align-items: stretch; gap: 38px; }
+    .topnav span { position: relative; display: grid; place-items: center; color: #bdb4a5; font-size: 15px; }
+    .topnav .active { color: var(--text); font-weight: 650; }
+    .topnav .active::after { position: absolute; right: 0; bottom: 0; left: 0; height: 2px; background: var(--bronze); content: ""; }
+    .topmeta { margin-left: auto; color: #9b917e; font-size: 13px; }
+    .topmeta b { margin-left: 28px; color: #b89457; font-weight: 550; }
+
+    .guide { position: absolute; z-index: 12; top: 76px; bottom: 0; left: 0; width: 286px; padding: 34px 24px; border-right: 1px solid var(--line); background: rgba(5, 13, 10, .97); }
+    .guide-head { margin-bottom: 26px; padding: 0 10px 22px; border-bottom: 1px solid var(--line); }
+    .guide-head small { color: var(--bronze); font-size: 12px; }
+    .guide-head h1 { margin: 9px 0 0; font: 600 22px "Noto Serif SC", serif; }
+    .steps { display: grid; gap: 6px; }
+    .step { display: grid; min-height: 66px; grid-template-columns: 30px 1fr; align-items: center; gap: 9px; padding: 10px 12px; border: 1px solid transparent; border-radius: 4px; color: #8f8a80; }
+    .step .num { display: grid; width: 26px; height: 26px; place-items: center; border: 1px solid rgba(235, 225, 208, .2); border-radius: 50%; font-size: 11px; }
+    .step strong { display: block; font-size: 14px; font-weight: 520; }
+    .step small { display: none; margin-top: 5px; color: #bdb5a7; font-size: 11px; }
+    .step.active { min-height: 86px; border-color: var(--line-strong); background: var(--surface-3); color: var(--text); }
+    .step.active .num { border-color: var(--bronze); background: var(--bronze); color: #11100d; font-weight: 700; }
+    .step.active small { display: block; }
+    .guide-foot { position: absolute; right: 34px; bottom: 28px; left: 34px; color: #817b70; font-size: 11px; line-height: 1.6; }
+
+    .stage-label { position: absolute; z-index: 10; top: 104px; left: 320px; display: flex; align-items: center; gap: 12px; padding: 8px 10px; background: rgba(4, 11, 8, .82); color: #c79a52; font: 600 17px "Noto Serif SC", serif; }
+    .back { position: absolute; z-index: 10; top: 101px; right: 402px; min-height: 40px; padding: 0 14px; border: 1px solid var(--line-strong); border-radius: 4px; background: #07100d; color: #d8d0c1; }
+    .tools { position: absolute; z-index: 15; bottom: 224px; left: 318px; display: flex; padding: 7px; border: 1px solid var(--line-strong); border-radius: 6px; background: rgba(4, 11, 8, .95); box-shadow: 0 12px 30px rgba(0,0,0,.24); }
+    .tool { display: grid; width: 68px; height: 58px; place-items: center; align-content: center; gap: 4px; border: 0; border-right: 1px solid var(--line); background: transparent; color: #d9d0bf; }
+    .tool:last-child { border-right: 0; }
+    .tool i { font: normal 20px Georgia, serif; }
+    .tool span { color: #aaa295; font-size: 11px; }
+
+    .info { position: absolute; z-index: 15; top: 76px; right: 0; bottom: 0; width: 372px; padding: 30px 30px 28px; border-left: 1px solid var(--line); background: rgba(6, 15, 12, .98); }
+    .info-kicker { display: flex; align-items: center; justify-content: space-between; color: #a99b83; font-size: 12px; }
+    .info-kicker span:last-child { color: var(--bronze); }
+    .info h2 { margin: 22px 0 8px; font: 600 29px "Noto Serif SC", serif; line-height: 1.28; }
+    .source { margin: 0; color: #b9af9e; font-size: 12px; line-height: 1.55; }
+    .mode { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; border: 1px solid var(--line-strong); border-radius: 4px; overflow: hidden; }
+    .mode button { min-height: 42px; border: 0; background: transparent; color: #a79f91; }
+    .mode .selected { background: var(--bronze); color: #17130d; font-weight: 650; }
+    .status { display: flex; margin: 13px 0 0; align-items: center; gap: 8px; color: #b8af9e; font-size: 12px; }
+    .status::before { width: 7px; height: 7px; border-radius: 50%; background: var(--jade); content: ""; }
+    .facts { margin: 28px 0 0; border-top: 1px solid var(--line); }
+    .fact { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .fact dt { margin-bottom: 8px; color: #a88a5b; font-size: 12px; }
+    .fact dd { margin: 0; color: #d3cab9; font-size: 13px; line-height: 1.65; }
+    .actions { position: absolute; right: 30px; bottom: 30px; left: 30px; display: grid; gap: 10px; }
+    .actions button { min-height: 46px; border: 1px solid var(--line-strong); border-radius: 4px; background: transparent; color: #d7cdbb; }
+    .actions .primary { border-color: var(--bronze); background: var(--bronze); color: #17130d; font-weight: 650; }
+
+    .views { position: absolute; z-index: 14; right: 372px; bottom: 0; left: 286px; height: 198px; padding: 20px 34px 22px; border-top: 1px solid var(--line); background: rgba(4, 12, 9, .97); }
+    .views-head { display: flex; align-items: center; justify-content: space-between; }
+    .views-head strong { font: 600 15px "Noto Serif SC", serif; }
+    .views-head span { color: #888176; font-size: 11px; }
+    .filmstrip { display: flex; margin-top: 16px; gap: 12px; }
+    .view { position: relative; width: 138px; height: 112px; overflow: hidden; border: 1px solid var(--line); border-radius: 4px; background: #020604; color: #b9b0a1; }
+    .view::before { position: absolute; inset: 0 0 28px; background: url("stage-crop.png") center 46% / 460% auto no-repeat; filter: brightness(.78); content: ""; }
+    .view:nth-child(2)::before { background-position: 46% 46%; }
+    .view:nth-child(3)::before { background-position: 54% 46%; }
+    .view:nth-child(4)::before { background-position: 50% 50%; }
+    .view:nth-child(5)::before { background-position: 50% 42%; }
+    .view span { position: absolute; right: 0; bottom: 0; left: 0; display: grid; height: 28px; place-items: center; background: #0c1512; font-size: 11px; }
+    .view.selected { border-color: var(--bronze); box-shadow: inset 0 0 0 1px var(--bronze); }
+    .view.selected span { background: #20190f; color: #f0d7a8; }
+    .view-num { display: grid; width: 112px; align-content: center; margin-left: auto; border-left: 1px solid var(--line); color: #898276; text-align: right; }
+    .view-num b { color: var(--text); font: 600 24px Georgia, serif; }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <header class="topbar">
+      <div class="brand"><span class="seal">宙</span><span><strong>河洛数字博物馆</strong><small>HELUO DIGITAL MUSEUM</small></span></div>
+      <nav class="topnav"><span>探索馆藏</span><span class="active">数字展厅</span><span>预约参观</span><span>河洛文创</span><span>内容管理</span></nav>
+      <div class="topmeta">EN <b>博物馆管理员</b></div>
+    </header>
+
+    <aside class="guide">
+      <div class="guide-head"><small>06 · 深墨青铜厅</small><h1>展览导览</h1></div>
+      <div class="steps">
+        <div class="step active"><span class="num">1</span><span><strong>器形概览</strong><small>从整体比例认识青铜鼎</small></span></div>
+        <div class="step"><span class="num">2</span><span><strong>鼎之结构</strong></span></div>
+        <div class="step"><span class="num">3</span><span><strong>纹样细节</strong></span></div>
+        <div class="step"><span class="num">4</span><span><strong>材质层次</strong></span></div>
+        <div class="step"><span class="num">5</span><span><strong>点云解构</strong></span></div>
+        <div class="step"><span class="num">6</span><span><strong>来源说明</strong></span></div>
+      </div>
+      <p class="guide-foot">当前 1 / 6<br>选择步骤可同步切换说明与推荐视角</p>
+    </aside>
+
+    <div class="stage-label">三足青铜鼎 <span>·</span> 数字展项</div>
+    <button class="back">← 返回展厅</button>
+    <div class="tools">
+      <button class="tool"><i>↻</i><span>旋转</span></button>
+      <button class="tool"><i>＋</i><span>放大</span></button>
+      <button class="tool"><i>−</i><span>缩小</span></button>
+      <button class="tool"><i>◇</i><span>重置</span></button>
+    </div>
+
+    <aside class="info">
+      <div class="info-kicker"><span>当前展项</span><span>01 / 01</span></div>
+      <h2>三足青铜鼎<br>1962.281</h2>
+      <p class="source">Cleveland Museum of Art · 1962.281</p>
+      <div class="mode"><button class="selected">实体</button><button>点云</button></div>
+      <p class="status">高画质 · PBR 实体展示</p>
+      <dl class="facts">
+        <div class="fact"><dt>材质</dt><dd>古青铜 PBR 网页重制</dd></div>
+        <div class="fact"><dt>本节说明</dt><dd>保留原始器型与纹样，通过旋转、缩放和预设视角观察器物结构。</dd></div>
+      </dl>
+      <div class="actions"><button class="primary">查看关联文物 ↗</button><button>预约参观</button></div>
+    </aside>
+
+    <section class="views">
+      <div class="views-head"><strong>预设视角</strong><span>选择视角后相机平滑过渡</span></div>
+      <div class="filmstrip">
+        <div class="view selected"><span>正面</span></div>
+        <div class="view"><span>左侧</span></div>
+        <div class="view"><span>右侧</span></div>
+        <div class="view"><span>背面</span></div>
+        <div class="view"><span>俯视</span></div>
+        <div class="view-num"><span>当前视角</span><b>01 / 05</b></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
