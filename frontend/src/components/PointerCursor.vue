@@ -11,7 +11,7 @@ const ring = ref<HTMLSpanElement | null>(null)
 const keyboardMode = ref(false)
 const directInputTier = ref<MotionTier | null>(null)
 const { tier, reducedTransparency, downgradeForFps } = usePointerCapabilities()
-const { pointer, updatePosition, setVisible, setPressed, setIntent, setTier } = usePointerMotion()
+const { pointer, position, updatePosition, setVisible, setPressed, setIntent, setTier } = usePointerMotion()
 const enabled = computed(() => !props.disabled && !keyboardMode.value && directInputTier.value === null && tier.value !== 'static')
 
 let stopFrame: (() => void) | undefined
@@ -23,6 +23,9 @@ let previousY = 0
 let previousMoveTime = 0
 let sampledTime = 0
 let sampledFrames = 0
+let frameCheckQueued = false
+let lastIntentTarget: EventTarget | null = null
+let mounted = false
 
 function updateCapabilityClass() {
   const root = document.documentElement
@@ -47,16 +50,19 @@ function hidePointer(resetPosition = true) {
   if (resetPosition) {
     initialized = false
     previousMoveTime = 0
+    lastIntentTarget = null
   }
 }
 
 function ensureFrame() {
-  if (stopFrame || !enabled.value || !pointer.visible) return
+  if (!mounted || stopFrame || !enabled.value || !pointer.visible) return
   stopFrame = subscribeMotionFrame((_time, deltaMs) => {
-    ringX = exponentialStep(ringX, pointer.clientX, deltaMs, 72)
-    ringY = exponentialStep(ringY, pointer.clientY, deltaMs, 72)
-    dot.value?.style.setProperty('transform', `translate3d(${pointer.clientX}px, ${pointer.clientY}px, 0)`)
-    ring.value?.style.setProperty('transform', `translate3d(${ringX}px, ${ringY}px, 0)`)
+    ringX = exponentialStep(ringX, position.clientX, deltaMs, 96)
+    ringY = exponentialStep(ringY, position.clientY, deltaMs, 96)
+    const lagDistance = Math.hypot(position.clientX - ringX, position.clientY - ringY)
+    const followScale = 1 + Math.min(lagDistance / 180, .12)
+    dot.value?.style.setProperty('transform', `translate3d(${position.clientX}px, ${position.clientY}px, 0)`)
+    ring.value?.style.setProperty('transform', `translate3d(${ringX}px, ${ringY}px, 0) scale(${followScale.toFixed(3)})`)
 
     sampledTime += deltaMs
     sampledFrames += 1
@@ -66,10 +72,19 @@ function ensureFrame() {
       sampledTime = 0
     }
 
-    if (Math.abs(ringX - pointer.clientX) < .05 && Math.abs(ringY - pointer.clientY) < .05) {
+    if (Math.abs(ringX - position.clientX) < .05 && Math.abs(ringY - position.clientY) < .05) {
       stopFrame?.()
       stopFrame = undefined
     }
+  })
+}
+
+function queueFrameCheck() {
+  if (frameCheckQueued) return
+  frameCheckQueued = true
+  void nextTick(() => {
+    frameCheckQueued = false
+    if (mounted) ensureFrame()
   })
 }
 
@@ -97,7 +112,10 @@ function onPointerMove(event: PointerEvent) {
   previousY = event.clientY
   previousMoveTime = time
   updatePosition(event.clientX, event.clientY, velocityX, velocityY)
-  setIntent(resolveCursorIntent(event.target))
+  if (event.target !== lastIntentTarget) {
+    lastIntentTarget = event.target
+    setIntent(resolveCursorIntent(event.target))
+  }
   if (!initialized) {
     ringX = event.clientX
     ringY = event.clientY
@@ -107,7 +125,7 @@ function onPointerMove(event: PointerEvent) {
   ensureFrame()
   // A keyboard-to-pointer switch remounts the cursor on the next Vue flush.
   // Re-request the shared frame there without writing DOM from pointermove.
-  void nextTick(ensureFrame)
+  queueFrameCheck()
 }
 
 function onPointerDown(event: PointerEvent) {
@@ -115,7 +133,10 @@ function onPointerDown(event: PointerEvent) {
 }
 function onPointerUp() { setPressed(false) }
 function onPointerLeave(event: PointerEvent) {
-  if (!event.relatedTarget) hidePointer()
+  if (!event.relatedTarget) {
+    lastIntentTarget = null
+    hidePointer()
+  }
 }
 function onKeyDown(event: KeyboardEvent) {
   if (event.key === 'Tab') keyboardMode.value = true
@@ -128,6 +149,7 @@ function onBlur() { hidePointer(); setPressed(false) }
 watch([enabled, tier, reducedTransparency, directInputTier], updateCapabilityClass)
 
 onMounted(() => {
+  mounted = true
   window.addEventListener('pointermove', onPointerMove, { passive: true })
   window.addEventListener('pointerdown', onPointerDown, { passive: true })
   window.addEventListener('pointerup', onPointerUp, { passive: true })
@@ -140,6 +162,8 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  mounted = false
+  frameCheckQueued = false
   window.removeEventListener('pointermove', onPointerMove)
   window.removeEventListener('pointerdown', onPointerDown)
   window.removeEventListener('pointerup', onPointerUp)

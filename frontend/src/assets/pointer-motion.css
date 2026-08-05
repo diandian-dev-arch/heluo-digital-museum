@@ -1,20 +1,20 @@
 :root {
   --cursor-dot-size: 6px;
-  --cursor-ring-size: 30px;
+  --cursor-ring-size: 28px;
   --cursor-ring-interactive-size: 38px;
-  --cursor-ring-action-size: 40px;
-  --cursor-dot-interactive-scale: .666667;
-  --cursor-ring-interactive-scale: 1.266667;
-  --cursor-ring-action-scale: 1.333333;
-  --cursor-dot-pressed-scale: .72;
-  --cursor-ring-pressed-scale: .86;
-  --cursor-ring-width: 1px;
+  --cursor-ring-action-size: 42px;
+  --cursor-dot-interactive-scale: .7;
+  --cursor-ring-interactive-scale: 1.357143;
+  --cursor-ring-action-scale: 1.5;
+  --cursor-dot-pressed-scale: .68;
+  --cursor-ring-pressed-scale: .84;
+  --cursor-ring-width: 1.25px;
   --cursor-dot-color: var(--color-action-strong);
-  --cursor-ring-color: color-mix(in oklch, var(--color-rule-strong) 82%, transparent);
+  --cursor-ring-color: color-mix(in oklch, var(--color-action) 54%, var(--color-rule-strong));
   --cursor-ring-action: var(--color-action);
   --cursor-ring-danger: var(--color-danger);
-  --pointer-spotlight-radius: 180px;
-  --pointer-spotlight-strength: .04;
+  --pointer-spotlight-radius: 240px;
+  --pointer-spotlight-strength: .14;
   --pointer-perspective: 1200px;
   --motion-pointer-state: 120ms;
   --motion-pointer-settle: 240ms;
@@ -63,16 +63,32 @@
   transition: transform var(--motion-pointer-state) var(--ease-pointer), border-color var(--motion-pointer-state) var(--ease-pointer);
   will-change: transform;
 }
-.pointer-cursor__dot::before { background: var(--cursor-dot-color); }
-.pointer-cursor__ring::before { border: var(--cursor-ring-width) solid var(--cursor-ring-color); }
+.pointer-cursor__dot::before {
+  background: var(--cursor-dot-color);
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--cursor-dot-color) 10%, transparent), 0 0 12px color-mix(in oklch, var(--cursor-dot-color) 24%, transparent);
+}
+.pointer-cursor__ring::before {
+  border: var(--cursor-ring-width) solid var(--cursor-ring-color);
+  background: color-mix(in oklch, var(--color-action) 4%, transparent);
+  box-shadow: 0 0 18px color-mix(in oklch, var(--color-action) 12%, transparent), inset 0 0 12px color-mix(in oklch, var(--color-action) 7%, transparent);
+}
 .pointer-cursor[data-intent="link"] .pointer-cursor__dot,
 .pointer-cursor[data-intent="action"] .pointer-cursor__dot,
 .pointer-cursor[data-intent="danger"] .pointer-cursor__dot { --cursor-intent-scale: var(--cursor-dot-interactive-scale); }
 .pointer-cursor[data-intent="link"] .pointer-cursor__ring,
 .pointer-cursor[data-intent="danger"] .pointer-cursor__ring { --cursor-intent-scale: var(--cursor-ring-interactive-scale); }
 .pointer-cursor[data-intent="action"] .pointer-cursor__ring { --cursor-intent-scale: var(--cursor-ring-action-scale); }
-.pointer-cursor[data-intent="action"] .pointer-cursor__ring::before { border-color: var(--cursor-ring-action); }
-.pointer-cursor[data-intent="danger"] .pointer-cursor__ring::before { border-color: var(--cursor-ring-danger); }
+.pointer-cursor[data-intent="link"] .pointer-cursor__ring::before { background: color-mix(in oklch, var(--color-action) 8%, transparent); }
+.pointer-cursor[data-intent="action"] .pointer-cursor__ring::before {
+  border-color: var(--cursor-ring-action);
+  background: color-mix(in oklch, var(--cursor-ring-action) 14%, transparent);
+  box-shadow: 0 0 24px color-mix(in oklch, var(--cursor-ring-action) 22%, transparent), inset 0 0 14px color-mix(in oklch, var(--cursor-ring-action) 10%, transparent);
+}
+.pointer-cursor[data-intent="danger"] .pointer-cursor__ring::before {
+  border-color: var(--cursor-ring-danger);
+  background: color-mix(in oklch, var(--cursor-ring-danger) 10%, transparent);
+  box-shadow: 0 0 22px color-mix(in oklch, var(--cursor-ring-danger) 18%, transparent);
+}
 .pointer-cursor[data-intent="native"],
 .pointer-cursor[data-intent="media"] { opacity: 0; }
 .pointer-cursor.is-pressed .pointer-cursor__dot { --cursor-press-scale: var(--cursor-dot-pressed-scale); }
@@ -99,7 +115,9 @@ html.pointer-motion-enabled .three-canvas canvas:active { cursor: grabbing; }
   position: absolute;
   z-index: 4;
   inset: 0;
-  background: radial-gradient(circle var(--pointer-spotlight-radius) at var(--pointer-x) var(--pointer-y), oklch(98% .006 158 / calc(var(--pointer-light) * var(--pointer-spotlight-strength))), transparent 72%);
+  background:
+    radial-gradient(circle 48px at var(--pointer-x) var(--pointer-y), color-mix(in oklch, var(--color-action) 18%, transparent), transparent 100%),
+    radial-gradient(circle var(--pointer-spotlight-radius) at var(--pointer-x) var(--pointer-y), oklch(98% .006 158 / var(--pointer-spotlight-strength)), transparent 72%);
   content: "";
   opacity: var(--pointer-light);
   pointer-events: none;

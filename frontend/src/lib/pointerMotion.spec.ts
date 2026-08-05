@@ -86,8 +86,13 @@ describe('pointer motion capabilities', () => {
     const link = document.createElement('a')
     expect(resolveCursorIntent(link)).toBe('link')
 
-    const paragraph = document.createElement('p')
-    expect(resolveCursorIntent(paragraph)).toBe('native')
+    for (const tag of ['p', 'h1', 'h2', 'li', 'dt', 'dd', 'blockquote', 'pre', 'code']) {
+      expect(resolveCursorIntent(document.createElement(tag))).toBe('idle')
+    }
+
+    const nativeCopy = document.createElement('p')
+    nativeCopy.dataset.cursor = 'native'
+    expect(resolveCursorIntent(nativeCopy)).toBe('native')
 
     const linkedHeading = document.createElement('h2')
     link.append(linkedHeading)

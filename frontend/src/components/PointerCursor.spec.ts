@@ -134,4 +134,28 @@ describe('PointerCursor', () => {
 
     wrapper.unmount()
   })
+
+  it('does not restart the shared frame after an unmount with a queued check', async () => {
+    const wrapper = mount(PointerCursor, { attachTo: document.body })
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 200, clientY: 220 }))
+    expect(activeMotionFrameSubscribers()).toBe(1)
+
+    wrapper.unmount()
+    await nextTick()
+    expect(activeMotionFrameSubscribers()).toBe(0)
+  })
+
+  it('makes fast pointer travel visible without oversized ring scale', () => {
+    const wrapper = mount(PointerCursor, { attachTo: document.body })
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 100, clientY: 120 }))
+    runFrame(16)
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 420, clientY: 120 }))
+    runFrame(32)
+
+    const style = wrapper.get('.pointer-cursor__ring').attributes('style') ?? ''
+    const scale = Number(style.match(/scale\(([\d.]+)\)/)?.[1] ?? 1)
+    expect(scale).toBeGreaterThan(1.08)
+    expect(scale).toBeLessThanOrEqual(1.12)
+    wrapper.unmount()
+  })
 })

@@ -131,8 +131,7 @@ export function resolveCursorIntent(target: EventTarget | null): CursorIntent {
     element = element.parentElement
   }
 
-  if (intent !== 'idle') return intent
-  return target.closest('p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, pre, code') ? 'native' : 'idle'
+  return intent
 }
 
 export function readPointerMotionCapabilities(): PointerMotionCapabilities {
