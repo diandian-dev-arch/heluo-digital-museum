@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "spring.profiles.active=test")
 class MuseumApplicationTests {
@@ -129,6 +130,42 @@ class MuseumApplicationTests {
                 org.springframework.http.HttpMethod.PATCH, new HttpEntity<>("{\"quantity\":2}", bearer), String.class);
         assertThat(update.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
         assertThat(jdbc.queryForObject("select quantity from cart_items where id=?", Integer.class, itemId)).isEqualTo(1);
+    }
+
+    @Test
+    void administratorCannotSetStockBelowLockedQuantity() {
+        String suffix = String.valueOf(System.nanoTime());
+        String username = "stock_admin_" + suffix;
+        String password = "SafePassword123";
+        jdbc.update("insert into users(username,password_hash,nickname,status) values(?,?,?,'ACTIVE')",
+                username, new BCryptPasswordEncoder().encode(password), "库存管理员");
+        long adminId = jdbc.queryForObject("select id from users where username=?", Long.class, username);
+        jdbc.update("insert into user_roles(user_id,role_id,assigned_by) values(?,(select id from roles where code='ADMIN'),?)",
+                adminId, adminId);
+
+        HttpHeaders json = new HttpHeaders();
+        json.setContentType(MediaType.APPLICATION_JSON);
+        var login = restTemplate.postForEntity("http://localhost:" + port + "/api/v1/auth/login",
+                new HttpEntity<>("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}", json), String.class);
+        assertThat(login.getStatusCode()).isEqualTo(HttpStatus.OK);
+        String token = login.getBody().replaceAll(".*\\\"accessToken\\\":\\\"([^\\\"]+)\\\".*", "$1");
+
+        jdbc.update("insert into products(sku,name,slug,price,stock_quantity,locked_stock,status,created_by,updated_by,published_at) values(?,?,?,?,?,?,'PUBLISHED',?,?,current_timestamp)",
+                "STOCK-" + suffix, "补货测试商品", "stock-product-" + suffix, new java.math.BigDecimal("19.90"), 10, 4, adminId, adminId);
+        long productId = jdbc.queryForObject("select id from products where sku=?", Long.class, "STOCK-" + suffix);
+        HttpHeaders bearer = new HttpHeaders();
+        bearer.setContentType(MediaType.APPLICATION_JSON);
+        bearer.setBearerAuth(token);
+
+        var rejected = restTemplate.exchange("http://localhost:" + port + "/api/v1/admin/products/" + productId + "/stock",
+                org.springframework.http.HttpMethod.PATCH, new HttpEntity<>("{\"stockQuantity\":3}", bearer), String.class);
+        assertThat(rejected.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(jdbc.queryForObject("select stock_quantity from products where id=?", Integer.class, productId)).isEqualTo(10);
+
+        var accepted = restTemplate.exchange("http://localhost:" + port + "/api/v1/admin/products/" + productId + "/stock",
+                org.springframework.http.HttpMethod.PATCH, new HttpEntity<>("{\"stockQuantity\":6}", bearer), String.class);
+        assertThat(accepted.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(jdbc.queryForObject("select stock_quantity from products where id=?", Integer.class, productId)).isEqualTo(6);
     }
 
     @Test

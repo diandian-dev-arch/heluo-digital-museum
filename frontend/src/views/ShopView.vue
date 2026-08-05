@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { motion } from 'motion-v'
 import { ShoppingBag } from '@element-plus/icons-vue'
 import { apiGet, apiRequest } from '../lib/api'
+import { resolveProductPresentation } from '../lib/productPresentation'
 import { useAuthStore } from '../stores/auth'
 import { useLocale } from '../stores/locale'
 import BottomSheet from '../components/BottomSheet.vue'
@@ -12,7 +13,7 @@ import FluidButton from '../components/FluidButton.vue'
 import InlineStatus from '../components/InlineStatus.vue'
 
 interface Product { id:number; slug:string; name:string; summary:string; price:string; availableStock:number; coverImageUrl:string }
-interface CartItem { id:number; productId:number; quantity:number; name:string; price:string; availableStock:number; coverImageUrl:string }
+interface CartItem { id:number; productId:number; quantity:number; name:string; slug?:string; price:string; availableStock:number; coverImageUrl:string }
 interface Order { id:number; orderNo:string; payableAmount:number }
 interface PendingCheckout {
   userId: number
@@ -26,6 +27,10 @@ interface PendingCheckout {
 const auth = useAuthStore()
 const router = useRouter()
 const products = ref<Product[]>([])
+type ProductCategory = 'all' | 'objects' | 'textiles' | 'paper'
+const activeCategory = ref<ProductCategory>('all')
+const productCategory = (product: Product): ProductCategory => product.slug === 'heluo-silk-scarf' ? 'textiles' : product.slug === 'river-map-notebook' ? 'paper' : 'objects'
+const visibleProducts = computed(() => activeCategory.value === 'all' ? products.value : products.value.filter(product => productCategory(product) === activeCategory.value))
 const cart = ref<CartItem[]>([])
 const loading = ref(true)
 const message = ref('')
@@ -42,6 +47,30 @@ const pendingOrder = computed(() => pendingCheckout.value?.order ?? null)
 const hasPendingCheckout = computed(() => pendingCheckout.value !== null)
 const { t, locale } = useLocale()
 const shopTitle = computed(() => locale.value === 'zh-CN' ? '器物的纹样，\n进入每天的生活。' : 'Bring the patterns of objects into everyday life.')
+const shopCopy = computed(() => locale.value === 'en-US' ? {
+  categories: 'Product categories', all: 'All objects', category: 'Objects for daily life', apparel: 'Wearable textiles', paper: 'River-map stationery', unavailable: 'No products in this category yet', adding: 'Adding', pending: 'Finish pending order', openCart: 'Open cart', bag: 'Shopping bag', selection: 'YOUR SELECTION', unit: 'items'
+} : {
+  categories: '商品分类', all: '全部文创', category: '器物日用', apparel: '穿戴织物', paper: '纸上河图', unavailable: '当前版本暂无该分类商品', adding: '正在加入', pending: '待支付订单未完成', openCart: '打开购物车', bag: '购物袋', selection: 'YOUR SELECTION', unit: '件'
+})
+const productImageNotes = computed<Record<string, string>>(() => locale.value === 'en-US' ? {
+  'river-line-teacup-set': 'Follow the river into a quieter tea ritual.',
+  'heluo-silk-scarf': 'Flowing rivers translated into deep-jade textiles.',
+  'river-map-notebook': 'Bring Heluo patterns into everyday notes and ideas.',
+} : {
+  'river-line-teacup-set': '以河流为线，盛装日常茶事，也盛放山水之思。',
+  'heluo-silk-scarf': '以河流的流线和深墨绿为灵感的原创概念丝巾。',
+  'river-map-notebook': '把河洛图纹带进每天的记录与灵感。',
+})
+const productEnglish: Record<string, { name: string; summary: string }> = {
+  'river-line-teacup-set': { name: 'River-pattern Teacup Set', summary: 'Keep a sense of the river in the everyday ritual of tea.' },
+  'heluo-silk-scarf': { name: 'Heluo River-system Scarf', summary: 'An original concept scarf inspired by flowing rivers and deep jade green.' },
+  'river-map-notebook': { name: 'River-map Pattern Notebook', summary: 'Bring Heluo patterns into everyday notes and ideas.' },
+}
+const displayProduct = (product: Product) => {
+  const normalized = resolveProductPresentation(product)
+  return locale.value === 'en-US' && productEnglish[product.slug] ? { ...normalized, ...productEnglish[product.slug] } : normalized
+}
+const stockUnit = (stock: number) => locale.value === 'en-US' && stock === 1 ? 'item' : t.value.shopText.items
 
 async function loadProducts() { try { products.value = await apiGet<Product[]>('/products') } catch (reason) { error.value = reason instanceof Error ? reason.message : '商品加载失败。' } finally { loading.value = false } }
 async function loadCart() {
@@ -78,14 +107,14 @@ async function add(product: Product) {
   await auth.initialize()
   if (!auth.loggedIn) { await router.push('/login'); return }
   if (pendingCheckout.value) {
-    error.value = '请先完成当前待支付订单，再继续添加商品。'
+    error.value = locale.value === 'en-US' ? 'Finish the pending order before adding another product.' : '请先完成当前待支付订单，再继续添加商品。'
     return
   }
   if (addingProductId.value !== null) return
   addingProductId.value = product.id
   try {
     cart.value = await apiRequest<CartItem[]>('/cart/items', 'POST', { productId: product.id, quantity: 1 }, auth.token)
-    message.value = `已将“${product.name}”加入购物袋。`
+    message.value = locale.value === 'en-US' ? `${displayProduct(product).name} was added to your bag.` : `已将“${product.name}”加入购物袋。`
     error.value = ''
     checkoutState.value = 'idle'
   } catch (reason) {
@@ -104,7 +133,7 @@ async function change(item: CartItem, quantity: number) {
 async function remove(item: CartItem) {
   try {
     cart.value = await apiRequest<CartItem[]>(`/cart/items/${item.id}`, 'DELETE', undefined, auth.token)
-    message.value = `已移除“${item.name}”。`
+    message.value = locale.value === 'en-US' ? 'The item was removed.' : `已移除“${item.name}”。`
     error.value = ''
   } catch (reason) { error.value = reason instanceof Error ? reason.message : '移除商品失败。' }
 }
@@ -133,7 +162,7 @@ async function checkout() {
     cart.value = []
     await apiRequest(`/orders/${order.id}/mock-payment`, 'POST', undefined, auth.token, { 'Idempotency-Key': attempt.paymentKey })
     clearPendingCheckout()
-    message.value = `模拟支付成功，订单号：${order.orderNo}`; checkoutState.value = 'success'; mobileCartSnapPoint.value = 'medium'
+    message.value = locale.value === 'en-US' ? `Mock payment completed. Order: ${order.orderNo}` : `模拟支付成功，订单号：${order.orderNo}`; checkoutState.value = 'success'; mobileCartSnapPoint.value = 'medium'
   } catch (reason) {
     const nonRetryable = reason instanceof Error && 'status' in reason
       && typeof (reason as { status?: unknown }).status === 'number'
@@ -142,7 +171,7 @@ async function checkout() {
     if (nonRetryable) clearPendingCheckout()
     else if (attempt?.order) {
       cart.value = []
-      message.value = `订单号：${attempt.order.orderNo} 尚未完成支付，可继续重试。`
+      message.value = locale.value === 'en-US' ? `Order ${attempt.order.orderNo} is still awaiting payment. You can retry.` : `订单号：${attempt.order.orderNo} 尚未完成支付，可继续重试。`
     }
     error.value = reason instanceof Error ? reason.message : '下单或支付失败。'; checkoutState.value = 'error'
   }
@@ -162,10 +191,10 @@ onMounted(async () => {
         class="shop-object-studio-surface"
         aria-hidden="true"
       ></div>
-      <header class="shop-intro">
+      <header class="shop-intro" data-glass="light">
         <p class="eyebrow">HELUO CULTURAL STORE</p>
         <h1>{{ shopTitle }}</h1>
-        <div class="shop-category-nav" role="group" aria-label="商品分类"><button type="button" class="active" aria-pressed="true">器物日用</button><button type="button" disabled title="当前版本暂无该分类商品">穿戴织物</button><button type="button" disabled title="当前版本暂无该分类商品">纸上河图</button></div>
+        <div class="shop-category-nav" data-glass="compact" role="group" :aria-label="shopCopy.categories"><button type="button" :class="{ active: activeCategory === 'all' }" :aria-pressed="activeCategory === 'all'" @click="activeCategory = 'all'">{{ shopCopy.all }}</button><button type="button" :class="{ active: activeCategory === 'objects' }" :aria-pressed="activeCategory === 'objects'" @click="activeCategory = 'objects'">{{ shopCopy.category }}</button><button type="button" :class="{ active: activeCategory === 'textiles' }" :aria-pressed="activeCategory === 'textiles'" @click="activeCategory = 'textiles'">{{ shopCopy.apparel }}</button><button type="button" :class="{ active: activeCategory === 'paper' }" :aria-pressed="activeCategory === 'paper'" @click="activeCategory = 'paper'">{{ shopCopy.paper }}</button></div>
         <p>{{ t.shopText.intro }}</p>
       </header>
 
@@ -175,19 +204,19 @@ onMounted(async () => {
       <InlineStatus v-if="error" kind="error" :message="error" />
       <div v-if="loading" class="state-panel">{{ t.shopText.loading }}</div>
       <div v-else id="shop-products" class="product-grid">
-        <motion.article v-for="(product,index) in products" :key="product.id" :class="{ featured: index === 0 }" :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }" :transition="{ duration: 0.28, delay: index * 0.04 }">
-          <div v-pointer-surface="{ kind: 'product', maxTilt: 0.8 }" class="product-image"><img :src="product.coverImageUrl" :alt="product.name" loading="lazy" decoding="async" /><p>{{ index === 0 ? '以河流为线，盛装日常茶事，也盛放山水之思。' : index === 1 ? '以河流的流线和深墨绿为灵感的原创概念丝巾。' : '把河洛图纹带进每天的记录与灵感。' }}</p></div>
-        <div class="product-copy"><span class="product-number">0{{ index + 1 }}</span><h2>{{ product.name }}</h2><p>{{ product.summary }}</p><div class="product-meta"><small>{{ t.shopText.remaining }} {{ product.availableStock }} {{ t.shopText.items }}</small><strong>¥ {{ product.price }}</strong></div><FluidButton block :disabled="product.availableStock === 0 || pendingCheckout !== null || (addingProductId !== null && addingProductId !== product.id)" :loading="addingProductId === product.id" @click="add(product)">{{ addingProductId === product.id ? '正在加入' : pendingCheckout ? '待支付订单未完成' : t.shopText.add }}</FluidButton></div>
+        <motion.article v-for="(product,index) in visibleProducts" :key="product.id" :class="{ featured: index === 0 }" :initial="{ opacity: 0, y: 10 }" :animate="{ opacity: 1, y: 0 }" :transition="{ duration: 0.28, delay: index * 0.04 }">
+          <div v-pointer-surface="{ kind: 'product', maxTilt: 0.8 }" class="product-image"><img :src="displayProduct(product).coverImageUrl" :alt="displayProduct(product).name" loading="lazy" decoding="async" /><p>{{ productImageNotes[product.slug] }}</p></div>
+        <div class="product-copy" data-glass="light" data-glass-interactive><span class="product-number">0{{ index + 1 }}</span><h2>{{ displayProduct(product).name }}</h2><p>{{ displayProduct(product).summary }}</p><div class="product-meta"><small>{{ t.shopText.remaining }} {{ product.availableStock }} {{ stockUnit(product.availableStock) }}</small><strong>¥ {{ product.price }}</strong></div><FluidButton block :disabled="product.availableStock === 0 || pendingCheckout !== null || (addingProductId !== null && addingProductId !== product.id)" :loading="addingProductId === product.id" @click="add(product)">{{ addingProductId === product.id ? shopCopy.adding : pendingCheckout ? shopCopy.pending : t.shopText.add }}</FluidButton></div>
         </motion.article>
       </div>
     </section>
 
-    <motion.button class="mobile-cart-trigger" type="button" :aria-label="`打开购物车，共${itemCount}件商品`" :while-press="{ scale: 0.96 }" :transition="{ type: 'spring', stiffness: 500, damping: 42 }" @click="mobileCartOpen = true">
-      <ShoppingBag aria-hidden="true" /><span>购物袋</span><motion.sup :key="itemCount" :initial="{ scale: 0.75 }" :animate="{ scale: 1 }">{{ itemCount }}</motion.sup>
+    <motion.button class="mobile-cart-trigger" type="button" :aria-label="`${shopCopy.openCart}, ${itemCount} ${shopCopy.unit}`" :while-press="{ scale: 0.96 }" :transition="{ type: 'spring', stiffness: 500, damping: 42 }" @click="mobileCartOpen = true">
+      <ShoppingBag aria-hidden="true" /><span>{{ shopCopy.bag }}</span><motion.sup :key="itemCount" :initial="{ scale: 0.75 }" :animate="{ scale: 1 }">{{ itemCount }}</motion.sup>
     </motion.button>
 
-    <aside class="cart-panel" aria-label="购物袋">
-      <header class="cart-heading"><span class="cart-heading__icon" aria-hidden="true"><ShoppingBag /></span><div><p>YOUR SELECTION</p><h2>购物袋</h2></div><motion.span :key="itemCount" class="cart-count" :initial="{ scale: 0.78 }" :animate="{ scale: 1 }">{{ itemCount }} 件</motion.span></header>
+    <aside class="cart-panel" data-glass="light" data-glass-controls :aria-label="shopCopy.bag">
+      <header class="cart-heading"><span class="cart-heading__icon" aria-hidden="true"><ShoppingBag /></span><div><p>{{ shopCopy.selection }}</p><h2>{{ shopCopy.bag }}</h2></div><motion.span :key="itemCount" class="cart-count" :initial="{ scale: 0.78 }" :animate="{ scale: 1 }">{{ itemCount }} {{ shopCopy.unit }}</motion.span></header>
       <CartPanelContent
         :logged-in="auth.loggedIn"
         :items="cart"
@@ -206,7 +235,7 @@ onMounted(async () => {
       />
     </aside>
 
-    <BottomSheet :open="mobileCartOpen" :title="`购物袋 · ${itemCount} 件`" :snap-point="mobileCartSnapPoint" @close="mobileCartOpen = false" @update:snap-point="mobileCartSnapPoint = $event">
+    <BottomSheet :open="mobileCartOpen" :title="`${shopCopy.bag} · ${itemCount} ${shopCopy.unit}`" :snap-point="mobileCartSnapPoint" @close="mobileCartOpen = false" @update:snap-point="mobileCartSnapPoint = $event">
       <CartPanelContent
         :logged-in="auth.loggedIn"
         :items="cart"

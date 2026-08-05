@@ -67,6 +67,22 @@ describe('shared visual controls', () => {
     expect(wrapper.find('button[aria-label="移除河流纹茶杯套装"]').exists()).toBe(true)
   })
 
+  it('uses the catalog cover when a legacy cart item has a blank image', () => {
+    const wrapper = mount(CartPanelContent, {
+      props: {
+        loggedIn: true,
+        items: [{ id: 1, productId: 1, quantity: 1, name: '河图纹笔记本', slug: 'river-map-notebook', price: '39.00', availableStock: 6, coverImageUrl: '' }],
+        itemCount: 1,
+        total: '39.00',
+        email: '',
+        checkoutState: 'idle',
+      },
+      global: { stubs: { RouterLink: true } },
+    })
+
+    expect(wrapper.get('.cart-item img').attributes('src')).toBe('/media/products/river-map-notebook.webp')
+  })
+
   it('keeps cart status copies visual-only so the page owns the live announcement', () => {
     const wrapper = mount(CartPanelContent, {
       props: {
