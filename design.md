@@ -4,7 +4,7 @@
 
 ## Genre
 
-`editorial`：以文物与河洛文明内容为主角，使用不对称编排、细线、留白和安静动效，不使用玻璃拟态、渐变胶囊或等宽功能卡阵列。
+`editorial`：以文物与河洛文明内容为主角，使用不对称编排、细线、留白和安静动效；允许受控的博物馆玻璃材质承载导航、浮层和信息看板，但禁止无节制玻璃拟态、渐变胶囊或等宽功能卡阵列。
 
 ## Macrostructure family
 
@@ -25,6 +25,16 @@
 - `--color-accent`：少量朱砂，单屏占比不超过 5%。
 - `--color-bronze`：文物与年代标注。
 - `--color-focus`：键盘焦点，必须同时对纸面和按钮可见。
+
+### Museum glass contract
+
+所有毛玻璃表面必须通过 `data-glass="light|dark|compact"` 选择既定材质，不得在页面规则中自行声明透明背景、模糊、边框或阴影。
+
+- `light`：通透月白青玉，用于导航、浅色看板、预约、商城和后台浅色工作面；底色保持近中性，仅保留极轻青玉色相。
+- `dark`：通透深墨玉，用于路线、图片信息叠层、3D 信息板、账户和后台侧栏；使用低彩度墨绿色与中性高光，不允许厚重纯绿底板。
+- `compact`：紧凑月白，用于输入、筛选、标签、次级按钮和小型状态控件；继承 light 色相并使用更轻的阴影。
+
+三个层级共享同一低彩度青绿色相、细边框、中性高光方向、8px/6px 圆角比例和无弹跳交互；只有表面明度与信息密度可以变化。正常模式必须让背景环境可感知，高彩度绿色和高不透明度底板均视为材质漂移。减少透明度、高对比度和强制颜色模式必须使用对应的低彩度实色令牌降级。
 
 所有颜色和字体声明引用命名令牌；禁止在页面局部临时添加 hex、rgb 或独立字体。
 
@@ -62,4 +72,4 @@
 
 ## Hallmark stamp
 
-`/* Hallmark · pre-emit critique: P5 H4 E4 S5 R4 V5 · genre: editorial · macrostructure: museum editorial system · design-system: design.md · designed-as-app */`
+`/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V5 · genre: editorial · macrostructure: museum editorial system · design-system: design.md · designed-as-app */`
