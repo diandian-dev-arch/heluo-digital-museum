@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router'
+import MuseumBrandSeal from './MuseumBrandSeal.vue'
 
 defineProps<{ title: string; description: string; section: 'content' | 'operations' }>()
 </script>
 
 <template>
   <main class="admin-workspace" :class="`admin-workspace--${section}`">
-    <aside class="admin-sidebar" aria-label="后台管理导航">
+    <aside class="admin-sidebar" data-glass="dark" aria-label="后台管理导航">
       <RouterLink class="admin-sidebar__brand" to="/">
-        <span class="admin-sidebar__seal" aria-hidden="true"><span>河</span><i>洛</i></span>
+        <MuseumBrandSeal class="admin-sidebar__seal" />
         <span><b>河洛数字博物馆</b><small>管理工作台</small></span>
       </RouterLink>
       <nav>
@@ -25,7 +26,7 @@ defineProps<{ title: string; description: string; section: 'content' | 'operatio
     </aside>
     <section class="admin-main">
       <div class="admin-context-rail"><span>HELUO MUSEUM · ADMIN</span><i></i><b>{{ section === 'content' ? '内容系统' : '运营系统' }}</b></div>
-      <header class="admin-page-header">
+      <header class="admin-page-header" data-glass="light">
         <div class="admin-title-lockup"><p>{{ section === 'content' ? 'COLLECTION DESK' : 'OPERATIONS DESK' }}</p><h1>{{ title }}</h1><span>{{ description }}</span></div>
         <div class="admin-header-actions"><slot name="header-actions" /></div>
       </header>

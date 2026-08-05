@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import type { BufferGeometry, Group, Material, Mesh, PerspectiveCamera, Points, ShaderMaterial, Vector3 } from 'three'
 import type { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { interpolateExhibitOrbitOffset, selectExhibitCameraDistanceScale, selectExhibitCanvasTouchAction } from '../lib/exhibitInteraction'
 import { POINT_COUNTS, downgradePointCloudQuality, selectPointCloudPalette, selectPointCloudQuality, type PointCloudQuality } from '../lib/pointCloudQuality'
 import { applyDeadZone, exponentialStep, readPointerMotionCapabilities, resolveExhibitPointerPolicy, selectEffectiveMotionTier, selectPointerMotionTier, type MotionTier } from '../lib/pointerMotion'
+import { useLocale } from '../stores/locale'
 
 type DisplayMode = 'solid' | 'points'
 type ViewName = 'front' | 'left' | 'right' | 'back' | 'top'
@@ -22,9 +23,18 @@ const emit = defineEmits<{
   (event: 'mode-change', value: DisplayMode): void
   (event: 'quality-change', value: PointCloudQuality): void
 }>()
+const { locale } = useLocale()
+const viewerCopy = computed(() => locale.value === 'zh-CN' ? {
+  unsupported: '当前浏览器不支持 WebGL，已为你保留展项封面和说明。', loadFailed: '3D 模型暂时无法加载，已切换为展项封面和文字说明。你可以稍后重试。', unavailable: '互动 3D 展项暂时不可用，已切换为展项封面和文字说明。你可以稍后重试。',
+  aria: '的可旋转 3D 模型', loading: '正在构建数字展项…', retry: '重试加载',
+} : {
+  unsupported: 'This browser does not support WebGL. The exhibit cover and notes remain available.', loadFailed: 'The 3D model could not be loaded. The exhibit cover and notes are shown instead. Please try again later.', unavailable: 'The interactive 3D exhibit is temporarily unavailable. The cover and notes are shown instead. Please try again later.',
+  aria: ' — rotatable 3D model', loading: 'Building the digital exhibit…', retry: 'Try again',
+})
 
 const container = ref<HTMLDivElement | null>(null)
 const loading = ref(true)
+const loadingProgress = ref(0)
 const error = ref('')
 let cleanup: (() => void) | undefined
 let controlsRef: OrbitControls | undefined
@@ -40,7 +50,7 @@ let initializationVersion = 0
 const clamp = (value: number) => Math.min(Math.max(value, 0), 1)
 const easeOut = (value: number) => 1 - Math.pow(1 - clamp(value), 3)
 const views: Record<ViewName, [number, number, number]> = {
-  front: [0, .5, 8.15], left: [-5.4, .8, 5.6], right: [5.4, .8, 5.6], back: [0, .5, -8.15], top: [0, 8.2, .7],
+  front: [0, .5, 9.7], left: [-6.15, .8, 6.4], right: [6.15, .8, 6.4], back: [0, .5, -9.7], top: [0, 9.45, .8],
 }
 
 function selectQuality(): PointCloudQuality {
@@ -115,11 +125,12 @@ async function initialize() {
   const version = ++initializationVersion
   cleanup?.()
   loading.value = true
+  loadingProgress.value = 0
   error.value = ''
   activeMode = props.initialMode
   await nextTick()
   if (!container.value || !window.WebGLRenderingContext) {
-    error.value = '当前浏览器不支持 WebGL，已为你保留展项封面和说明。'
+    error.value = viewerCopy.value.unsupported
     loading.value = false
     return
   }
@@ -137,11 +148,13 @@ async function initialize() {
     emit('quality-change', quality)
 
     const scene = new THREE.Scene()
-    scene.background = new THREE.Color('#06100d')
-    scene.fog = new THREE.FogExp2('#06100d', .012)
+    // The confirmed moon-jade layout supplies the room as a DOM background.
+    // Keep WebGL transparent so the real model sits naturally in that space.
+    scene.background = null
+    scene.fog = new THREE.FogExp2('#eee9df', .006)
     const camera = new THREE.PerspectiveCamera(37, 1, .1, 80)
     cameraRef = camera
-    const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' })
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' })
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, quality === 'mobile' ? 1.25 : 2))
     renderer.outputColorSpace = THREE.SRGBColorSpace
     // A museum object needs stable material values rather than an HDR-like bloom.
@@ -158,7 +171,7 @@ async function initialize() {
     // reflection to reveal its relief and patina instead of reading as black.
     const environmentTarget = pmrem.fromScene(new environmentModule.RoomEnvironment(), .04)
     scene.environment = environmentTarget.texture
-    scene.environmentIntensity = .3
+    scene.environmentIntensity = .5
     pmrem.dispose()
 
     const controls = new controlsModule.OrbitControls(camera, renderer.domElement)
@@ -178,7 +191,7 @@ async function initialize() {
     controls.dampingFactor = .065
     controls.enablePan = false
     controls.minDistance = 3.2
-    controls.maxDistance = window.innerWidth <= 760 ? 11 : 10.5
+    controls.maxDistance = window.innerWidth <= 760 ? 13.5 : 12.5
     controls.minPolarAngle = .08
     controls.maxPolarAngle = 1.62
     controls.minAzimuthAngle = -Math.PI
@@ -270,30 +283,29 @@ async function initialize() {
     setView('front', { animated: false })
     renderer.domElement.addEventListener('dblclick', resetView)
 
-    const floor = new THREE.Mesh(new THREE.CircleGeometry(8, 96), new THREE.MeshStandardMaterial({ color: '#111c18', roughness: .9, metalness: .08 }))
+    const floor = new THREE.Mesh(new THREE.CircleGeometry(8, 96), new THREE.MeshStandardMaterial({ color: '#d7d0c4', roughness: 1, metalness: 0, opacity: .1, transparent: true }))
     floor.rotation.x = -Math.PI / 2
     floor.receiveShadow = true
     scene.add(floor)
-    // Selected presentation: a layered charcoal stone plinth with one restrained
-    // antique-gold trim line. Keep the material non-emissive so the ding remains
-    // readable and the pedestal never recreates the previous white glow.
-    const base = new THREE.Mesh(new THREE.CylinderGeometry(2.15, 2.28, .32, 96), new THREE.MeshStandardMaterial({ color: '#181b18', roughness: .82, metalness: .14 }))
+    // Warm limestone layers mirror the confirmed reference without competing
+    // with the aged bronze. The thin brass ring is the only bright accent.
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(2.15, 2.28, .32, 96), new THREE.MeshStandardMaterial({ color: '#c9c1b4', roughness: .88, metalness: .02 }))
     base.position.y = .21
     base.receiveShadow = true
     scene.add(base)
-    const top = new THREE.Mesh(new THREE.CylinderGeometry(1.88, 1.96, .19, 96), new THREE.MeshStandardMaterial({ color: '#40382d', roughness: .76, metalness: .18 }))
+    const top = new THREE.Mesh(new THREE.CylinderGeometry(1.88, 1.96, .19, 96), new THREE.MeshStandardMaterial({ color: '#eee8dc', roughness: .82, metalness: .02 }))
     top.position.y = .44
     top.receiveShadow = true
     scene.add(top)
     const pedestalTrim = new THREE.Mesh(
       new THREE.TorusGeometry(1.8, .018, 8, 128),
-      new THREE.MeshStandardMaterial({ color: '#9a6a31', roughness: .52, metalness: .62 }),
+      new THREE.MeshStandardMaterial({ color: '#b68a4b', roughness: .5, metalness: .68 }),
     )
     pedestalTrim.rotation.x = Math.PI / 2
     pedestalTrim.position.y = .545
     scene.add(pedestalTrim)
     ;[2.38, 3.55, 4.65].forEach((radius, index) => {
-      const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, index === 0 ? .018 : .007, 6, 96), new THREE.MeshBasicMaterial({ color: '#8e7445', transparent: true, opacity: .26 - index * .07 }))
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(radius, index === 0 ? .016 : .006, 6, 96), new THREE.MeshBasicMaterial({ color: '#af9d7d', transparent: true, opacity: .12 - index * .03 }))
       ring.rotation.x = Math.PI / 2
       ring.position.y = .03
       scene.add(ring)
@@ -301,34 +313,18 @@ async function initialize() {
     const river = new THREE.CatmullRomCurve3([
       new THREE.Vector3(-7.5, 2.2, -4.3), new THREE.Vector3(-4.2, 3.25, -6.3), new THREE.Vector3(-1, 2.3, -7.7), new THREE.Vector3(2.2, 3.1, -7.3), new THREE.Vector3(5.5, 2.5, -5.7), new THREE.Vector3(7.6, 3.1, -4.2),
     ])
-    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(river.getPoints(150)), new THREE.LineBasicMaterial({ color: '#bf8e43', transparent: true, opacity: .28 })))
-    scene.add(new THREE.HemisphereLight(0x9aab9d, 0x0d1713, .48))
-    const key = new THREE.SpotLight(0xffe6bd, 145, 16, .44, .78, 1.5)
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(river.getPoints(150)), new THREE.LineBasicMaterial({ color: '#b79d70', transparent: true, opacity: .08 })))
+    scene.add(new THREE.HemisphereLight(0xfff8e9, 0x5c675f, 1.08))
+    const key = new THREE.SpotLight(0xffe8c6, 132, 16, .44, .78, 1.5)
     key.position.set(2.2, 7.6, 3.4); key.target.position.set(0, 1.05, 0); key.castShadow = true; key.shadow.mapSize.set(1024, 1024)
     scene.add(key, key.target)
-    const fill = new THREE.PointLight(0x8fb9ad, 2.6, 9, 2); fill.position.set(-3.7, 2.5, 2); scene.add(fill)
-    const rim = new THREE.PointLight(0xf1c98e, 3.4, 8, 2); rim.position.set(0, 3.8, -4.6); scene.add(rim)
-    const front = new THREE.PointLight(0xffdcb0, 4.2, 11, 2); front.position.set(0, 2.8, 5.2); scene.add(front)
+    const fill = new THREE.PointLight(0xb8d1c8, 3.3, 9, 2); fill.position.set(-3.7, 2.5, 2); scene.add(fill)
+    const rim = new THREE.PointLight(0xf3cf99, 3.8, 8, 2); rim.position.set(0, 3.8, -4.6); scene.add(rim)
+    const front = new THREE.PointLight(0xffe1bd, 5.2, 11, 2); front.position.set(0, 2.8, 5.2); scene.add(front)
 
+    // Rendering directly preserves the alpha channel. Bloom post-processing
+    // turns transparent pixels black and would cover the photographic room.
     let composer: { render: () => void; setSize: (width: number, height: number) => void; dispose?: () => void } | undefined
-    if (quality === 'high') {
-      const [composerModule, renderPassModule, bloomModule] = await Promise.all([
-        import('three/examples/jsm/postprocessing/EffectComposer.js'), import('three/examples/jsm/postprocessing/RenderPass.js'), import('three/examples/jsm/postprocessing/UnrealBloomPass.js'),
-      ])
-      if (version !== initializationVersion || !container.value) {
-        controls.dispose()
-        environmentTarget.dispose()
-        disposeScene(scene)
-        renderer.renderLists.dispose()
-        renderer.dispose()
-        renderer.domElement.remove()
-        return
-      }
-      const effectComposer = new composerModule.EffectComposer(renderer)
-      effectComposer.addPass(new renderPassModule.RenderPass(scene, camera))
-      effectComposer.addPass(new bloomModule.UnrealBloomPass(new THREE.Vector2(1, 1), .12, .55, .92))
-      composer = effectComposer
-    }
 
     let cloud: Points | undefined
     let cloudMaterial: ShaderMaterial | undefined
@@ -336,6 +332,7 @@ async function initialize() {
     let dust: Points | undefined
     const modelMaterials: Array<{ material: OpacityMaterial; opacity: number }> = []
     let transition: { from: number; to: number; start: number; duration: number } | undefined
+    let modelRevealStartedAt: number | undefined
     let introStartedAt: number | undefined
     let introComplete = false
     let animationState: PointCloudAnimationState = 'solid'
@@ -494,7 +491,7 @@ async function initialize() {
           // Selected reference profile: grey-green aged bronze with soft metal
           // reflections, visible micro relief and no emissive lift.
           const mobileMaterial = quality === 'mobile'
-          next.envMapIntensity = mobileMaterial ? .28 : .42
+          next.envMapIntensity = mobileMaterial ? .3 : .5
           // Preserve the v5.4 texture as the source of truth; a pale runtime
           // color multiplier was washing out the material contrast.
           next.color?.setRGB?.(mobileMaterial ? .55 : 1, mobileMaterial ? .62 : 1, mobileMaterial ? .42 : 1)
@@ -514,7 +511,8 @@ async function initialize() {
       artifact.position.set(-center.x * scale, -bounds.min.y * scale + .51, -center.z * scale)
       artifact.updateMatrixWorld(true)
       scene.add(artifact)
-      target.set(0, .51 + size.y * scale * .5, 0)
+      const compositionLift = window.innerWidth <= 760 ? .1 : .22
+      target.set(0, .51 + size.y * scale * .5 - compositionLift, 0)
       setView('front', { animated: false })
       if (props.enablePointCloud) { createCloud(artifact); makeDust() }
       // The initial route must be stable: starting from a bright point-cloud crossfade
@@ -524,11 +522,15 @@ async function initialize() {
         setMix(1); introComplete = true; animationState = 'points-idle'; activeMode = 'points'; emit('mode-change', 'points')
       } else {
         completeSolid()
+        if (!reducedMotion) { setModelOpacity(0); modelRevealStartedAt = performance.now() }
       }
+      loadingProgress.value = 100
       loading.value = false
-    }, undefined, () => {
+    }, (event) => {
+      if (event.lengthComputable && event.total > 0) loadingProgress.value = Math.min(96, Math.round((event.loaded / event.total) * 100))
+    }, () => {
       if (disposed || version !== initializationVersion) return
-      error.value = '3D 模型暂时无法加载，已切换为展项封面和文字说明。你可以稍后重试。'
+      error.value = viewerCopy.value.loadFailed
       loading.value = false
     })
 
@@ -621,6 +623,11 @@ async function initialize() {
         cloudMaterial.uniforms.uPointerStrength.value = pointResponseAllowed ? pointerStrength : 0
       }
       if (dust) { dust.rotation.y = reducedMotion ? 0 : time * .00006; (dust.material as import('three').PointsMaterial).opacity = activeMode === 'points' || !introComplete ? .64 : .16 }
+      if (modelRevealStartedAt !== undefined && artifact) {
+        const reveal = clamp((time - modelRevealStartedAt) / 850)
+        setModelOpacity(easeOut(reveal))
+        if (reveal >= 1) modelRevealStartedAt = undefined
+      }
       if (introStartedAt !== undefined && cloudMaterial && cloud && artifact) {
         const elapsed = time - introStartedAt, revealDuration = 240, scatterDuration = 660, driftDuration = 750, settleDuration = 750, totalDuration = revealDuration + scatterDuration + driftDuration + settleDuration
         let progress = 1, cloudOpacity = 0, modelOpacity = 1
@@ -686,7 +693,7 @@ async function initialize() {
     cleanup = () => { disposed = true; cancelAnimationFrame(frameId); observer.disconnect(); visibilityObserver.disconnect(); document.removeEventListener('visibilitychange', onDocumentVisibility); renderer.domElement.removeEventListener('dblclick', resetView); renderer.domElement.removeEventListener('pointermove', onCanvasPointerMove); renderer.domElement.removeEventListener('pointerleave', onCanvasPointerLeave); controls.removeEventListener('start', onControlsStart); controls.removeEventListener('end', onControlsEnd); removeAppliedPointerOffset(); controls.dispose(); cameraTransition = undefined; pointerInteractionRef = undefined; composer?.dispose?.(); environmentTarget.dispose(); disposeScene(scene); renderer.renderLists.dispose(); renderer.dispose(); renderer.domElement.remove(); container.value?.removeAttribute('data-render-state'); controlsRef = undefined; cameraRef = undefined; targetRef = undefined; changeMode = () => undefined; cleanup = undefined }
   } catch {
     if (version !== initializationVersion) return
-    error.value = '互动 3D 展项暂时不可用，已切换为展项封面和文字说明。你可以稍后重试。'
+    error.value = viewerCopy.value.unavailable
     loading.value = false
   }
 }
@@ -698,8 +705,8 @@ onBeforeUnmount(() => { initializationVersion += 1; cleanup?.() })
 
 <template>
   <div class="three-viewer">
-    <div ref="container" class="three-canvas" role="img" data-cursor="native" :aria-label="`${alt} 的可旋转 3D 模型`"></div>
-    <div v-if="loading" class="three-overlay" role="status" aria-live="polite"><span class="loading-orbit" aria-hidden="true"></span>正在构建数字展项…</div>
-    <div v-if="error" class="three-fallback" role="alert" aria-live="assertive"><img :src="coverImageUrl" :alt="alt" decoding="async" /><p>{{ error }}</p><button type="button" @click="initialize">重试加载</button></div>
+    <div ref="container" class="three-canvas" role="img" data-cursor="native" :aria-label="`${alt}${viewerCopy.aria}`"></div>
+    <div v-if="loading" class="three-overlay" role="status" aria-live="polite"><div class="exhibit-loader" data-glass="dark"><span class="exhibit-loader__artifact" aria-hidden="true"><i></i><b></b></span><div class="exhibit-loader__copy"><small>DIGITAL OBJECT</small><strong>{{ viewerCopy.loading }}</strong><span class="exhibit-loader__track" aria-hidden="true"><i :style="{ width: `${loadingProgress || 12}%` }"></i></span><em>{{ loadingProgress ? `${loadingProgress}%` : 'LOADING' }}</em></div></div></div>
+    <div v-if="error" class="three-fallback" role="alert" aria-live="assertive"><img :src="coverImageUrl" :alt="alt" decoding="async" /><p>{{ error }}</p><button type="button" @click="initialize">{{ viewerCopy.retry }}</button></div>
   </div>
 </template>

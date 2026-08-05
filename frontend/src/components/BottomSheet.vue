@@ -66,7 +66,7 @@ onBeforeUnmount(() => {
     <AnimatePresence>
       <div v-if="open" class="bottom-sheet-root">
         <motion.button class="bottom-sheet-scrim" type="button" aria-label="关闭面板" :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" :exit="{ opacity: 0 }" @click="emit('close')" />
-        <motion.section ref="panel" class="bottom-sheet" role="dialog" aria-modal="true" :aria-labelledby="titleId" tabindex="-1" :data-snap-point="snapPoint" drag="y" :drag-controls="dragControls" :drag-listener="false" drag-direction-lock :drag-constraints="{ top: 0, bottom: 280 }" :drag-elastic="0.14" :initial="{ y: '100%' }" :animate="{ y: 0 }" :exit="{ y: '100%' }" :transition="{ type: 'spring', stiffness: 420, damping: 38, mass: 0.9 }" @drag-end="finishDrag">
+        <motion.section ref="panel" class="bottom-sheet" data-glass="light" data-glass-controls role="dialog" aria-modal="true" :aria-labelledby="titleId" tabindex="-1" :data-snap-point="snapPoint" drag="y" :drag-controls="dragControls" :drag-listener="false" drag-direction-lock :drag-constraints="{ top: 0, bottom: 280 }" :drag-elastic="0.14" :initial="{ y: '100%' }" :animate="{ y: 0 }" :exit="{ y: '100%' }" :transition="{ type: 'spring', stiffness: 420, damping: 38, mass: 0.9 }" @drag-end="finishDrag">
           <button class="bottom-sheet-handle" type="button" :aria-label="snapPoint === 'full' ? '收起面板' : '展开面板'" @pointerdown="startDrag" @click="toggleSnapPoint"><i aria-hidden="true" /></button>
           <header class="bottom-sheet-header"><h2 :id="titleId">{{ title }}</h2><button class="bottom-sheet-close" type="button" aria-label="关闭面板" @click="emit('close')"><Close /></button></header>
           <div class="bottom-sheet-content"><slot /></div>

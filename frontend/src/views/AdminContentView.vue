@@ -11,6 +11,7 @@ import FluidButton from '../components/FluidButton.vue'
 import InlineStatus from '../components/InlineStatus.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import AdminTabs from '../components/AdminTabs.vue'
+import AdminActionButton from '../components/AdminActionButton.vue'
 
 interface Category { id: number; code: string; name: string }
 interface ManagedItem { id: number; title: string; slug: string; summary: string; content: string; categoryId: number; categoryName: string; status: string; deleted: boolean; coverImageUrl: string; authorDisplay?: string }
@@ -101,7 +102,7 @@ onMounted(load)
   <AdminShell v-if="auth.isAdmin" title="内容管理" description="创建、发布与维护面向公众的馆藏内容。" section="content">
     <template #header-actions><RouterLink class="admin-header-link" to="/admin/operations">进入运营管理 →</RouterLink></template>
 
-    <section v-if="summary" class="dashboard-summary" aria-label="运营概览">
+    <section v-if="summary" class="dashboard-summary" data-glass="light" aria-label="运营概览">
       <article><span>用户</span><strong>{{ summary.userCount }}</strong><small>注册账号</small></article>
       <article><span>预约</span><strong>{{ summary.appointmentCount }}</strong><small>累计记录</small></article>
       <article><span>订单</span><strong>{{ summary.orderCount }}</strong><small>商城订单</small></article>
@@ -116,7 +117,7 @@ onMounted(load)
     </div>
 
     <div id="admin-content-panel" class="admin-layout" role="tabpanel" :aria-labelledby="`admin-content-panel-tab-${tab}`" tabindex="0">
-      <section class="admin-create">
+      <section class="admin-create" data-glass="light" data-glass-controls>
         <header><span>{{ editing ? '正在编辑' : '新建草稿' }}</span><h2>{{ tab === 'artifacts' ? '文物内容' : '文化文章' }}</h2><p>草稿只有发布后才会出现在前台。</p></header>
         <form @submit.prevent="save">
           <label><span>分类</span><el-select v-model="form.categoryId" popper-class="museum-select-popper" placeholder="请选择内容分类" required><el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id" /></el-select></label>
@@ -130,18 +131,18 @@ onMounted(load)
         </form>
       </section>
 
-      <section class="admin-records">
+      <section class="admin-records" data-glass="light">
         <div class="section-heading"><div><span>{{ showDeleted ? 'RECYCLE BIN' : 'CONTENT LIBRARY' }}</span><h2>{{ showDeleted ? '回收站' : '现有内容' }}</h2></div><strong>{{ items.length }} 项</strong></div>
         <div v-if="loading" class="state-panel">正在加载后台内容…</div>
         <div v-else-if="items.length === 0" class="state-panel">{{ showDeleted ? '回收站为空。' : '暂无内容，可以从左侧创建第一篇草稿。' }}</div>
         <div v-else class="admin-list admin-list--content">
           <div class="admin-list-head" aria-hidden="true"><span>状态</span><span>标题</span><span>分类</span><span>更新时间</span><span>操作</span></div>
-          <article v-for="(item, index) in items" :key="item.id">
+          <article v-for="(item, index) in items" :key="item.id" data-glass="compact">
             <div class="admin-record-status"><StatusBadge :status="item.deleted ? 'DISABLED' : item.status" /></div>
             <div class="admin-record-copy"><div class="admin-record-title"><img :src="imageFor(item, index)" :alt="`${item.title}封面`" /><div><h3>{{ item.title }}</h3><RouterLink v-if="!item.deleted" :to="`/${tab}/${item.slug}`" target="_blank">查看前台页 ↗</RouterLink></div></div></div>
             <span class="admin-record-category">{{ item.categoryName }}</span>
             <time class="admin-record-date">2026-05-{{ String(28 - index * 2).padStart(2, '0') }}</time>
-            <div class="admin-actions"><button v-if="!item.deleted" @click="edit(item)">编辑</button><button v-if="!item.deleted && item.status !== 'PUBLISHED'" class="primary" @click="action(item, 'publish')">发布</button><button v-if="!item.deleted && item.status === 'PUBLISHED'" @click="action(item, 'withdraw')">撤回</button><button v-if="!item.deleted" class="danger" @click="action(item, 'delete')">删除</button><button v-if="item.deleted" class="primary" @click="action(item, 'restore')">恢复</button></div>
+            <div class="admin-actions"><AdminActionButton v-if="!item.deleted" action="edit" @click="edit(item)">编辑</AdminActionButton><AdminActionButton v-if="!item.deleted && item.status !== 'PUBLISHED'" action="publish" @click="action(item, 'publish')">发布</AdminActionButton><AdminActionButton v-if="!item.deleted && item.status === 'PUBLISHED'" action="withdraw" @click="action(item, 'withdraw')">撤回</AdminActionButton><AdminActionButton v-if="!item.deleted" action="delete" @click="action(item, 'delete')">删除</AdminActionButton><AdminActionButton v-if="item.deleted" action="restore" @click="action(item, 'restore')">恢复</AdminActionButton></div>
           </article>
         </div>
       </section>

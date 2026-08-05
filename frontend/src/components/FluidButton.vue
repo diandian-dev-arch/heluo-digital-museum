@@ -20,6 +20,8 @@ withDefaults(defineProps<{
     :aria-invalid="state === 'error' || undefined"
     :data-cursor="variant === 'danger' ? 'danger' : variant === 'primary' ? 'action' : 'link'"
     :data-state="loading ? 'loading' : state"
+    :data-glass="variant === 'secondary' || variant === 'ghost' ? 'compact' : undefined"
+    :data-glass-interactive="variant === 'secondary' || variant === 'ghost' ? '' : undefined"
     :class="['fluid-button', `fluid-button--${variant}`, `fluid-button--${size}`, { 'fluid-button--block': block }]"
     :while-press="{ scale: 0.98, y: 1 }"
     :transition="{ type: 'spring', stiffness: 500, damping: 42, mass: 0.9 }"
