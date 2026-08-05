@@ -29,4 +29,17 @@ class BootstrapDataInitializerTests {
         assertThat(((Number) exhibit.get("model_size_bytes")).longValue()).isEqualTo(5213372L);
         assertThat(exhibit.get("cover_image_url")).isEqualTo("/media/exhibits/heluo-bronze-ding-v5.4-cover.webp");
     }
+
+    @Test
+    void freshDatabaseUsesExpandedEditorialArticles() {
+        var articles = jdbc.queryForList("select slug, content from articles order by slug");
+
+        assertThat(articles).hasSize(3);
+        assertThat(articles).allSatisfy(article -> {
+            assertThat((String) article.get("content"))
+                    .hasSizeGreaterThan(600)
+                    .contains("｜")
+                    .contains("留给观众的问题");
+        });
+    }
 }
