@@ -33,7 +33,19 @@
 
 <table>
   <tr>
-    <td width="50%"><a href="docs/showcase/home-dark-en.png"><img src="docs/showcase/home-dark-en.png" alt="河洛数字博物馆主页深色主题" /></a></td>
+    <td width="50%" align="center"><strong>首页 · 中文浅色</strong></td>
+    <td width="50%" align="center"><strong>首页 · 中文深色</strong></td>
+  </tr>
+  <tr>
+    <td width="50%"><a href="docs/showcase/home-light-zh.png"><img src="docs/showcase/home-light-zh.png" alt="中文浅色首页完整页面：明亮展馆、器物介绍与主题入口" /></a></td>
+    <td width="50%"><a href="docs/showcase/home-dark-zh.png"><img src="docs/showcase/home-dark-zh.png" alt="中文深色首页完整页面：深色展馆、器物介绍与主题入口" /></a></td>
+  </tr>
+  <tr>
+    <td width="50%" align="center"><strong>首页 · 英文深色</strong></td>
+    <td width="50%" align="center"><strong>Explore · 英文深色</strong></td>
+  </tr>
+  <tr>
+    <td width="50%"><a href="docs/showcase/home-dark-en.png"><img src="docs/showcase/home-dark-en.png" alt="英文深色首页完整页面" /></a></td>
     <td width="50%"><a href="docs/showcase/explore-dark-en.png"><img src="docs/showcase/explore-dark-en.png" alt="Explore 双语藏品浏览页" /></a></td>
   </tr>
   <tr>

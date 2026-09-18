@@ -1,5 +1,9 @@
 # 仓库展示与完整页面效果图
 
+## 首页外观补充
+
+按用户追加要求，新增同一历史验收目录的 home-1440-light-zh-CN.png、home-1440-dark-zh-CN.png，分别保存为 docs/showcase/home-light-zh.png、home-dark-zh.png。两图均1440×2544，逐张确认导航、主视觉、器物介绍、主题入口、预约入口和页尾完整，无个人账户信息。保留已有英文深色首页，不重复复制；展示总计五图。README 并排对照中文双主题，并为英文深色图明确标注语言。仅文档与图片变更，不重跑业务测试。
+
 ## 目标与范围
 
 README 提供 https://heluo.pocketbay.app/ 入口、项目价值与完整页面展示。关联 F-01/F-02/F-05，仅文档展示，不变更业务。影响 README.md、docs/showcase/、PROJECT_STATUS.md 和需求追踪表。
