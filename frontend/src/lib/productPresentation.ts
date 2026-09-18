@@ -10,6 +10,11 @@ interface ProductFallback {
   coverImageUrl: string
 }
 
+const defaultProductFallback: ProductFallback = {
+  summary: '河洛纹样的日常概念文创，等待被带入下一段生活。',
+  coverImageUrl: '/media/editorial/shop-object-studio.webp',
+}
+
 const productFallbacks: Record<string, ProductFallback> = {
   'river-line-teacup-set': {
     summary: '让日常饮茶也保留一段关于河流的想象。',
@@ -33,7 +38,7 @@ const productSlugByName: Record<string, string> = {
 
 function productFallback(source: ProductPresentationSource): ProductFallback | undefined {
   const slug = source.slug?.trim() || (source.name ? productSlugByName[source.name] : undefined)
-  return slug ? productFallbacks[slug] : undefined
+  return (slug ? productFallbacks[slug] : undefined) ?? defaultProductFallback
 }
 
 export function fallbackProductCover(source: ProductPresentationSource): string {

@@ -34,9 +34,11 @@ public class ArticleController {
             where.append(" and c.code=?");
             arguments.add(categoryCode.trim());
         }
-        if (notBlank(keyword)) {
-            where.append(" and (a.title like ? or a.summary like ?)");
-            String query = "%" + keyword.trim() + "%";
+        if (keyword != null) {
+            where.append(" and ").append(ContentSearch.PREDICATE);
+            String query = ContentSearch.pattern(keyword);
+            arguments.add(query);
+            arguments.add(query);
             arguments.add(query);
             arguments.add(query);
         }
@@ -46,12 +48,12 @@ public class ArticleController {
         listArguments.add(normalized.size());
         listArguments.add(normalized.offset());
         List<Card> items = jdbc.query(
-                "select a.slug,a.title,a.summary,a.cover_image_url,a.author_display,c.code category_code,c.name category_name "
+                "select a.slug,a.title,a.summary,a.title_en,a.summary_en,a.cover_image_url,a.author_display,c.code category_code,c.name category_name "
                         + "from articles a join categories c on c.id=a.category_id" + where
                         + " order by a.published_at desc,a.id desc limit ? offset ?",
                 (rs, rowNum) -> new Card(rs.getString("slug"), rs.getString("title"), rs.getString("summary"),
                         empty(rs.getString("cover_image_url")), empty(rs.getString("author_display")),
-                        rs.getString("category_code"), rs.getString("category_name")),
+                        rs.getString("category_code"), rs.getString("category_name"), rs.getString("title_en"), rs.getString("summary_en")),
                 listArguments.toArray());
         return ApiResponse.ok(ContentPage.of(items, normalized.page(), normalized.size(), total), "articles");
     }
@@ -59,12 +61,12 @@ public class ArticleController {
     @GetMapping("/{slug}")
     public ApiResponse<Detail> detail(@PathVariable String slug) {
         List<Detail> details = jdbc.query(
-                "select a.slug,a.title,a.summary,a.content,a.cover_image_url,a.author_display,a.published_at,"
+                "select a.slug,a.title,a.summary,a.title_en,a.summary_en,a.content,a.cover_image_url,a.author_display,a.published_at,"
                         + "c.code category_code,c.name category_name from articles a join categories c on c.id=a.category_id "
                         + "where a.slug=? and a.status='PUBLISHED' and a.deleted_at is null and c.enabled=1",
                 (rs, rowNum) -> new Detail(rs.getString("slug"), rs.getString("title"), rs.getString("summary"),
                         rs.getString("content"), empty(rs.getString("cover_image_url")), empty(rs.getString("author_display")),
-                        new Category(rs.getString("category_code"), rs.getString("category_name"))), slug);
+                        new Category(rs.getString("category_code"), rs.getString("category_name")), rs.getString("title_en"), rs.getString("summary_en")), slug);
         if (details.isEmpty()) {
             throw new ResourceNotFoundException("文章不存在或未发布");
         }
@@ -80,13 +82,13 @@ public class ArticleController {
     }
 
     public record Card(String slug, String title, String summary, String coverImageUrl, String authorDisplay,
-                       String categoryCode, String categoryName) {
+                       String categoryCode, String categoryName, String titleEn, String summaryEn) {
     }
 
     public record Category(String code, String name) {
     }
 
     public record Detail(String slug, String title, String summary, String content, String coverImageUrl,
-                         String authorDisplay, Category category) {
+                         String authorDisplay, Category category, String titleEn, String summaryEn) {
     }
 }

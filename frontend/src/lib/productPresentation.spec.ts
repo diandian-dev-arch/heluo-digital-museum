@@ -27,4 +27,16 @@ describe('product presentation fallbacks', () => {
 
     expect(product.coverImageUrl).toBe('/uploads/custom-cup.webp')
   })
+
+  it('keeps validation products presentable when the API has no media fields', () => {
+    const product = resolveProductPresentation({
+      slug: 'a2-product-46519022',
+      name: '验收商品2 9022',
+      summary: '',
+      coverImageUrl: '',
+    })
+
+    expect(product.summary).toBeTruthy()
+    expect(product.coverImageUrl).toBe('/media/editorial/shop-object-studio.webp')
+  })
 })

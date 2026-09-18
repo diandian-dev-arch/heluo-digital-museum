@@ -1,6 +1,7 @@
 package com.heluo.museum.config;
 
 import java.util.List;
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,13 +23,15 @@ public class BootstrapDataInitializer implements CommandLineRunner {
     private final String username;
     private final String password;
     private final String email;
+    private final Clock clock;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    BootstrapDataInitializer(JdbcTemplate jdbc,
+    BootstrapDataInitializer(JdbcTemplate jdbc, Clock clock,
                              @Value("${museum.bootstrap.admin-username:}") String username,
                              @Value("${museum.bootstrap.admin-password:}") String password,
                              @Value("${museum.bootstrap.admin-email:}") String email) {
         this.jdbc = jdbc;
+        this.clock = clock;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -83,6 +86,29 @@ public class BootstrapDataInitializer implements CommandLineRunner {
     }
 
     private void createArtifacts(long adminId) {
+        insertArtifact(adminId, "BRONZE", "河洛青铜鼎（数字重制）", "heluo-bronze-ding",
+                "原件年代见来源馆藏记录", "青铜意象（数字材质）",
+                "/media/exhibits/heluo-bronze-ding-v5.4-cover.webp", "IMG-MODEL-HELUO-BRONZE-DING-V5-4",
+                "从三足、器腹与器表纹样近观一件鼎。基于 Cleveland Museum of Art 1962.281 的 CC0 模型进行项目数字重制。",
+                """
+                观察入口｜从三足走近鼎
+
+                先沿着三足看向器腹，再把视线移到口沿。支撑、容纳与边缘共同组成这件鼎的轮廓。在三维视图中转动器物，可以比较正面与侧面的足部间距，观察器腹如何由宽转窄，以及纹样怎样沿着曲面连续展开。这里的三个观察点来自眼前的数字形态，不是对原件用途、年代或出土地点的考证结论。试着选择一个细节，先用自己的语言描述，再与来源馆藏记录对照。
+
+                数字重制｜你看到的是什么
+
+                本展品是项目数字重制，不是河洛地区出土或本项目收藏的实物。基础网格来自 Cleveland Museum of Art 的 1962.281 Tripod (Ding) CC0 模型；项目调整了材质、法线、局部纹理与展示灯光，v5.5 还对正面中心浮雕作了局部校正。画面颜色和表面效果不应作为原件当前状况的依据。本版本不是馆方扫描数据或官方复原。
+
+                资料来源｜原件与数字版本
+
+                原件资料：Cleveland Museum of Art，1962.281 Tripod (Ding)。https://www.clevelandart.org/art/1962.281
+
+                基础模型发布方：Cleveland Museum of Art（Sketchfab @clevelandart）；许可：CC0 Public Domain。https://sketchfab.com/3d-models/1962281-tripod-ding-af15e7980f9b4f718094fc2e16205d89
+
+                留给观众的问题
+
+                正面看似对称的轮廓，换一个视角后有什么变化？请在三足、器腹和纹样中选择一处，再进入 3D 展项验证自己的观察。
+                """);
         insertArtifact(adminId, "BRONZE", "河洛纹青铜爵（概念展品）", "heluo-bronze-jue",
                 "青铜时代意象", "青铜", "/media/exhibits/bronze-jue-cover.webp", "IMG-EXHIBIT-BRONZE-JUE",
                 "一件以河洛纹样为灵感的原创概念器物，用轻量的故事入口带你观察器形与纹样。",
@@ -112,9 +138,10 @@ public class BootstrapDataInitializer implements CommandLineRunner {
         }
         long categoryId = jdbc.queryForObject("select id from categories where code=?", Long.class, categoryCode);
         jdbc.update("insert into artifacts(category_id,title,slug,period,material,cover_image_url,cover_asset_ref,summary,content,"
-                        + "status,published_at,created_by,updated_by) values(?,?,?,?,?,?,?,?,?,'PUBLISHED',current_timestamp(3),?,?)",
+                        + "status,published_at,created_by,updated_by,title_en,summary_en) values(?,?,?,?,?,?,?,?,?,'PUBLISHED',current_timestamp(3),?,?,?,?)",
                 categoryId, title, slug, period, material, coverUrl, assetRef, summary,
-                artifactEditorialContent(slug, content), adminId, adminId);
+                artifactEditorialContent(slug, content), adminId, adminId,
+                SeedContentEnglish.forSlug(slug).title(), SeedContentEnglish.forSlug(slug).summary());
     }
 
     private String artifactEditorialContent(String slug, String fallback) {
@@ -339,20 +366,24 @@ public class BootstrapDataInitializer implements CommandLineRunner {
         if (count("select count(*) from exhibits_3d where slug=?", slug) > 0) {
             return;
         }
-        long artifactId = jdbc.queryForObject("select id from artifacts where slug='heluo-bronze-jue'", Long.class);
-        jdbc.update("insert into exhibits_3d(artifact_id,title,slug,summary,description,model_url,model_source_ref,model_format,model_size_bytes,cover_image_url,cover_asset_ref,status,published_at,created_by,updated_by) "
-                        + "values(?,?,?,?,?,?,?,?,?,?,?,'PUBLISHED',current_timestamp(3),?,?)", artifactId,
+        long artifactId = jdbc.queryForObject("select id from artifacts where slug='heluo-bronze-ding'", Long.class);
+        jdbc.update("insert into exhibits_3d(artifact_id,title,slug,summary,description,model_url,model_source_ref,model_format,model_size_bytes,mobile_model_url,mobile_model_size_bytes,cover_image_url,cover_asset_ref,status,published_at,created_by,updated_by) "
+                        + "values(?,?,?,?,?,?,?,?,?,?,?,?,?,'PUBLISHED',current_timestamp(3),?,?)", artifactId,
                 "河洛青铜鼎 · 互动概念展项", slug,
                 "基于 Cleveland Museum of Art 1962.281 CC0 鼎模型，保留原始器型与纹样并重制真实古青铜 PBR 材质的数字展项，支持旋转、缩放和近观纹样。",
                 "本展项以 Cleveland Museum of Art 1962.281 Tripod (Ding) 的 CC0 模型为基础网格，保留原始器型与纹样，由项目完成法线、AO、粗糙度、金属度和局部氧化铜绿重制，并使用深色博物馆顶光展厅呈现。该版本不是馆方扫描数据或官方复原。请拖动模型旋转视角，使用滚轮或双指缩放；若设备不支持 WebGL，仍可查看封面图和文字说明。",
                 "/media/models/heluo-bronze-ding-v5.5.glb", "MODEL-HELUO-BRONZE-DING-V5-5-CMA-1962-281-CC0-CENTERLINE-FIX", "GLB", 5213372L,
+                "/media/models/heluo-bronze-ding-v5.5-mobile.glb", 837720L,
                 "/media/exhibits/heluo-bronze-ding-v5.4-cover.webp", "IMG-MODEL-HELUO-BRONZE-DING-V5-4", adminId, adminId);
+        jdbc.update("update exhibits_3d set display_no=?,source_credit=?,source_url=?,license_label=?,collection_location=? where slug=?",
+                "06", "Cleveland Museum of Art · 1962.281 CC0 reference", "https://www.clevelandart.org/art/1962.281",
+                "CC0 reference · project reconstruction", "河洛数字博物馆 · 深墨青铜厅", slug);
     }
 
     private void createAppointmentSlots(long adminId) {
-        insertSlot(adminId, LocalDate.now().plusDays(2), LocalTime.of(10, 0), LocalTime.of(11, 30), 30);
-        insertSlot(adminId, LocalDate.now().plusDays(2), LocalTime.of(14, 0), LocalTime.of(15, 30), 30);
-        insertSlot(adminId, LocalDate.now().plusDays(5), LocalTime.of(10, 0), LocalTime.of(11, 30), 40);
+        insertSlot(adminId, LocalDate.now(clock).plusDays(2), LocalTime.of(10, 0), LocalTime.of(11, 30), 30);
+        insertSlot(adminId, LocalDate.now(clock).plusDays(2), LocalTime.of(14, 0), LocalTime.of(15, 30), 30);
+        insertSlot(adminId, LocalDate.now(clock).plusDays(5), LocalTime.of(10, 0), LocalTime.of(11, 30), 40);
     }
 
     private void insertSlot(long adminId, LocalDate date, LocalTime start, LocalTime end, int capacity) {
@@ -381,9 +412,10 @@ public class BootstrapDataInitializer implements CommandLineRunner {
         }
         long categoryId = jdbc.queryForObject("select id from categories where code=?", Long.class, categoryCode);
         jdbc.update("insert into articles(category_id,title,slug,cover_image_url,cover_asset_ref,summary,content,author_display,"
-                        + "status,published_at,created_by,updated_by) values(?,?,?,?,?,?,?,?, 'PUBLISHED',current_timestamp(3),?,?)",
+                        + "status,published_at,created_by,updated_by,title_en,summary_en) values(?,?,?,?,?,?,?,?, 'PUBLISHED',current_timestamp(3),?,?,?,?)",
                 categoryId, title, slug, coverUrl, assetRef, summary,
-                articleEditorialContent(slug, content), author, adminId, adminId);
+                articleEditorialContent(slug, content), author, adminId, adminId,
+                SeedContentEnglish.forSlug(slug).title(), SeedContentEnglish.forSlug(slug).summary());
     }
 
     private long count(String sql, Object... values) {

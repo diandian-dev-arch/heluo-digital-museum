@@ -1,16 +1,17 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick, ref } from 'vue'
-import { activeMotionFrameSubscribers } from '../lib/motionFrame'
+import { activeMotionFrameSubscribers, subscribeMotionFrame } from '../lib/motionFrame'
 import PointerCursor from './PointerCursor.vue'
 
 const capabilityTier = ref<'full' | 'restrained' | 'static'>('full')
+const downgradeForFps = vi.fn<(fps: number) => 'full' | 'restrained' | 'static'>()
 
 vi.mock('../composables/usePointerCapabilities', () => ({
   usePointerCapabilities: () => ({
     tier: capabilityTier,
     reducedTransparency: ref(false),
-    downgradeForFps: vi.fn(),
+    downgradeForFps,
   }),
 }))
 
@@ -20,6 +21,8 @@ describe('PointerCursor', () => {
 
   beforeEach(() => {
     capabilityTier.value = 'full'
+    downgradeForFps.mockReset()
+    downgradeForFps.mockReturnValue('full')
     frameId = 0
     frames = new Map()
     vi.stubGlobal('requestAnimationFrame', (callback: FrameRequestCallback) => {
@@ -50,17 +53,17 @@ describe('PointerCursor', () => {
     window.dispatchEvent(event)
   }
 
-  it('resynchronizes the ring after leaving the viewport and hides for keyboard input', async () => {
+  it('resynchronizes the dot after leaving the viewport and hides for keyboard input', async () => {
     const wrapper = mount(PointerCursor, { attachTo: document.body })
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: 100, clientY: 120 }))
-    expect(wrapper.get('.pointer-cursor__ring').attributes('style') ?? '').not.toContain('translate3d')
+    expect(wrapper.get('.pointer-cursor__dot').attributes('style') ?? '').not.toContain('translate3d')
     runFrame(16)
-    expect(wrapper.get('.pointer-cursor__ring').attributes('style')).toContain('translate3d(100px, 120px, 0)')
+    expect(wrapper.get('.pointer-cursor__dot').attributes('style')).toContain('translate3d(100px, 120px, 0)')
 
     window.dispatchEvent(new MouseEvent('pointerout', { relatedTarget: null }))
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: 700, clientY: 420 }))
     runFrame(32)
-    expect(wrapper.get('.pointer-cursor__ring').attributes('style')).toContain('translate3d(700px, 420px, 0)')
+    expect(wrapper.get('.pointer-cursor__dot').attributes('style')).toContain('translate3d(700px, 420px, 0)')
 
     window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab' }))
     await nextTick()
@@ -70,7 +73,7 @@ describe('PointerCursor', () => {
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: 360, clientY: 260 }))
     await nextTick()
     runFrame(48)
-    expect(wrapper.get('.pointer-cursor__ring').attributes('style')).toContain('translate3d(360px, 260px, 0)')
+    expect(wrapper.get('.pointer-cursor__dot').attributes('style')).toContain('translate3d(360px, 260px, 0)')
     expect(document.documentElement.dataset.motionTier).toBe('full')
 
     wrapper.unmount()
@@ -145,17 +148,47 @@ describe('PointerCursor', () => {
     expect(activeMotionFrameSubscribers()).toBe(0)
   })
 
-  it('makes fast pointer travel visible without oversized ring scale', () => {
+  it('lets the immediate core pull a lagging halo that settles and releases its frame', () => {
     const wrapper = mount(PointerCursor, { attachTo: document.body })
     window.dispatchEvent(new MouseEvent('pointermove', { clientX: 100, clientY: 120 }))
     runFrame(16)
-    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 420, clientY: 120 }))
-    runFrame(32)
+    expect(wrapper.find('.pointer-cursor__halo').exists()).toBe(true)
+    expect(wrapper.findAll('.pointer-cursor__dot')).toHaveLength(1)
+    expect(wrapper.get('.pointer-cursor__dot').attributes('style')).toContain('translate3d(100px, 120px, 0)')
 
-    const style = wrapper.get('.pointer-cursor__ring').attributes('style') ?? ''
-    const scale = Number(style.match(/scale\(([\d.]+)\)/)?.[1] ?? 1)
-    expect(scale).toBeGreaterThan(1.08)
-    expect(scale).toBeLessThanOrEqual(1.12)
+    window.dispatchEvent(new MouseEvent('pointermove', { clientX: 320, clientY: 120 }))
+    runFrame(32)
+    const halo = wrapper.get('.pointer-cursor__halo')
+    expect(wrapper.get('.pointer-cursor__dot').attributes('style')).toContain('translate3d(320px, 120px, 0)')
+    expect(halo.attributes('style')).not.toContain('translate3d(320px, 120px, 0)')
+    expect(halo.attributes('data-pulling')).toBe('true')
+    const stretch = Number(halo.attributes('style')?.match(/scaleX\(([\d.]+)\)/)?.[1])
+    expect(stretch).toBeGreaterThan(1)
+    expect(stretch).toBeLessThanOrEqual(1.06)
+
+    for (let index = 3; index <= 80; index += 1) runFrame(index * 16)
+    expect(halo.attributes('data-pulling')).toBe('false')
+    expect(activeMotionFrameSubscribers()).toBe(0)
+    wrapper.unmount()
+  })
+
+  it('keeps one bounded probe alive to confirm consecutive critical FPS windows', () => {
+    downgradeForFps.mockReturnValueOnce('restrained').mockReturnValueOnce('static')
+    const stopAmbientFrame = subscribeMotionFrame(() => {})
+    const wrapper = mount(PointerCursor, { attachTo: document.body })
+
+    for (let index = 1; index <= 20; index += 1) {
+      window.dispatchEvent(new MouseEvent('pointermove', { clientX: 100 + index, clientY: 120 }))
+      runFrame(index * 50)
+    }
+    stopAmbientFrame()
+
+    expect(downgradeForFps).toHaveBeenCalledTimes(1)
+    expect(activeMotionFrameSubscribers()).toBe(1)
+    for (let index = 21; index <= 40; index += 1) runFrame(index * 50)
+    expect(downgradeForFps).toHaveBeenCalledTimes(2)
+    expect(activeMotionFrameSubscribers()).toBe(0)
+
     wrapper.unmount()
   })
 })

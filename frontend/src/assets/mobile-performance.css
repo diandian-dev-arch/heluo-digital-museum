@@ -1,0 +1,100 @@
+.corridor-home__hero-media {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 760px) {
+  .corridor-home__hero-media {
+    object-position: 56% center;
+  }
+
+  .corridor-home__next {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 420px;
+  }
+
+  .corridor-home__curation > :not(.corridor-home__curation-heading),
+  .collection-browse :is(.artifact-feature, .artifact-card),
+  .collection-theme-path,
+  .collection-reading {
+    content-visibility: auto;
+  }
+
+  .corridor-home__curation > :not(.corridor-home__curation-heading) {
+    contain-intrinsic-size: auto 190px;
+  }
+
+  .collection-browse :is(.artifact-feature, .artifact-card) {
+    contain-intrinsic-size: auto 320px;
+  }
+
+  .collection-theme-path,
+  .collection-reading {
+    contain-intrinsic-size: auto 680px;
+  }
+
+  .booking-page .slot-list > button {
+    contain: layout paint style;
+  }
+
+  /* Profile records can contain two 20-item histories. Preserve every item
+     for scrolling and keyboard focus, but keep off-screen cards out of the
+     first mobile layout/paint pass. */
+  .auth-page.profile-page .profile-record-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 180px;
+  }
+
+  .auth-page.profile-page .profile-records__sentinel {
+    display: block;
+    width: 100%;
+    height: 1px;
+  }
+}
+
+@media (pointer: coarse) {
+  :is(
+    [data-glass],
+    .bottom-sheet-scrim
+  ) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* Route-owned async style sheets are injected after this global sheet. Keep
+     the mobile compositing contract authoritative even when legacy selectors
+     such as `.auth-page .auth-panel` load later. */
+  html body #app :is([data-glass], .bottom-sheet-scrim, .fluid-button) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  html body #app [data-glass-controls] :is(input, textarea, select, .el-select__wrapper) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .site-header,
+.mobile-tab-bar {
+    background: color-mix(in oklch, var(--theme-surface) 96%, var(--theme-canvas)) !important;
+    box-shadow: inset 0 1px 0 color-mix(in oklch, var(--theme-text-strong) 7%, transparent), 0 8px 22px color-mix(in oklch, var(--theme-text-strong) 10%, transparent) !important;
+  }
+
+  .corridor-home__routes,
+.bottom-sheet {
+    box-shadow: inset 0 1px 0 color-mix(in oklch, white 12%, transparent), 0 14px 32px color-mix(in oklch, black 18%, transparent) !important;
+  }
+}
+
+html[data-performance-tier="constrained"] :is(
+  [data-glass],
+  .bottom-sheet-scrim
+) {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}

@@ -1,0 +1,94 @@
+/* Explore v3: research-first layout refinement. Scoped to this page only. */
+#app .collection-page {
+  --collection-max: 1320px;
+  padding-top: 24px;
+}
+
+#app .collection-page .collection-discovery {
+  min-height: 400px;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, .78fr);
+  align-items: center;
+  gap: 32px;
+  padding: 32px 24px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#app .collection-page .collection-discovery__copy h1 {
+  max-width: 100%;
+  margin-top: .7rem;
+  font-size: 48px;
+  line-height: 1.35;
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+#app .collection-page .collection-discovery__copy > p:not(.section-label) {
+  max-width: 42ch;
+  font-size: .98rem;
+}
+
+#app .collection-page .collection-discovery__search-card {
+  align-self: center;
+  max-width: 560px;
+  justify-self: end;
+  padding: 24px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#app .collection-page .collection-discovery__search { padding: 1rem 0 .45rem; }
+
+#app .collection-page .collection-filters {
+  position: sticky;
+  top: 74px;
+  z-index: 2;
+  margin-top: 24px;
+  margin-bottom: 32px;
+  border-radius: 6px;
+  background: var(--theme-surface-content);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+#app .collection-page .collection-browse .collection-section-header { margin-bottom: 1rem; }
+
+#app .collection-page .artifact-feature {
+  height: 440px;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+#app .collection-page .artifact-feature__body { padding: 32px; }
+#app .collection-page .artifact-feature h3 { font-size: 32px; }
+#app .collection-page .artifact-card__summary { max-width: 46ch; font-size: .95rem; }
+
+#app .collection-page .artifact-grid { gap: 24px; margin-top: 24px; }
+#app .collection-page .artifact-card { min-height: 214px; border-radius: 8px; box-shadow: none; }
+#app .collection-page .artifact-card__body { padding: 1.1rem; }
+
+@media (max-width: 760px) {
+  #app .collection-page { width: min(calc(100% - 1rem), var(--collection-max)); padding-top: .65rem; padding-bottom: 5.5rem; }
+  #app .collection-page .collection-discovery { min-height: 0; grid-template-columns: 1fr; align-items: start; gap: 1rem; padding: 1.1rem; border-radius: 0; }
+  #app .collection-page .collection-discovery__copy h1 { max-width: 100%; margin-bottom: .8rem; font-size: 30px; }
+  #app .collection-page .collection-discovery__search-card { width: 100%; max-width: none; justify-self: stretch; }
+  #app .collection-page .collection-filters { top: 64px; margin-top: 1rem; margin-bottom: 1.5rem; border-radius: 9px; }
+  #app .collection-page .artifact-feature { height: auto; border-radius: 8px; }
+  #app .collection-page .artifact-feature h3 { font-size: 24px; }
+  #app .collection-page .artifact-feature__body { padding: 1.15rem; }
+  #app .collection-page .artifact-grid { gap: .8rem; }
+  #app .collection-page .artifact-card { min-height: 188px; border-radius: 8px; }
+  #app .collection-page .artifact-card__body { padding: .9rem; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  #app .collection-page .collection-filters { backdrop-filter: none; background: var(--theme-surface-content); }
+}
+
+@media (forced-colors: active) {
+  #app .collection-page .collection-filters { position: static; backdrop-filter: none; }
+}

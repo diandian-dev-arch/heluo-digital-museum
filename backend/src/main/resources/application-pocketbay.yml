@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    url: "jdbc:h2:file:${POCKETBAY_DATA_DIR:/data}/museum;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE"
+    username: ${MUSEUM_DB_USERNAME:sa}
+    password: ${MUSEUM_DB_PASSWORD:}
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+
+server:
+  address: 0.0.0.0
+  port: ${PORT:8080}
+  compression:
+    enabled: true
+    min-response-size: 1024
+    mime-types: text/html,text/css,text/javascript,application/javascript,application/json,image/svg+xml

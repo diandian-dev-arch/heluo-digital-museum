@@ -1,18 +1,15 @@
 :root {
-  --cursor-dot-size: 6px;
-  --cursor-ring-size: 28px;
-  --cursor-ring-interactive-size: 38px;
-  --cursor-ring-action-size: 42px;
-  --cursor-dot-interactive-scale: .7;
-  --cursor-ring-interactive-scale: 1.357143;
-  --cursor-ring-action-scale: 1.5;
-  --cursor-dot-pressed-scale: .68;
-  --cursor-ring-pressed-scale: .84;
-  --cursor-ring-width: 1.25px;
-  --cursor-dot-color: var(--color-action-strong);
-  --cursor-ring-color: color-mix(in oklch, var(--color-action) 54%, var(--color-rule-strong));
-  --cursor-ring-action: var(--color-action);
-  --cursor-ring-danger: var(--color-danger);
+  --cursor-dot-size: 4px;
+  --cursor-halo-size: 30px;
+  --cursor-dot-pressed-scale: .72;
+  --cursor-dot-color: var(--theme-action-strong);
+  --cursor-dot-danger: var(--color-danger);
+  --cursor-halo-rim: color-mix(in oklch, var(--theme-action) 62%, transparent);
+  --cursor-halo-rim-pulling: oklch(.46 .075 171 / .96);
+  --cursor-halo-glint: oklch(.78 .13 86 / .98);
+  --cursor-halo-fill: transparent;
+  --cursor-halo-gold-glow: oklch(.72 .105 86 / .24);
+  --cursor-halo-jade-glow: oklch(.39 .065 171 / .18);
   --pointer-spotlight-radius: 240px;
   --pointer-spotlight-strength: .14;
   --pointer-perspective: 1200px;
@@ -20,6 +17,15 @@
   --motion-pointer-settle: 240ms;
   --ease-pointer: cubic-bezier(.16, 1, .3, 1);
   --z-cursor: 130;
+}
+
+html[data-theme="dark"] {
+  --cursor-halo-rim: color-mix(in oklch, var(--theme-action) 68%, transparent);
+  --cursor-halo-rim-pulling: oklch(.97 .022 166 / .98);
+  --cursor-halo-glint: oklch(.82 .13 86 / 1);
+  --cursor-halo-fill: transparent;
+  --cursor-halo-gold-glow: oklch(.75 .13 82 / .4);
+  --cursor-halo-jade-glow: oklch(.7 .075 171 / .2);
 }
 
 .pointer-cursor {
@@ -32,9 +38,7 @@
 }
 
 .pointer-cursor.is-visible { opacity: 1; }
-.pointer-cursor__dot,
-.pointer-cursor__ring {
-  --cursor-intent-scale: 1;
+.pointer-cursor__dot {
   --cursor-press-scale: 1;
   position: fixed;
   top: 0;
@@ -45,56 +49,101 @@
   pointer-events: none;
   will-change: transform;
 }
+.pointer-cursor__halo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--cursor-halo-size);
+  height: var(--cursor-halo-size);
+  translate: -50% -50%;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  background: none;
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: center;
+  transition: opacity 140ms var(--ease-pointer), border-color 180ms var(--ease-pointer), background 180ms var(--ease-pointer), box-shadow 180ms var(--ease-pointer);
+  will-change: transform, opacity;
+}
+.pointer-cursor__halo::after {
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: conic-gradient(from 18deg, transparent 0deg 325deg, var(--cursor-halo-glint) 338deg 358deg, transparent 360deg);
+  content: "";
+  opacity: .92;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
 .pointer-cursor__dot {
   width: var(--cursor-dot-size);
   height: var(--cursor-dot-size);
 }
-.pointer-cursor__ring {
-  width: var(--cursor-ring-size);
-  height: var(--cursor-ring-size);
-}
-.pointer-cursor__dot::before,
-.pointer-cursor__ring::before {
+.pointer-cursor__dot::before {
   position: absolute;
   inset: 0;
   border-radius: inherit;
   content: "";
-  transform: scale(var(--cursor-intent-scale)) scale(var(--cursor-press-scale));
-  transition: transform var(--motion-pointer-state) var(--ease-pointer), border-color var(--motion-pointer-state) var(--ease-pointer);
+  transform: scale(var(--cursor-press-scale));
+  transition: transform var(--motion-pointer-state) var(--ease-pointer), background-color var(--motion-pointer-state) var(--ease-pointer), box-shadow var(--motion-pointer-state) var(--ease-pointer);
   will-change: transform;
 }
 .pointer-cursor__dot::before {
   background: var(--cursor-dot-color);
-  box-shadow: 0 0 0 4px color-mix(in oklch, var(--cursor-dot-color) 10%, transparent), 0 0 12px color-mix(in oklch, var(--cursor-dot-color) 24%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklch, var(--cursor-dot-color) 16%, transparent);
 }
-.pointer-cursor__ring::before {
-  border: var(--cursor-ring-width) solid var(--cursor-ring-color);
-  background: color-mix(in oklch, var(--color-action) 4%, transparent);
-  box-shadow: 0 0 18px color-mix(in oklch, var(--color-action) 12%, transparent), inset 0 0 12px color-mix(in oklch, var(--color-action) 7%, transparent);
+.pointer-cursor[data-intent="link"] .pointer-cursor__dot::before {
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--cursor-dot-color) 10%, transparent);
 }
-.pointer-cursor[data-intent="link"] .pointer-cursor__dot,
-.pointer-cursor[data-intent="action"] .pointer-cursor__dot,
-.pointer-cursor[data-intent="danger"] .pointer-cursor__dot { --cursor-intent-scale: var(--cursor-dot-interactive-scale); }
-.pointer-cursor[data-intent="link"] .pointer-cursor__ring,
-.pointer-cursor[data-intent="danger"] .pointer-cursor__ring { --cursor-intent-scale: var(--cursor-ring-interactive-scale); }
-.pointer-cursor[data-intent="action"] .pointer-cursor__ring { --cursor-intent-scale: var(--cursor-ring-action-scale); }
-.pointer-cursor[data-intent="link"] .pointer-cursor__ring::before { background: color-mix(in oklch, var(--color-action) 8%, transparent); }
-.pointer-cursor[data-intent="action"] .pointer-cursor__ring::before {
-  border-color: var(--cursor-ring-action);
-  background: color-mix(in oklch, var(--cursor-ring-action) 14%, transparent);
-  box-shadow: 0 0 24px color-mix(in oklch, var(--cursor-ring-action) 22%, transparent), inset 0 0 14px color-mix(in oklch, var(--cursor-ring-action) 10%, transparent);
+.pointer-cursor[data-intent="action"] .pointer-cursor__dot::before {
+  box-shadow: 0 0 0 4px color-mix(in oklch, var(--cursor-dot-color) 12%, transparent);
 }
-.pointer-cursor[data-intent="danger"] .pointer-cursor__ring::before {
-  border-color: var(--cursor-ring-danger);
-  background: color-mix(in oklch, var(--cursor-ring-danger) 10%, transparent);
-  box-shadow: 0 0 22px color-mix(in oklch, var(--cursor-ring-danger) 18%, transparent);
+.pointer-cursor[data-intent="danger"] .pointer-cursor__dot::before {
+  background: var(--cursor-dot-danger);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--cursor-dot-danger) 13%, transparent);
+}
+html.pointer-motion-enabled:not([data-theme="dark"]):has(.pointer-dot-field[data-state="active"]) .pointer-cursor:not([data-intent="danger"]) .pointer-cursor__dot::before {
+  background: oklch(.66 .13 171);
+  box-shadow: 0 0 0 1px oklch(.3 .055 171 / .6);
+}
+html.pointer-motion-enabled[data-theme="dark"]:has(.pointer-dot-field[data-state="active"]) .pointer-cursor:not([data-intent="danger"]) .pointer-cursor__dot::before {
+  background: oklch(.97 .025 168);
+  box-shadow: 0 0 0 1px oklch(.7 .09 171 / .4);
+}
+html.pointer-motion-enabled:has(.pointer-dot-field[data-state="active"]) .pointer-cursor.is-visible .pointer-cursor__halo,
+.pointer-cursor:is([data-intent="link"], [data-intent="action"]) .pointer-cursor__halo {
+  border-color: var(--cursor-halo-rim);
+  background: var(--cursor-halo-fill);
+  box-shadow: none;
+  opacity: 1;
+}
+html.pointer-motion-enabled:has(.pointer-dot-field[data-state="active"]) .pointer-cursor.is-visible .pointer-cursor__halo[data-pulling="true"] {
+  border-color: var(--cursor-halo-rim-pulling);
+  box-shadow: none;
 }
 .pointer-cursor[data-intent="native"],
 .pointer-cursor[data-intent="media"] { opacity: 0; }
 .pointer-cursor.is-pressed .pointer-cursor__dot { --cursor-press-scale: var(--cursor-dot-pressed-scale); }
-.pointer-cursor.is-pressed .pointer-cursor__ring { --cursor-press-scale: var(--cursor-ring-pressed-scale); }
-.pointer-cursor.is-pressed .pointer-cursor__dot::before,
-.pointer-cursor.is-pressed .pointer-cursor__ring::before { transition-duration: 80ms; }
+.pointer-cursor.is-pressed .pointer-cursor__dot::before { transition-duration: 80ms; }
+
+.pointer-dot-field {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.pointer-dot-field[data-state="disabled"] { opacity: 0; }
+.pointer-dot-field[data-variant="heading"] {
+  mask-image: linear-gradient(90deg, transparent 8%, #000 45%, #000 85%, transparent);
+  transition: opacity 200ms var(--ease-pointer);
+}
+.pointer-dot-field[data-variant="heading"][data-state="idle"] { opacity: .55; }
 
 html.pointer-motion-enabled .app-shell { cursor: none; }
 html.pointer-motion-enabled .app-shell :where(p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, pre, code) { cursor: text; }
@@ -129,6 +178,7 @@ html[data-motion-tier="static"] [data-pointer-surface]::before { display: none !
 
 @media (pointer: coarse), (hover: none), (prefers-reduced-motion: reduce), (prefers-contrast: more), (forced-colors: active) {
   .pointer-cursor { display: none !important; }
+  .pointer-dot-field { display: none !important; }
   [data-pointer-surface] { transform: none !important; }
   [data-pointer-surface]::before { display: none !important; }
 }

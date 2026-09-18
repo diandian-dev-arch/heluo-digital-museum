@@ -18,6 +18,9 @@ if (!CHROME_PATH) throw new Error('未找到 Chrome。可通过 CHROME_PATH 指�
 
 const routes = [
   { name: 'home', path: '/', readySelector: '.corridor-home' },
+  { name: 'explore', path: '/explore', readySelector: '.collection-page #collection-title' },
+  { name: 'exhibits', path: '/exhibits', readySelector: '.exhibits-intro' },
+  { name: 'appointment', path: '/appointment', readySelector: '.appointment-heading' },
   { name: 'shop', path: '/shop', readySelector: '#shop-products' },
 ]
 const viewports = [
@@ -109,9 +112,30 @@ async function inspectPage(client, route, width, height) {
     deviceScaleFactor: 1,
     mobile: false,
   })
+  await client.send('Emulation.setEmulatedMedia', {
+    media: 'screen',
+    features: [
+      { name: 'prefers-reduced-motion', value: 'no-preference' },
+      { name: 'prefers-reduced-transparency', value: 'no-preference' },
+      { name: 'prefers-contrast', value: 'no-preference' },
+      { name: 'forced-colors', value: 'none' },
+    ],
+  })
   await client.send('Page.navigate', { url: `${BASE_URL}${route.path}` })
   await waitForReady(client, route.readySelector)
   await sleep(250)
+
+  const dotFieldTarget = await evaluate(client, `(() => {
+    const canvas = document.querySelector('[data-pointer-dot-field]')
+    const host = canvas?.parentElement
+    if (!canvas || !host) return null
+    const rect = host.getBoundingClientRect()
+    return { x: rect.left + rect.width * .52, y: rect.top + rect.height * .52 }
+  })()`)
+  if (dotFieldTarget) {
+    await client.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: dotFieldTarget.x, y: dotFieldTarget.y, button: 'none', pointerType: 'mouse' })
+    await sleep(180)
+  }
 
   if (route.name === 'shop') {
     const bounds = await evaluate(client, `(() => {
@@ -136,9 +160,23 @@ async function inspectPage(client, route, width, height) {
       const rect = element.getBoundingClientRect()
       return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < innerHeight
     })
-    const clippedControls = controls.filter((element) => element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1)
+    const clippedControls = controls.filter((element) => {
+      const hasOverflow = element.scrollWidth > element.clientWidth + 1 || element.scrollHeight > element.clientHeight + 1
+      if (!hasOverflow) return false
+      // Galaxy buttons deliberately keep their decorative fill outside the
+      // viewport while it translates. Measure the readable label instead of
+      // treating that hidden decorative layer as clipped button text.
+      if (element.matches('[data-galaxy-button]')) {
+        const label = element.querySelector('.fluid-button__label')
+        return !label || label.getBoundingClientRect().height > element.clientHeight + 1
+      }
+      return true
+    })
     const studio = document.querySelector('.shop-object-studio-surface')
     const studioStyle = studio ? getComputedStyle(studio) : null
+    const dotFields = [...document.querySelectorAll('[data-pointer-dot-field]')]
+    const dotField = dotFields[0]
+    const dotFieldStyle = dotField ? getComputedStyle(dotField) : null
     return {
       viewport: { width: innerWidth, height: innerHeight },
       motionTier: document.documentElement.dataset.motionTier ?? null,
@@ -153,6 +191,14 @@ async function inspectPage(client, route, width, height) {
       surfaceCount: document.querySelectorAll('[data-pointer-surface]').length,
       activeSurfaceCount: document.querySelectorAll('[data-pointer-active]').length,
       cursorCount: document.querySelectorAll('.pointer-cursor').length,
+      dotField: dotField ? {
+        count: dotFields.length,
+        state: dotField.getAttribute('data-state'),
+        display: dotFieldStyle.display,
+        pointerEvents: dotFieldStyle.pointerEvents,
+        width: dotField.width,
+        height: dotField.height,
+      } : { count: 0 },
       studio: studio ? {
         display: studioStyle.display,
         inlineTransform: studio.style.transform,
@@ -207,15 +253,22 @@ try {
   const states = Object.values(results).flatMap((routeResult) => Object.values(routeResult))
   const homeStates = Object.values(results.home)
   const shopStates = Object.values(results.shop)
+  const sceneStates = [...homeStates, ...Object.values(results.exhibits), ...Object.values(results.explore), ...Object.values(results.appointment)]
   const zeroSpatialTransform = (state) => !state.studio
     || state.studio.display === 'none'
+    || (state.motionTier !== 'full' && ['', 'none'].includes(state.studio.inlineTransform))
     || /^perspective\(.+\) rotateX\(0\.000deg\) rotateY\(0\.000deg\) translate3d\(0, 0\.000px, 0\)$/.test(state.studio.inlineTransform)
 
   const gates = {
     noHorizontalOverflow: states.every((state) => state.horizontalOverflow <= 1),
     noClippedControls: states.every((state) => state.clippedControls.length === 0),
+    approvedHeroesHaveOneDotField: sceneStates.every((state) => state.dotField.count === 1),
+    dotFieldsAreNonBlocking: sceneStates.every((state) => state.dotField.pointerEvents === 'none'),
+    dotFieldsHavePixels: sceneStates.every((state) => state.dotField.width > 0 && state.dotField.height > 0),
+    dotFieldsActivateInFullTier: sceneStates.every((state) => state.motionTier !== 'full' || state.dotField.state === 'active'),
     homeUsesOnlyL1: homeStates.every((state) => state.surfaceCount === 0),
-    shopStudioSpotlightActivates: shopStates.every((state) => state.studio?.display === 'none' || state.studio?.active),
+    shopStudioSpotlightActivates: shopStates.every((state) => state.studio?.display === 'none'
+      || (state.motionTier === 'full' ? state.studio?.active : !state.studio?.active)),
     shopStudioHasNoSpatialMotion: shopStates.every(zeroSpatialTransform),
   }
   const summary = {

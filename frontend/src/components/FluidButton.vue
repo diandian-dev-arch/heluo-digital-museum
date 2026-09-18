@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { motion } from 'motion-v'
-
 withDefaults(defineProps<{
   type?: 'button' | 'submit' | 'reset'
   disabled?: boolean
@@ -13,17 +11,18 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <motion.button
+  <button
     :type="type"
     :disabled="disabled || loading"
     :aria-busy="loading"
     :aria-invalid="state === 'error' || undefined"
     :data-cursor="variant === 'danger' ? 'danger' : variant === 'primary' ? 'action' : 'link'"
     :data-state="loading ? 'loading' : state"
+    :data-tactile-variant="variant"
+    data-galaxy-button
+    data-tactile-button
     :data-glass="variant === 'secondary' || variant === 'ghost' ? 'compact' : undefined"
     :data-glass-interactive="variant === 'secondary' || variant === 'ghost' ? '' : undefined"
     :class="['fluid-button', `fluid-button--${variant}`, `fluid-button--${size}`, { 'fluid-button--block': block }]"
-    :while-press="{ scale: 0.98, y: 1 }"
-    :transition="{ type: 'spring', stiffness: 500, damping: 42, mass: 0.9 }"
-  ><span v-if="loading" class="fluid-button__spinner" aria-hidden="true"></span><span v-else-if="state === 'success'" aria-hidden="true">✓</span><span v-else-if="state === 'error'" aria-hidden="true">!</span><span class="fluid-button__label"><slot /></span></motion.button>
+  ><span class="fluid-button__fill" aria-hidden="true"></span><span v-if="loading" class="fluid-button__spinner" aria-hidden="true"></span><span v-else-if="state === 'success'" aria-hidden="true">✓</span><span v-else-if="state === 'error'" aria-hidden="true">!</span><span class="fluid-button__label"><slot /></span></button>
 </template>

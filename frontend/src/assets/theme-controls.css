@@ -1,0 +1,297 @@
+/* Shared theme defaults. Page layouts may position controls, but should not
+   redefine their palette, focus, disabled, or semantic-state treatment. */
+
+/* Input boundaries are functional marks, separate from quiet panel rules. */
+html[data-theme] {
+  --theme-field-boundary: oklch(55% .028 164);
+  --theme-field-focus: oklch(43% .07 164);
+}
+html[data-theme="dark"] {
+  --theme-field-boundary: oklch(69% .024 160);
+  --theme-field-focus: oklch(82% .075 78);
+}
+html[data-theme] #app :is(.task-auth-page .auth-panel, .profile-page .profile-account-panel, .admin-workspace) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not(.el-select__input), textarea, select, .el-select__wrapper),
+html[data-theme] :is(#app, body) .appointment-contact-fields .appointment-field :is(input, textarea),
+html[data-theme] :is(.appointment-workbench, .appointment-refined-sheet) .appointment-quantity {
+  border-color: var(--theme-field-boundary) !important;
+}
+html[data-theme] #app :is(.task-auth-page .auth-panel, .profile-page .profile-account-panel, .admin-workspace) :is(input:not(.el-select__input), textarea, select, .el-select__wrapper):focus-within,
+html[data-theme] :is(#app, body) .appointment-contact-fields .appointment-field :is(input, textarea):focus-visible {
+  border-color: var(--theme-field-focus) !important;
+  outline: 2px solid var(--theme-field-focus) !important;
+  outline-offset: 2px;
+}
+html[data-theme] :is(#app, body) .appointment-contact-fields .appointment-field [aria-invalid="true"] { border-color: var(--theme-danger) !important; }
+@media (forced-colors: active) {
+  html[data-theme] {
+    --theme-field-boundary: CanvasText;
+    --theme-field-focus: Highlight;
+  }
+}
+
+html[data-theme="dark"] {
+  background: var(--theme-canvas);
+  background-color: var(--theme-canvas) !important;
+}
+
+.fluid-button,
+.admin-action-button {
+  min-height: var(--theme-control-min);
+  border: 1px solid var(--theme-primary-surface);
+  border-radius: var(--theme-control-radius);
+  background: var(--theme-primary-surface);
+  color: var(--theme-primary-text);
+  box-shadow: var(--theme-control-shadow);
+  letter-spacing: 0;
+}
+
+.fluid-button:hover:not(:disabled),
+.admin-action-button--primary:hover:not(:disabled) {
+  border-color: var(--theme-primary-surface-hover);
+  background: var(--theme-primary-surface-hover);
+  color: var(--theme-primary-text);
+  box-shadow: var(--theme-control-shadow-hover);
+}
+
+.fluid-button--secondary,
+.fluid-button--ghost,
+.admin-action-button--secondary {
+  border-color: var(--theme-border-strong);
+  background: var(--theme-secondary-surface);
+  color: var(--theme-secondary-text);
+  box-shadow: none;
+}
+
+.fluid-button--secondary:hover:not(:disabled),
+.fluid-button--ghost:hover:not(:disabled),
+.admin-action-button--secondary:hover:not(:disabled) {
+  border-color: var(--theme-action);
+  background: var(--theme-secondary-surface-hover);
+  color: var(--theme-action);
+  box-shadow: var(--theme-control-shadow);
+}
+
+.fluid-button--ghost { border-color: transparent; background: transparent; }
+
+.fluid-button--danger,
+.admin-action-button--danger {
+  border-color: color-mix(in oklch, var(--theme-danger) 54%, var(--theme-border));
+  background: var(--theme-danger-surface);
+  color: var(--theme-danger);
+  box-shadow: none;
+}
+
+.fluid-button--danger:hover:not(:disabled),
+.admin-action-button--danger:hover:not(:disabled) {
+  border-color: var(--theme-danger);
+  background: var(--theme-danger-surface-hover);
+  color: var(--theme-danger);
+}
+
+.fluid-button[data-state="success"] {
+  border-color: var(--theme-success);
+  background: var(--theme-success);
+  color: var(--theme-primary-text);
+}
+
+.fluid-button[data-state="error"] {
+  border-color: var(--theme-danger);
+  background: var(--theme-danger);
+  color: var(--theme-primary-text);
+}
+
+.fluid-button:focus-visible,
+.admin-action-button:focus-visible,
+.museum-search-field__clear:focus-visible,
+.museum-search-field__submit:focus-visible {
+  outline: 2px solid var(--theme-focus);
+  outline-offset: 3px;
+  box-shadow: var(--theme-focus-ring);
+}
+
+.fluid-button:disabled,
+.admin-action-button:disabled {
+  box-shadow: none;
+  opacity: var(--theme-disabled-opacity);
+}
+
+.admin-actions .admin-action-button { min-height: var(--theme-control-min); }
+
+.inline-status {
+  border-color: var(--theme-border-strong);
+  background: var(--theme-info-surface);
+  color: var(--theme-text);
+}
+
+.inline-status i { background: var(--theme-info); color: var(--theme-primary-text); }
+.inline-status--success { border-color: color-mix(in oklch, var(--theme-success) 48%, var(--theme-border)); background: var(--theme-success-surface); }
+.inline-status--success i { background: var(--theme-success); }
+.inline-status--warning { border-color: color-mix(in oklch, var(--theme-warning) 52%, var(--theme-border)); background: var(--theme-warning-surface); }
+.inline-status--warning i { background: var(--theme-warning); color: var(--theme-surface-canvas); }
+.inline-status--error { border-color: color-mix(in oklch, var(--theme-danger) 48%, var(--theme-border)); background: var(--theme-danger-surface); }
+.inline-status--error i { background: var(--theme-danger); }
+
+.status-badge {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: .42rem;
+  padding: .3rem .55rem;
+  border: 1px solid var(--theme-border);
+  border-radius: 6px;
+  background: var(--theme-surface-control);
+  color: var(--theme-text-muted);
+  font: 650 .68rem/1.2 var(--font-body);
+}
+
+.status-badge i { width: 6px; height: 6px; flex: 0 0 auto; border-radius: 50%; background: currentColor; }
+.status-badge--positive { border-color: color-mix(in oklch, var(--theme-success) 40%, var(--theme-border)); background: var(--theme-success-surface); color: var(--theme-success); }
+.status-badge--warning { border-color: color-mix(in oklch, var(--theme-warning) 44%, var(--theme-border)); background: var(--theme-warning-surface); color: var(--theme-warning); }
+.status-badge--negative { border-color: color-mix(in oklch, var(--theme-danger) 40%, var(--theme-border)); background: var(--theme-danger-surface); color: var(--theme-danger); }
+
+.glass-checkbox { color: var(--theme-text-strong); }
+.glass-checkbox__box {
+  border-color: var(--theme-border-strong);
+  background: var(--theme-surface-control);
+  color: var(--theme-primary-text);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--theme-text-strong) 7%, transparent);
+}
+.glass-checkbox:hover:not(.glass-checkbox--disabled) .glass-checkbox__box { border-color: var(--theme-action); background: var(--theme-surface-control-hover); }
+.glass-checkbox input:checked + .glass-checkbox__box { border-color: var(--theme-primary-surface); background: var(--theme-primary-surface); }
+.glass-checkbox input:focus-visible + .glass-checkbox__box { outline: 2px solid var(--theme-focus); outline-offset: 3px; box-shadow: var(--theme-focus-ring); }
+
+.museum-search-field__label { color: var(--theme-text-muted); }
+.museum-search-field__control {
+  border-color: var(--theme-border-strong);
+  background: var(--theme-surface-control);
+  color: var(--theme-text-strong);
+  box-shadow: none;
+}
+.museum-search-field__control:hover { border-color: var(--theme-border-strong); background: var(--theme-surface-control-hover); }
+.museum-search-field__control:focus-within { border-color: var(--theme-focus); background: var(--theme-surface-control-active); box-shadow: var(--theme-focus-ring); }
+.museum-search-field input { color: var(--theme-text-strong); }
+.museum-search-field input::placeholder { color: var(--theme-text-muted); opacity: 1; }
+.museum-search-field__clear { color: var(--theme-text-muted); }
+.museum-search-field__submit { border-color: var(--theme-primary-surface); background: var(--theme-primary-surface); color: var(--theme-primary-text); }
+.museum-search-field__submit:hover:not(:disabled) { border-color: var(--theme-primary-surface-hover); background: var(--theme-primary-surface-hover); }
+.museum-search-field__error { color: var(--theme-danger); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fluid-button,
+  .admin-action-button,
+  .museum-search-field__control,
+  .glass-checkbox__box { transition-duration: 0ms; }
+}
+
+@media (prefers-contrast: more), (forced-colors: active) {
+  .fluid-button,
+  .admin-action-button,
+  .inline-status,
+  .status-badge,
+  .glass-checkbox__box,
+  .museum-search-field__control,
+  .museum-search-field__submit { box-shadow: none; }
+}
+
+@media (forced-colors: active) {
+  .fluid-button,
+  .admin-action-button,
+  .museum-search-field__submit { border-color: ButtonText; background: ButtonFace; color: ButtonText; }
+  .fluid-button:focus-visible,
+  .admin-action-button:focus-visible,
+  .museum-search-field__clear:focus-visible,
+  .museum-search-field__submit:focus-visible,
+  .glass-checkbox input:focus-visible + .glass-checkbox__box { outline-color: Highlight; }
+}
+
+/* Shared control ownership outranks legacy page materials without adding a new stylesheet. */
+html[data-theme] #app .app-shell :where(h1, h2, h3, p, span, small, strong, a, button, input, select, textarea, label) { letter-spacing: 0 !important; }
+html[data-theme] #app #main-content :is(button, input, select, textarea, label, .status-badge) { font-family: var(--font-body) !important; font-style: normal !important; }
+html[data-theme] #app #main-content :is(input, select, textarea) { font-size: 16px; }
+html[data-theme] #app #main-content :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
+  border-color: var(--theme-field-boundary) !important;
+  border-radius: 6px !important;
+  background: var(--theme-surface-content) !important;
+  color: var(--theme-text-strong) !important;
+  box-shadow: none !important;
+}
+html[data-theme] #app #main-content :is(input, textarea)::placeholder { color: var(--theme-text-muted) !important; opacity: 1; }
+html[data-theme] #app #main-content :is(input, select, textarea):focus-visible { outline: 2px solid var(--theme-focus); outline-offset: 2px; }
+html[data-theme] #app #main-content .museum-search-field input { border: 0 !important; background: transparent !important; outline: 0; }
+html[data-theme] #app #main-content :is(.fluid-button, .admin-action-button, .museum-search-field__submit) {
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  min-height: 44px;
+}
+html[data-theme] #app #main-content :is(.fluid-button--primary, .admin-action-button--primary, .museum-search-field__submit) {
+  background: var(--theme-primary-surface) !important;
+  color: var(--theme-primary-text) !important;
+  border-color: var(--theme-primary-surface) !important;
+}
+html[data-theme] #app #main-content :is(.fluid-button--secondary, .fluid-button--ghost, .admin-action-button--secondary) {
+  background: var(--theme-surface-content) !important;
+  color: var(--theme-text-strong) !important;
+  border-color: var(--theme-border-strong) !important;
+}
+/* Keep danger text and surface paired when legacy route hover/focus rules load. */
+html[data-theme] #app #main-content :is(.fluid-button--danger, .admin-action-button--danger) {
+  background: var(--theme-danger-surface) !important;
+  color: var(--theme-danger) !important;
+  border-color: var(--theme-danger) !important;
+}
+html[data-theme="dark"] #app #main-content :is(.fluid-button--danger, .admin-action-button--danger) {
+  background: var(--theme-surface-content) !important;
+}
+html[data-theme] #app #main-content :is(.fluid-button, .admin-action-button, .museum-search-field__submit):hover:not(:disabled) { filter: brightness(.96); }
+html[data-theme] #app #main-content :is(button, a, input, select, textarea):focus-visible { outline: 2px solid var(--theme-focus) !important; outline-offset: 3px; }
+html[data-theme] #app #main-content :is(input, select, textarea):focus-visible { outline-color: var(--theme-field-focus) !important; }
+html[data-theme] #app #main-content :is(input, select, textarea)[aria-invalid="true"] { border-color: var(--theme-danger) !important; }
+html[data-theme] #app #main-content :is(.appointment-page, .shop-page, .auth-page, .profile-page) .pointer-dot-field { display: none; }
+html[data-theme] #app #main-content :is(.admin-create, .admin-records, .dashboard-summary, .admin-operations-main, .product-copy) {
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+}
+html[data-theme] #app #main-content :is(.admin-create, .admin-records, .admin-operations-main, .product-copy) { border: 0 !important; }
+html[data-theme] #app #main-content :is(.admin-create, .admin-records, .admin-operations-main, .product-copy)::before,
+html[data-theme] #app #main-content :is(.admin-create, .admin-records, .admin-operations-main, .product-copy)::after { display: none; }
+html[data-theme] #app #main-content .admin-workspace h1 { font: 650 28px/1.4 var(--font-body) !important; }
+html[data-theme] #app #main-content .admin-workspace :is(h2, h3) { font-family: var(--font-body) !important; }
+html[data-theme] #app #main-content .admin-page-header { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; }
+html[data-theme] #app #main-content :is(.auth-panel, .profile-form) h1 { font: 650 30px/1.4 var(--font-body) !important; }
+html[data-theme] #app #main-content .detail-header h1 { font-size: 42px; line-height: 1.4; }
+html[data-theme] #app #main-content .detail-content { max-width: 70ch; font: 400 17px/1.95 var(--font-body); }
+html[data-theme] #app #main-content .detail-content h2 { scroll-margin-top: 100px; font-size: 26px; }
+html[data-theme] #app #main-content .detail-toc { display: grid; gap: 8px; margin-block: 16px; }
+html[data-theme] #app #main-content .detail-toc a { padding-block: 10px; color: var(--theme-action-strong); font: 500 14px/1.6 var(--font-body); }
+html[data-theme] #app #main-content .detail-source { padding-top: 20px; border-top: 1px solid var(--theme-border); font: 400 13px/1.8 var(--font-body); color: var(--theme-text-muted); }
+.detail-image-fallback { display: grid; place-items: center; min-height: 240px; background: var(--theme-canvas-raised); }
+.password-field { position: relative; display: block; }
+html[data-theme] #app #main-content .password-field input { width: 100%; padding-right: 52px; }
+html[data-theme] #app #main-content .password-toggle {
+  position: absolute; inset: 1px 1px 1px auto; display: grid; place-items: center;
+  width: 44px; min-height: 44px; padding: 10px; border: 0; background: transparent; color: var(--theme-text-strong); box-shadow: none;
+}
+.password-toggle svg { width: 20px; height: 20px; }
+.form-field-error { display: block; margin-top: 6px; font: 500 14px/1.5 var(--font-body); color: var(--theme-danger); }
+.profile-record-pagination { display: flex; align-items: center; justify-content: center; gap: 16px; padding-block: 20px; }
+.profile-record-pagination button { display: grid; place-items: center; width: 44px; height: 44px; }
+.profile-record-pagination svg { width: 20px; height: 20px; }
+.not-found-page { display: grid; grid-template-columns: minmax(0, 360px) minmax(0, 1fr); gap: 48px; align-items: center; width: min(calc(100% - 48px), 1000px); margin: 64px auto; }
+.not-found-page img { width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; border-radius: 8px; }
+.not-found-page h1 { font-size: 36px; line-height: 1.4; }
+.not-found-page .section-label { color: var(--theme-text-strong); font-size: 14px; }
+.not-found-page nav { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 24px; }
+html[data-theme] #app #main-content .corridor-home__title-block h1 { font-size: 64px !important; line-height: 1.16; }
+@media (max-width: 760px) {
+  html[data-theme] #app #main-content .corridor-home__title-block h1 { font-size: 40px !important; }
+  html[data-theme] #app #main-content .detail-header h1 { font-size: 28px; }
+  html[data-theme] #app #main-content .detail-content { font-size: 16px; }
+  html[data-theme] #app #main-content .detail-content h2 { font-size: 22px; }
+  .not-found-page { grid-template-columns: minmax(0, 1fr); gap: 24px; margin: 32px auto 100px; }
+  .not-found-page img { max-height: 230px; }
+  .not-found-page h1 { font-size: 28px; }
+}
+@media (forced-colors: active) {
+  html[data-theme] #app #main-content :is(.fluid-button, .admin-action-button, .museum-search-field__submit) { background: ButtonFace !important; color: ButtonText !important; border-color: ButtonText !important; }
+}

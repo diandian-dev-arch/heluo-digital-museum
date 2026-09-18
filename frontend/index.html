@@ -10,6 +10,17 @@
   </head>
   <body>
     <div id="app"></div>
+    <script>
+      (() => {
+        try {
+          const theme = window.localStorage.getItem('heluo.theme') === 'dark' ? 'dark' : 'light'
+          document.documentElement.dataset.theme = theme
+          document.documentElement.style.colorScheme = theme
+          const meta = document.querySelector('meta[name="theme-color"]')
+          if (meta) meta.setAttribute('content', theme === 'dark' ? '#12110f' : '#f7faf8')
+        } catch (_) {}
+      })()
+    </script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -2,11 +2,11 @@ package com.heluo.museum.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heluo.museum.common.error.ApiError;
+import com.heluo.museum.common.web.RequestCorrelationFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -31,8 +31,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
                       String code, String message, HttpServletRequest request) throws IOException {
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        String requestId = request.getHeader("X-Request-Id");
         objectMapper.writeValue(response.getOutputStream(),
-                new ApiError(code, message, List.of(), requestId == null ? UUID.randomUUID().toString() : requestId));
+                new ApiError(code, message, List.of(), RequestCorrelationFilter.currentId()));
     }
 }

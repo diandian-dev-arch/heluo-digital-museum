@@ -5,6 +5,9 @@ spring:
     url: ${MUSEUM_DB_URL:jdbc:mysql://localhost:3306/museum?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC}
     username: ${MUSEUM_DB_USERNAME:museum}
     password: ${MUSEUM_DB_PASSWORD:change-me}
+    hikari:
+      connection-timeout: 5000
+      validation-timeout: 2000
   jpa:
     open-in-view: false
     hibernate:
@@ -20,6 +23,12 @@ spring:
     properties:
       mail.smtp.auth: ${MUSEUM_SMTP_AUTH:false}
       mail.smtp.starttls.enable: ${MUSEUM_SMTP_STARTTLS:false}
+      mail.smtp.connectiontimeout: 5000
+      mail.smtp.timeout: 5000
+      mail.smtp.writetimeout: 5000
+logging:
+  pattern:
+    level: '%5p [requestId:%X{requestId}]'
 management:
   endpoints:
     web:

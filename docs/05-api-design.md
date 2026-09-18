@@ -1,7 +1,20 @@
 # REST API 契约
 
-- 文档版本：v1.1
-- 最后更新：2026-08-03
+## 2026-09-17 双语内容检索契约
+
+- `GET /search` 以及 `GET /artifacts`、`GET /articles` 的 `keyword` 同时匹配中文标题/摘要和英文标题/摘要；英文大小写不敏感，首尾空白被去除，`%`、`_`、`!` 按字面匹配。连续短语不拆词，不提供同义词或语义搜索。
+- 搜索必传 keyword；两个内容列表可以省略以浏览全部。显式空白或去空格后超过 100 个字符返回 422。type、page、size、公开可见性和排序保持原约定。
+- 文物/文章公开列表、详情及搜索结果增加 `titleEn: string | null`、`summaryEn: string | null`；现有 `title/summary` 继续返回中文，不随语言切换。前端按语言逐字段选择，缺译回退中文。
+- 后台文物/文章创建、列表、详情、PATCH 同步支持 titleEn（最多300字符）和 summaryEn（最多1000字符）。创建时可省略；PATCH 省略不修改，显式 null 或空白清除，非文本值及超长字段返回422。管理员权限保持不变。
+
+## 2026-09-10 公开发现文档
+
+`GET/HEAD /robots.txt` 返回 UTF-8 文本，`GET/HEAD /sitemap.xml` 返回 UTF-8 XML；两者允许匿名访问，非 GET/HEAD 不获得额外权限。URL 基址取已有 `museum.mail.public-base-url` / `MUSEUM_PUBLIC_BASE_URL`，启动时验证为无路径、查询、片段或凭据的 HTTP(S) origin。
+
+站点地图实时包含五个公开入口及公开 API 可见的文物、文章、展项详情；不收录登录、个人中心和后台。按公开内容状态/软删除/分类条件及展项关联条件过滤，Cache-Control 为 no-store，不返回数据库内部字段。Compose Nginx 与 PocketBay Spring Boot 共用此实现；错误不得以旧静态索引伪装成功。
+
+- 文档版本：v1.3
+- 最后更新：2026-09-08
 - 数据依据：[数据模型与权限](04-data-and-permissions.md)、[完整 ER 图](07-er-diagram.md)、[需求追踪表](01-requirements-traceability.md)。
 - 实现依据：后端以 OpenAPI 生成最终机器可读接口文档；本文件是编码前的产品/API 契约。
 
@@ -21,6 +34,17 @@ Content-Type: application/json; charset=utf-8
 - 前端不得传入或信任 `userId`、角色、管理员标记、商品金额、库存或状态等服务端决定的字段。
 - 列表接口使用 `page`（从 1 开始）和 `size`（默认 20，最大 100）；无分页的下拉选项接口会明确说明。
 - `keyword` 只搜索第一版已确认的标题和摘要；服务端会去除首尾空格，空关键词返回 422。
+
+### 1.1.1 就绪与异常恢复（2026-09-08）
+
+- `GET /api/v1/health` 保持原有存活语义，返回 `data.status=UP`，不访问数据库。
+- 新增公开只读 `GET /api/v1/ready`：数据库 `select 1` 成功返回 200 与 `data.status=UP`，失败返回 503、`code=SERVICE_UNAVAILABLE`、`data.status=DOWN`。响应为 `Cache-Control: no-store`；数据库池连接等待最多 5 秒，查询超时 2 秒。
+- 每个 `/api/` 请求由服务端生成 UUID；响应 `X-Request-Id`、JSON `requestId` 与日志 MDC 使用同一编号。忽略来访请求自行提供的编号；日志不记录查询参数、请求体或令牌。
+- 401 表示身份失效，前端合并为一次登录恢复；403 表示权限不足且保留会话。认证期间数据库不可用返回 503，临时网络故障不会清除本地凭据。
+- 请求工具默认 15 秒超时，支持可选 `AbortSignal/timeoutMs`；取消、超时和断网分别为前端 `REQUEST_ABORTED/REQUEST_TIMEOUT/NETWORK_ERROR`。写请求不自动重放，预约、下单和模拟支付由原幂等键恢复。
+- PocketBay Java 静态入口对未知公开页面路径返回 404 并转发 Vue 入口，显示站内恢复导航；`/api`、`/actuator`、`/assets`、`/media` 与带扩展名资源保持原鉴权/资源行为，不进入页面回退。
+- 已过期订单支付返回 409 `ORDER_PAYMENT_EXPIRED` 前提交取消及库存释放；重复模拟支付不重复扣减库存。密码重置令牌在单一事务内原子消费，并发最多成功一次。
+- 预约日期和取消截止判断统一使用 `Asia/Shanghai` 的业务时钟；接口中的绝对时间仍使用 ISO 8601。邮件在业务事务提交后进入有界后台队列，失败不回滚业务结果。
 
 ### 1.2 响应信封
 
@@ -108,10 +132,20 @@ Content-Type: application/json; charset=utf-8
 | GET | `/articles` | 公开 | 同文物列表 | 已发布且未删除的文章卡片。 |
 | GET | `/articles/{slug}` | 公开 | `slug` | 文章详情、封面、分类和正文。 |
 | GET | `/exhibits` | 公开 | `page`、`size`、`artifactSlug?` | 可公开展示的 3D 展项卡片。 |
-| GET | `/exhibits/{slug}` | 公开 | `slug` | 说明、封面、`modelUrl`、模型格式与大小。 |
+| GET | `/exhibits/{slug}` | 公开 | `slug` | 说明、封面、默认模型字段，以及可空的 `mobileModelUrl`、`mobileModelSizeBytes`。 |
 | GET | `/search` | 公开 | `keyword`、`type=all|artifact|article`、`page`、`size` | 标题/摘要匹配的混合结果。 |
 
 公开详情若为草稿、撤回或软删除，统一返回 `404 RESOURCE_NOT_FOUND`。`modelSourceRef`、后台操作人和资产源文件路径不返回给前端。
+
+3D 展项详情中的模型字段约定：
+
+| 字段 | 类型 | 语义 |
+|---|---|---|
+| `modelUrl` | `string` | 必填的默认桌面模型 URL。 |
+| `modelFormat` | `"GLB" \| "GLTF"` | 默认模型格式。 |
+| `modelSizeBytes` | 正整数 | 默认模型文件大小。 |
+| `mobileModelUrl` | `string \| null` | 可选移动 LOD URL；为空时客户端使用 `modelUrl`。 |
+| `mobileModelSizeBytes` | 正整数 `\| null` | 可选移动 LOD 文件大小，与 `mobileModelUrl` 成对出现。 |
 
 ### 3.2 管理内容接口
 
@@ -132,13 +166,15 @@ Content-Type: application/json; charset=utf-8
 | POST | `/admin/articles/{id}/publish` | 发布文章。 |
 | POST | `/admin/articles/{id}/withdraw` | 撤回文章。 |
 | DELETE/POST | `/admin/articles/{id}` / `/admin/articles/{id}/restore` | 软删除/恢复。 |
-| GET/POST | `/admin/exhibits` | 后台 3D 展项列表/创建草稿。 |
-| GET/PATCH | `/admin/exhibits/{id}` | 查看/编辑展项资料。 |
+| GET/POST | `/admin/exhibits` | 后台 3D 展项列表/创建草稿；读写默认模型和可选移动模型字段。 |
+| GET/PATCH | `/admin/exhibits/{id}` | 查看/编辑展项资料；读写默认模型和可选移动模型字段。 |
 | POST | `/admin/exhibits/{id}/publish` | 发布展项；检查关联文物可公开。 |
 | POST | `/admin/exhibits/{id}/withdraw` | 撤回展项。 |
 | DELETE/POST | `/admin/exhibits/{id}` / `/admin/exhibits/{id}/restore` | 软删除/恢复。 |
 
 创建/编辑文物、文章和展项时，后端以相应数据模型字段为准；不得由客户端填写 `status`、审计字段或软删除字段。发布接口执行状态转换与必要校验，所有关键操作写入 `operation_logs`。
+
+管理端展项请求中的 `mobileModelUrl` 与 `mobileModelSizeBytes` 均可省略，但必须同时填写或同时留空；URL 最长 500 字符，大小必须为至少 1 字节的整数。只提交其中一个字段时返回 `422 VALIDATION_ERROR`。后台读取当前以空字符串表示缺失的 `mobileModelUrl`，以 `null` 表示缺失的 `mobileModelSizeBytes`；大小使用 64 位整数，不截断超过 32 位的值。
 
 ## 4. 预约接口
 

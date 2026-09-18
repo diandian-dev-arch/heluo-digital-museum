@@ -29,7 +29,7 @@ describe('ExhibitsView GSAP reveal', () => {
     const wrapper = mount(ExhibitsView, {
       global: {
         directives: { pointerSurface: {} },
-        stubs: { RouterLink: { template: '<a><slot /></a>' } },
+        stubs: { RouterLink: { template: '<a><slot /></a>' }, PointerDotField: true },
       },
     })
 
@@ -48,13 +48,30 @@ describe('ExhibitsView GSAP reveal', () => {
     const wrapper = mount(ExhibitsView, {
       global: {
         directives: { pointerSurface: {} },
-        stubs: { RouterLink: { template: '<a><slot /></a>' } },
+        stubs: { RouterLink: { template: '<a><slot /></a>' }, PointerDotField: true },
       },
     })
     await flushPromises()
     await nextTick()
     expect(wrapper.find('.state-panel').exists()).toBe(true)
     expect(timeline).not.toHaveBeenCalled()
+    wrapper.unmount()
+  })
+
+  it('does not render the empty gallery alongside a load error', async () => {
+    apiGet.mockRejectedValue(new Error('服务暂时不可用'))
+    const wrapper = mount(ExhibitsView, {
+      global: {
+        directives: { pointerSurface: {} },
+        stubs: { RouterLink: { template: '<a><slot /></a>' }, PointerDotField: true },
+      },
+    })
+    await flushPromises()
+    await nextTick()
+    expect(wrapper.find('.inline-status--error').exists()).toBe(true)
+    expect(wrapper.find('.exhibit-grid').exists()).toBe(false)
+    expect(wrapper.find('.state-panel--action').exists()).toBe(false)
+    expect(wrapper.find('.state-panel__action').exists()).toBe(true)
     wrapper.unmount()
   })
 })

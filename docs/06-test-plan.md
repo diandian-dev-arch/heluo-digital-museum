@@ -1,5 +1,11 @@
 # 测试与验收计划
 
+## 2026-09-17 双语搜索回归
+
+自动化入口：后端 `BilingualSearchTests`、`BilingualMigrationTests`、`BootstrapDataInitializerTests`；前端 `contentLocale.spec.ts`、Explore/Admin 相关测试；浏览器 `e2e/bilingual-search.e2e.ts`。实际运行结果记录在 [实施计划](plans/2026-09-17-explore-bilingual-search.md)，本节不单独宣称验收通过。
+
+必须覆盖四字段匹配、英文大小写、中文保持、通配符字面处理、空/超长输入、分页无重复、发布/撤回/软删除/禁用分类、后台双语新建修改清空、PATCH省略保留、缺译回退、普通用户拒绝写入。双语×双主题×390/1440视口走搜索、详情、返回、刷新和语言切换；真实 MySQL 验证升级迁移和 ESCAPE，H2通过不能替代。所有写入仅发生在隔离测试库，生产部署另行授权。
+
 - 文档版本：v1.0
 - 最后更新：2026-08-01
 - 依据：需求追踪表、用户故事、数据模型、ER 图和 API 契约。
@@ -19,6 +25,8 @@
 最小种子数据：一个 `ADMIN`、两个普通用户、三个分类、至少三件文物、三篇文章、一个 3D 展项、两个预约时段、三件商品。
 
 ## 3. 测试层级与工具
+
+2026-09-08 工具落地：本地隔离 MySQL 的 Playwright 命令、Lighthouse 手机/桌面报告、k6 公开读接口渐增负载已补充，执行步骤见 [开源测试工具使用说明](testing-open-source.md)。三类测试顺序运行，报告位于忽略目录 `artifacts/`。本地原生 MySQL 的负载结果仅作为 N-04 补充证据，不代替 Docker Compose 拓扑验收。
 
 | 层级 | 计划工具 | 覆盖重点 | 通过标准 |
 |---|---|---|---|

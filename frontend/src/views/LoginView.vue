@@ -1,9 +1,10 @@
 <script setup lang="ts">
+import '../assets/task-pages.css'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { motion } from 'motion-v'
+import { Hide, View } from '@element-plus/icons-vue'
 import { apiRequest } from '../lib/api'
-import { useAuthStore } from '../stores/auth'
+import { safeReturnTo, useAuthStore } from '../stores/auth'
 import { useLocale } from '../stores/locale'
 import InlineStatus from '../components/InlineStatus.vue'
 import FluidButton from '../components/FluidButton.vue'
@@ -15,6 +16,7 @@ const router = useRouter()
 const mode = ref<'login' | 'register' | 'forgot' | 'reset'>(route.query.token ? 'reset' : 'login')
 const username = ref('')
 const password = ref('')
+const passwordVisible = ref(false)
 const nickname = ref('')
 const email = ref('')
 const phone = ref('')
@@ -31,25 +33,27 @@ const story = computed(() => locale.value === 'en-US' ? {
 
 function switchMode(next: typeof mode.value) {
   mode.value = next
+  passwordVisible.value = false
   message.value = ''
   error.value = ''
 }
 
 async function submit() {
+  if (submitting.value) return
   submitting.value = true
   message.value = ''
   error.value = ''
   try {
     if (mode.value === 'login') {
       await auth.login(username.value, password.value)
-      await router.push(auth.isAdmin ? '/admin' : '/profile')
+       await router.push(safeReturnTo(route.query.returnTo, auth.isAdmin ? '/admin' : '/profile'))
     } else if (mode.value === 'register') {
       await auth.register({ username: username.value, password: password.value, nickname: nickname.value, email: email.value || undefined, phone: phone.value || undefined })
       message.value = locale.value === 'en-US' ? 'Account created. Sign in with your username and password.' : '账号创建成功，请使用用户名和密码登录。'
       mode.value = 'login'
     } else if (mode.value === 'forgot') {
       await apiRequest('/auth/password-reset/request', 'POST', { username: username.value, email: email.value })
-      message.value = locale.value === 'en-US' ? 'If the account and email match, a reset link has been sent. In development, check the Mailpit inbox.' : '若账号与已绑定邮箱匹配，重置链接已发送。开发环境请在 Mailpit 测试收件箱查看邮件。'
+      message.value = locale.value === 'en-US' ? 'If the account and email match, a reset link has been sent. Check your inbox.' : '若账号与已绑定邮箱匹配，重置链接已发送，请查收邮件。'
     } else {
       await apiRequest('/auth/password-reset/confirm', 'POST', { resetToken: resetToken.value, newPassword: password.value })
       message.value = locale.value === 'en-US' ? 'Password updated. Please sign in again.' : '密码已更新，请重新登录。'
@@ -64,9 +68,9 @@ async function submit() {
 </script>
 
 <template>
-  <main class="auth-page">
+  <section class="auth-page task-auth-page">
     <aside class="auth-story" :aria-label="story.aria"><img src="/media/editorial/museum-exterior-watercolor.webp" :alt="story.alt" /><div><p>VISITOR ACCOUNT</p><h2>{{ story.title }}</h2><ul><li v-for="item in story.items" :key="item">{{ item }}</li></ul></div></aside>
-    <motion.section class="auth-panel" data-glass="dark" data-glass-controls :initial="{ opacity: 0 }" :animate="{ opacity: 1 }" :transition="{ duration: 0.18 }"><p class="auth-context">{{ story.context }}</p><h1>{{ title }}</h1><p class="auth-intro">{{ t.auth.intro }}</p>
+    <section class="auth-panel" data-glass="dark" data-glass-controls><p class="auth-context">{{ story.context }}</p><h1>{{ title }}</h1><p class="auth-intro">{{ t.auth.intro }}</p>
     <InlineStatus v-if="message" kind="success" :message="message" />
     <InlineStatus v-if="error" kind="error" :message="error" />
     <form @submit.prevent="submit">
@@ -75,10 +79,10 @@ async function submit() {
       <label v-if="mode === 'register' || mode === 'forgot'">{{ t.auth.email }}<span v-if="mode === 'register'">{{ t.auth.emailOptional }}</span><input v-model.trim="email" type="email" :required="mode === 'forgot'" autocomplete="email" /></label>
       <label v-if="mode === 'register'">{{ t.auth.phoneOptional }}<input v-model.trim="phone" maxlength="20" autocomplete="tel" /></label>
       <label v-if="mode === 'reset'">{{ t.auth.token }}<input v-model.trim="resetToken" required /></label>
-      <label v-if="mode === 'login' || mode === 'register' || mode === 'reset'">{{ t.auth.password }}<input v-model="password" type="password" minlength="8" maxlength="72" required :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" /></label>
+      <label v-if="mode === 'login' || mode === 'register' || mode === 'reset'">{{ t.auth.password }}<span class="password-field"><input v-model="password" :type="passwordVisible ? 'text' : 'password'" :disabled="submitting" minlength="8" maxlength="72" required :autocomplete="mode === 'login' ? 'current-password' : 'new-password'" /><button class="password-toggle" type="button" :aria-pressed="passwordVisible" :aria-label="locale === 'en-US' ? (passwordVisible ? 'Hide password' : 'Show password') : (passwordVisible ? '隐藏密码' : '显示密码')" :title="locale === 'en-US' ? (passwordVisible ? 'Hide password' : 'Show password') : (passwordVisible ? '隐藏密码' : '显示密码')" @click="passwordVisible = !passwordVisible"><Hide v-if="passwordVisible" aria-hidden="true" /><View v-else aria-hidden="true" /></button></span></label>
       <FluidButton type="submit" block :loading="submitting">{{ submitting ? t.auth.submitting : title }}</FluidButton>
     </form>
     <div class="auth-switch"><button v-if="mode !== 'login'" type="button" @click="switchMode('login')">{{ t.auth.back }}</button><button v-if="mode === 'login'" type="button" @click="switchMode('register')">{{ t.auth.create }}</button><button v-if="mode === 'login'" type="button" @click="switchMode('forgot')">{{ t.auth.forgotAction }}</button></div>
-    </motion.section>
-  </main>
+    </section>
+  </section>
 </template>

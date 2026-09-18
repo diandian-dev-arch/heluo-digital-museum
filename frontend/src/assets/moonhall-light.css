@@ -1,0 +1,379 @@
+html:not([data-theme="dark"]) {
+  color-scheme: light;
+
+  --moonhall-canvas: oklch(97% .003 165);
+  --moonhall-section: oklch(94% .008 165);
+  --moonhall-content: oklch(99% .002 165);
+  --moonhall-control: oklch(96% .006 165);
+  --moonhall-control-hover: oklch(93% .015 159);
+  --moonhall-media: oklch(30% .025 161);
+  --moonhall-ink: oklch(25.5% .042 165);
+  --moonhall-text: oklch(34% .031 164);
+  --moonhall-muted: oklch(48% .024 163);
+  --moonhall-rule: oklch(51% .026 164 / .27);
+  --moonhall-rule-strong: oklch(43% .033 164 / .45);
+  --moonhall-jade: oklch(42% .085 163);
+  --moonhall-jade-strong: oklch(35% .078 163);
+  --moonhall-bronze: oklch(61% .092 66);
+  --moonhall-bronze-soft: oklch(79% .058 76);
+  --moonhall-focus: oklch(47% .11 169);
+
+  --color-paper: var(--moonhall-canvas);
+  --color-paper-2: var(--moonhall-section);
+  --color-surface: var(--moonhall-content);
+  --color-text: var(--moonhall-text);
+  --color-ink: var(--moonhall-ink);
+  --color-muted: var(--moonhall-muted);
+  --color-rule: var(--moonhall-rule);
+  --color-rule-strong: var(--moonhall-rule-strong);
+  --color-action: var(--moonhall-jade);
+  --color-action-strong: var(--moonhall-jade-strong);
+  --color-action-ink: oklch(97% .009 90);
+  --color-accent: var(--moonhall-bronze);
+  --color-focus: var(--moonhall-focus);
+
+  --theme-canvas: var(--moonhall-canvas);
+  --theme-canvas-raised: var(--moonhall-section);
+  --theme-surface: var(--moonhall-content);
+  --theme-surface-raised: var(--moonhall-control);
+  --theme-surface-canvas: var(--moonhall-canvas);
+  --theme-surface-section: var(--moonhall-section);
+  --theme-surface-content: var(--moonhall-content);
+  --theme-surface-control: var(--moonhall-control);
+  --theme-surface-control-hover: var(--moonhall-control-hover);
+  --theme-surface-control-active: color-mix(in oklch, var(--moonhall-jade) 12%, var(--moonhall-control));
+  --theme-primary-surface: var(--moonhall-jade);
+  --theme-primary-surface-hover: var(--moonhall-jade-strong);
+  --theme-primary-text: oklch(97% .009 90);
+  --theme-secondary-surface: var(--moonhall-control);
+  --theme-secondary-surface-hover: var(--moonhall-control-hover);
+  --theme-secondary-text: var(--moonhall-ink);
+  --theme-shadow-surface: 0 10px 26px oklch(24% .032 164 / .08);
+  --theme-shadow-float: 0 18px 42px oklch(24% .032 164 / .13);
+  --theme-control-shadow: 0 7px 16px oklch(24% .032 164 / .09);
+  --theme-control-shadow-hover: 0 12px 24px oklch(24% .032 164 / .14);
+}
+
+html:not([data-theme="dark"]) body,
+html:not([data-theme="dark"]) #app,
+html:not([data-theme="dark"]) .app-shell {
+  background: var(--moonhall-canvas);
+  color: var(--moonhall-text);
+}
+html:not([data-theme="dark"]) .site-header {
+  border-color: var(--moonhall-rule);
+  background: color-mix(in oklch, var(--moonhall-content) 94%, transparent);
+  box-shadow: 0 8px 24px oklch(24% .032 164 / .045);
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) .site-header :is(.brand-copy b, .locale-toggle, nav a) {
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) .site-header :is(.brand-copy small, .login-link) {
+  color: var(--moonhall-muted);
+}
+
+html:not([data-theme="dark"]) .site-header .brand-seal {
+  stroke: var(--moonhall-jade);
+}
+
+html:not([data-theme="dark"]) :is(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--moonhall-focus);
+  outline-offset: 3px;
+}
+
+html:not([data-theme="dark"]) #app :is(
+  .corridor-home__curation-heading[data-glass],
+  .booking-main[data-glass]
+) {
+  --glass-contract-surface: var(--moonhall-section);
+  --glass-contract-surface-hover: color-mix(in oklch, var(--moonhall-section) 84%, var(--moonhall-control));
+  --glass-contract-border: var(--moonhall-rule);
+  --glass-contract-border-hover: var(--moonhall-rule-strong);
+  --glass-contract-sheen: none;
+  --glass-contract-sheen-hover: none;
+  --glass-contract-shadow: none;
+  --glass-contract-shadow-hover: none;
+  --glass-contract-filter: none;
+  --glass-contract-solid: var(--moonhall-section);
+  --glass-contract-reduced: var(--moonhall-section);
+}
+html:not([data-theme="dark"]) #app .corridor-home__curation.home-experiences {
+  border-color: var(--moonhall-rule-strong);
+  background: var(--moonhall-section);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__curation.home-experiences > * {
+  border-color: var(--moonhall-rule);
+  background: var(--moonhall-content);
+  box-shadow: none;
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__curation-heading {
+  background: color-mix(in oklch, var(--moonhall-section) 86%, var(--moonhall-control)) !important;
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__curation-heading :is(b, small) {
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__curation-heading :is(p, span, a) {
+  color: var(--moonhall-jade-strong);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__object-card {
+  position: relative;
+  background: var(--moonhall-content) !important;
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__object-card:hover {
+  background: color-mix(in oklch, var(--moonhall-content) 82%, var(--moonhall-section)) !important;
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__object-card > span,
+html:not([data-theme="dark"]) #app .corridor-home__object-card p {
+  color: var(--moonhall-muted);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__object-card h2 {
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__object-card img {
+  box-sizing: border-box;
+  padding: .42rem;
+  border: 1px solid color-mix(in oklch, var(--moonhall-bronze) 30%, var(--moonhall-rule));
+  border-radius: 5px;
+  background: var(--moonhall-control);
+  box-shadow: inset 0 0 0 1px oklch(100% 0 0 / .38), 0 6px 14px oklch(24% .032 164 / .08);
+  filter: saturate(.86) contrast(.96);
+  mix-blend-mode: normal !important;
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__map {
+  background: var(--moonhall-content) !important;
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__map :is(p, a) {
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .corridor-home__map p span,
+html:not([data-theme="dark"]) #app .corridor-home__map svg {
+  color: var(--moonhall-jade);
+  stroke: currentColor;
+}
+html:not([data-theme="dark"]) #app .booking-page {
+  background: var(--moonhall-rule);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-main[data-glass="light"] {
+  background: var(--moonhall-section);
+  color: var(--moonhall-text);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-side[data-glass="light"] {
+  border-color: var(--moonhall-rule-strong);
+  background: var(--moonhall-content);
+  color: var(--moonhall-text);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-wash {
+  opacity: .28;
+  stroke: color-mix(in oklch, var(--moonhall-jade) 38%, transparent);
+}
+
+html:not([data-theme="dark"]) #app .booking-page :is(.booking-intro h1, .booking-steps strong, .visit-card h2, .appointment-form h2) {
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .booking-page :is(.booking-intro > p:not(.eyebrow), .booking-steps li, .slot-note, .visit-card p, .visit-card footer, .form-note, .privacy-note) {
+  color: var(--moonhall-muted);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-steps li::after {
+  border-color: var(--moonhall-content);
+  background: var(--moonhall-control);
+  box-shadow: 0 0 0 1px var(--moonhall-rule-strong);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-steps li.active::after {
+  background: var(--moonhall-jade);
+  box-shadow: 0 0 0 1px var(--moonhall-jade);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .date-strip {
+  border: 1px solid var(--moonhall-rule);
+  border-radius: 10px;
+  background: var(--moonhall-content);
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .55);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .date-strip > button:not(.date-arrow) {
+  border-color: var(--moonhall-rule);
+  background: var(--moonhall-control);
+  color: var(--moonhall-text);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .date-strip > button:not(.date-arrow):hover:not(:disabled) {
+  background: var(--moonhall-control-hover);
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .date-strip > button:not(.date-arrow).active {
+  border-color: var(--moonhall-jade);
+  background: var(--moonhall-jade);
+  box-shadow: var(--theme-control-shadow);
+  color: var(--theme-primary-text);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .slot-list button {
+  border-color: var(--moonhall-rule-strong);
+  background: var(--moonhall-control);
+  color: var(--moonhall-text);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .slot-list button:hover:not(:disabled),
+html:not([data-theme="dark"]) #app .booking-page .slot-list button.active {
+  border-color: color-mix(in oklch, var(--moonhall-jade) 58%, var(--moonhall-rule));
+  background: color-mix(in oklch, var(--moonhall-jade) 11%, var(--moonhall-control));
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .slot-list button small {
+  color: var(--moonhall-jade-strong);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .visit-card {
+  border-color: var(--moonhall-rule);
+  background: var(--moonhall-content);
+  box-shadow: var(--theme-shadow-surface);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .visit-card > img {
+  filter: saturate(.78) contrast(.96);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-site-plan {
+  color: var(--moonhall-muted);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-site-plan :is(.booking-site-plan__route, .booking-site-plan__river) {
+  stroke: var(--moonhall-jade);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-site-plan :is(.booking-site-plan__route-shadow, .booking-site-plan__room circle) {
+  stroke: var(--moonhall-rule-strong);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-site-plan :is(text, .booking-site-plan__hint) {
+  fill: var(--moonhall-muted);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .appointment-form :is(input, textarea, .booking-summary .visitor-count input),
+html:not([data-theme="dark"]) #app .booking-page .mobile-booking-form :is(input, textarea) {
+  border-color: var(--moonhall-rule-strong);
+  background: var(--moonhall-control);
+  color: var(--moonhall-ink);
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .5);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .appointment-form :is(input, textarea):hover,
+html:not([data-theme="dark"]) #app .booking-page .mobile-booking-form :is(input, textarea):hover {
+  background: var(--moonhall-control-hover);
+}
+
+html:not([data-theme="dark"]) #app .booking-page .booking-summary {
+  border-color: var(--moonhall-rule);
+  background: color-mix(in oklch, var(--moonhall-section) 48%, var(--moonhall-content));
+}
+html:not([data-theme="dark"]) .task-auth-page .auth-panel {
+  border-color: var(--moonhall-rule-strong);
+  background: var(--moonhall-content);
+}
+
+html:not([data-theme="dark"]) .task-auth-page .auth-panel :is(input, textarea, select) {
+  background: var(--moonhall-control) !important;
+}
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] {
+  border-color: var(--moonhall-rule-strong);
+  background: var(--moonhall-content);
+  box-shadow: var(--theme-shadow-surface);
+  color: var(--moonhall-text);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"]::after {
+  display: none;
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] :is(.auth-context, .profile-identity, .profile-form label) {
+  color: var(--moonhall-text);
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] :is(.profile-account-heading h1, .profile-identity strong, .profile-form-intro strong) {
+  color: var(--moonhall-ink);
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] .auth-context {
+  color: var(--moonhall-jade-strong);
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] .auth-context::before {
+  background: var(--moonhall-bronze);
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] :is(.profile-form-intro, .profile-account-panel .auth-switch) {
+  border-color: var(--moonhall-rule);
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] :is(input, textarea, select) {
+  border-color: var(--moonhall-rule-strong) !important;
+  background: var(--moonhall-control) !important;
+  color: var(--moonhall-ink) !important;
+  box-shadow: inset 0 1px 0 oklch(100% 0 0 / .5) !important;
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] :is(input, textarea, select):hover {
+  background: var(--moonhall-control-hover) !important;
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] .secondary-button {
+  border-color: var(--moonhall-rule-strong);
+  background: var(--moonhall-control);
+  color: var(--moonhall-jade-strong);
+}
+
+html:not([data-theme="dark"]) #app .auth-page.profile-page .profile-account-panel[data-glass="dark"] .secondary-button:hover {
+  background: var(--moonhall-control-hover);
+}
+
+@media (max-width: 760px) {
+  html:not([data-theme="dark"]) #app .corridor-home__curation.home-experiences {
+    border-top: 1px solid var(--moonhall-rule-strong);
+  }
+
+  html:not([data-theme="dark"]) #app .corridor-home__object-card img {
+    padding: .34rem;
+  }
+
+  html:not([data-theme="dark"]) #app .booking-page .booking-steps li,
+html:not([data-theme="dark"]) #app .booking-page .booking-steps li.current {
+    border-color: var(--moonhall-rule-strong);
+    background: var(--moonhall-content);
+  }
+
+  html:not([data-theme="dark"]) #app .booking-page .booking-steps li.current {
+    border-color: var(--moonhall-jade);
+    background: color-mix(in oklch, var(--moonhall-jade) 10%, var(--moonhall-content));
+  }
+
+  html:not([data-theme="dark"]) #app .booking-page .date-strip {
+    border-radius: 8px;
+  }
+}

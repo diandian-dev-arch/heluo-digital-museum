@@ -3,6 +3,7 @@ package com.heluo.museum.store;
 import com.heluo.museum.common.api.ApiResponse;
 import com.heluo.museum.common.audit.OperationLogService;
 import com.heluo.museum.common.error.ConflictException;
+import com.heluo.museum.common.error.ContentPage;
 import com.heluo.museum.common.error.ResourceNotFoundException;
 import com.heluo.museum.common.notification.NotificationService;
 import jakarta.transaction.Transactional;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
@@ -96,10 +98,22 @@ public class OrderController {
     }
 
     @GetMapping
-    public ApiResponse<List<View>> list(Authentication authentication) {
+    public ApiResponse<ContentPage<View>> list(Authentication authentication,
+                                                @org.springframework.web.bind.annotation.RequestParam(defaultValue = "1") int page,
+                                                @org.springframework.web.bind.annotation.RequestParam(defaultValue = "20") int size,
+                                                @org.springframework.web.bind.annotation.RequestParam(required = false) String status) {
+        validatePage(page, size);
+        validateStatus(status);
         long userId = actorId(authentication);
-        return ApiResponse.ok(jdbc.query("select id from orders where user_id=? order by created_at desc",
-                (rs, rowNum) -> view(rs.getLong(1)), userId), "orders");
+        String where = " where user_id=?" + (status == null || status.isBlank() ? "" : " and status=?");
+        Object[] filter = status == null || status.isBlank() ? new Object[] {userId} : new Object[] {userId, status};
+        long total = jdbc.queryForObject("select count(*) from orders" + where, Long.class, filter);
+        Object[] args = java.util.Arrays.copyOf(filter, filter.length + 2);
+        args[args.length - 2] = size;
+        args[args.length - 1] = (page - 1) * size;
+        List<Long> ids = jdbc.query("select id from orders" + where + " order by created_at desc,id desc limit ? offset ?",
+                (rs, rowNum) -> rs.getLong(1), args);
+        return ApiResponse.ok(ContentPage.of(ids.stream().map(this::view).toList(), page, size, total), "orders");
     }
 
     @GetMapping("/{id}")
@@ -120,7 +134,7 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/mock-payment")
-    @Transactional
+    @Transactional(dontRollbackOn = PaymentExpiredException.class)
     public ApiResponse<View> pay(Authentication authentication, @PathVariable long id,
                                  @RequestHeader("Idempotency-Key") @NotBlank @Size(max = 64) String key) {
         View view = ownedForUpdate(actorId(authentication), id);
@@ -135,9 +149,10 @@ public class OrderController {
         if (!"PENDING_PAYMENT".equals(view.status())) {
             throw new ConflictException("订单不是待支付状态");
         }
-        if (view.expiresAt().isBefore(Instant.now())) {
+        if (!view.expiresAt().isAfter(Instant.now())) {
             expire(id, "支付超时");
-            throw new ConflictException("订单支付已超时");
+            audit.record(view.userId(), "ORDER", "EXPIRE", "ORDER", String.valueOf(id));
+            throw new PaymentExpiredException();
         }
         for (Item item : view.items()) {
             int changed = jdbc.update("update products set stock_quantity=stock_quantity-?,locked_stock=locked_stock-? "
@@ -247,6 +262,19 @@ public class OrderController {
 
     private static long actorId(Authentication authentication) {
         return (Long) authentication.getPrincipal();
+    }
+
+    private static void validatePage(int page, int size) {
+        if (page < 1 || size < 1 || size > 100) {
+            throw new IllegalArgumentException("page 必须大于 0，size 必须在 1 到 100 之间");
+        }
+    }
+
+    private static void validateStatus(String status) {
+        if (status != null && !status.isBlank()
+                && !Set.of("PENDING_PAYMENT", "PAID", "CANCELLED", "COMPLETED").contains(status)) {
+            throw new IllegalArgumentException("订单状态不合法");
+        }
     }
 
     record Line(long cartItemId, long productId, int quantity, String sku, String name, BigDecimal price, int stock,

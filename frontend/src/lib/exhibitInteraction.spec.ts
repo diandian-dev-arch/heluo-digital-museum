@@ -1,5 +1,13 @@
-import { describe, expect, it } from 'vitest'
-import { interpolateExhibitOrbitOffset, selectExhibitCameraDistanceScale, selectExhibitCanvasTouchAction } from './exhibitInteraction'
+import { describe, expect, it, vi } from 'vitest'
+import {
+  createRetryableAsyncLoader,
+  interpolateExhibitOrbitOffset,
+  requiresManualExhibitActivation,
+  selectExhibitCameraDistanceScale,
+  selectExhibitCanvasTouchAction,
+  selectExhibitModelSource,
+  selectExhibitRenderProfile,
+} from './exhibitInteraction'
 
 describe('exhibit canvas interaction', () => {
   it('keeps vertical page scrolling available on mobile and coarse pointers', () => {
@@ -30,5 +38,74 @@ describe('exhibit canvas interaction', () => {
     expect(finish.x).toBeCloseTo(to.x, 5)
     expect(finish.y).toBeCloseTo(to.y, 5)
     expect(finish.z).toBeCloseTo(to.z, 5)
+  })
+
+  it.each([
+    { coarsePointer: true },
+    { coarsePointer: false, saveData: true },
+    { coarsePointer: false, effectiveType: 'slow-2g' },
+    { coarsePointer: false, effectiveType: '2g' },
+    { coarsePointer: false, effectiveType: '3g' },
+    { coarsePointer: false, memoryGiB: 4 },
+  ])('requires a user gesture for a constrained device: %o', (context) => {
+    expect(requiresManualExhibitActivation(context)).toBe(true)
+  })
+
+  it('keeps automatic startup for an unconstrained desktop', () => {
+    expect(requiresManualExhibitActivation({
+      coarsePointer: false,
+      effectiveType: '4g',
+      memoryGiB: 8,
+    })).toBe(false)
+  })
+
+  it('prefers the optional mobile model only for a constrained device', () => {
+    const sources = {
+      modelUrl: '/ding-desktop.glb',
+      modelSizeBytes: 5_213_372,
+      mobileModelUrl: '/ding-mobile.glb',
+      mobileModelSizeBytes: 837_720,
+    }
+    expect(selectExhibitModelSource(sources, true)).toEqual({
+      url: '/ding-mobile.glb',
+      sizeBytes: 837_720,
+      mobile: true,
+    })
+    expect(selectExhibitModelSource(sources, false)).toEqual({
+      url: '/ding-desktop.glb',
+      sizeBytes: 5_213_372,
+      mobile: false,
+    })
+    expect(selectExhibitModelSource({ ...sources, mobileModelUrl: null }, true).url).toBe('/ding-desktop.glb')
+  })
+
+  it('turns off fixed GPU costs and lowers geometry segments for the mobile renderer', () => {
+    const mobile = selectExhibitRenderProfile({ mobile: true })
+    const desktop = selectExhibitRenderProfile({ mobile: false })
+    expect(mobile).toMatchObject({ antialias: false, shadows: false, dust: false })
+    expect(mobile.baseSegments).toBeLessThan(desktop.baseSegments)
+    expect(mobile.trimSegments).toBeLessThan(desktop.trimSegments)
+  })
+
+  it('deduplicates an in-flight module load and allows retry after a rejection', async () => {
+    let resolveFirst: ((value: string) => void) | undefined
+    const load = vi.fn()
+      .mockImplementationOnce(() => new Promise<string>((resolve) => { resolveFirst = resolve }))
+      .mockRejectedValueOnce(new Error('temporary chunk failure'))
+      .mockResolvedValueOnce('recovered')
+    const retryableLoad = createRetryableAsyncLoader(load)
+
+    const first = retryableLoad()
+    const duplicate = retryableLoad()
+    expect(first).toBe(duplicate)
+    expect(load).toHaveBeenCalledOnce()
+    resolveFirst?.('loaded')
+    await expect(first).resolves.toBe('loaded')
+    await expect(retryableLoad()).resolves.toBe('loaded')
+
+    const rejectingLoad = createRetryableAsyncLoader(load)
+    await expect(rejectingLoad()).rejects.toThrow('temporary chunk failure')
+    await expect(rejectingLoad()).resolves.toBe('recovered')
+    expect(load).toHaveBeenCalledTimes(3)
   })
 })
