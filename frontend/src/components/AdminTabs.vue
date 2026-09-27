@@ -41,7 +41,7 @@ function moveFocus(event: KeyboardEvent, index: number) {
 </script>
 
 <template>
-  <div class="admin-tabs" role="tablist" :aria-label="label">
+  <div class="admin-tabs" data-glass="compact" data-galaxy-segmented role="tablist" :aria-label="label">
     <button
       v-for="(item, index) in tabs"
       :id="tabId(item.value)"

@@ -1,0 +1,55 @@
+[data-glass] {
+  border-style: solid;
+  border-width: 1px;
+  border-color: var(--theme-border);
+  box-shadow: var(--theme-shadow-surface);
+  backdrop-filter: blur(var(--theme-glass-blur)) saturate(var(--theme-glass-saturation));
+  -webkit-backdrop-filter: blur(var(--theme-glass-blur)) saturate(var(--theme-glass-saturation));
+}
+
+[data-glass="light"] {
+  background: color-mix(in oklch, var(--theme-surface-content) 84%, transparent);
+}
+
+[data-glass="dark"] {
+  background: color-mix(in oklch, var(--theme-surface-section) 86%, transparent);
+}
+
+[data-glass="compact"] {
+  background: color-mix(in oklch, var(--theme-surface-control) 78%, transparent);
+}
+
+[data-glass-interactive] {
+  transition:
+    border-color var(--theme-motion-duration) var(--ease-out, ease-out),
+    background-color var(--theme-motion-duration) var(--ease-out, ease-out),
+    box-shadow var(--theme-motion-duration) var(--ease-out, ease-out),
+    color var(--theme-motion-duration) var(--ease-out, ease-out);
+}
+
+[data-glass-interactive]:is(:hover, :focus-within) {
+  border-color: var(--theme-border-strong);
+  background-color: var(--theme-surface-control-hover);
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  [data-glass] {
+    background: var(--theme-surface-content);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  [data-glass="dark"] { background: var(--theme-surface-section); }
+  [data-glass="compact"] { background: var(--theme-surface-control); }
+}
+
+@media (forced-colors: active) {
+  [data-glass] {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

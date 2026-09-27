@@ -1,7 +1,11 @@
 # 完整 ER 图与数据关系说明
 
-- 文档版本：v0.1
-- 最后更新：2026-08-01
+## 2026-09-17 双语字段增量
+
+V25 在 `artifacts`、`articles` 各新增 `title_en VARCHAR(300) NULL`、`summary_en VARCHAR(1000) NULL`。译文是原记录属性，不新增实体、外键或关联表；现有中文字段及所有关系保持不变。V26按slug补齐已有演示内容，详见 [数据模型](04-data-and-permissions.md) 与 [ADR-004](decisions/ADR-004-bilingual-content-search.md)。
+
+- 文档版本：v0.2
+- 最后更新：2026-08-16
 - 权威字段定义：[`04-data-and-permissions.md`](04-data-and-permissions.md)
 - 范围：用户权限、内容、预约、商城订单与操作日志的第一版逻辑模型。
 - 不包含：真实支付平台回调、物流、短信、独立媒体资源表和后续多管理员扩展。
@@ -73,6 +77,8 @@ erDiagram
         BIGINT artifact_id FK
         VARCHAR slug UK
         VARCHAR model_url
+        VARCHAR mobile_model_url
+        BIGINT mobile_model_size_bytes
         VARCHAR model_source_ref UK
         VARCHAR status
         DATETIME deleted_at
@@ -187,7 +193,7 @@ erDiagram
 |---|---|---|
 | `users ↔ roles` | 通过 `user_roles` 多对多关联。 | 数据模型支持扩展；业务规则只启用一个 `ADMIN`，其余账号为 `USER`。 |
 | `categories → artifacts/articles` | 一个一级分类可包含多条文物和文章。 | 内容各自只属于一个一级分类；已被引用的分类仅能停用。 |
-| `artifacts → exhibits_3d` | 一个文物可关联多个自创 3D 展项。 | 第一版至少发布一个可加载的自创模型。 |
+| `artifacts → exhibits_3d` | 一个文物可关联多个自创 3D 展项。 | 第一版至少发布一个可加载的自创模型；可选 `mobile_model_url` 与 `mobile_model_size_bytes` 必须同时有值或同时为空。 |
 | `appointment_slots → appointments` | 一个时段可容纳多个预约。 | 默认 30 人、2 小时、开放未来 14 天；`reserved_people` 防止超额预约。 |
 | `users → carts → cart_items` | 一个用户最多一个活动购物车。 | 同一商品在购物车中只能一条，数量累加。 |
 | `users → orders → order_items` | 一个用户可创建多个订单。 | 订单明细保存商品名称、价格、封面等快照。 |

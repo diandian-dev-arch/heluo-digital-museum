@@ -5,19 +5,26 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc -b && vite build && node scripts/bundle-budget.mjs",
     "preview": "vite preview",
+    "perf:mobile": "node scripts/performance-audit.mjs --mobile",
     "perf:pointer": "node scripts/performance-audit.mjs",
     "perf:pointer-size": "node scripts/pointer-size-audit.mjs",
     "qa:pointer-pages": "node scripts/page-mapping-audit.mjs",
     "uat:android": "node scripts/android-device-audit.mjs",
     "typecheck": "vue-tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "test:e2e:types": "tsc -p e2e/tsconfig.json",
+    "qa:mysql:start": "node scripts/quality-mysql-environment.mjs",
+    "qa:mysql:stop": "node scripts/quality-mysql-environment.mjs --stop",
+    "qa:lighthouse": "node scripts/lighthouse-audit.mjs",
+    "qa:load": "node scripts/load-audit.mjs"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",
-    "@fontsource-variable/noto-serif-sc": "^5.3.0",
     "element-plus": "^2.14.3",
+    "gsap": "^3.15.0",
     "motion-v": "^2.3.0",
     "pinia": "^4.0.2",
     "three": "^0.185.1",
@@ -25,6 +32,7 @@
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@types/node": "^24.13.3",
     "@types/three": "^0.185.1",
     "@vitejs/plugin-vue": "^6.0.8",

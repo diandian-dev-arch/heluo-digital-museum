@@ -1,0 +1,410 @@
+/* Final responsive owner for the public home, collection and store routes. */
+
+@media (max-width: 760px) {
+  html[data-theme] #app .corridor-home__curation.home-experiences {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .65rem;
+    width: calc(100% - 1rem);
+    min-height: 0;
+    padding: .65rem 0;
+  }
+
+  html[data-theme] #app .corridor-home__curation.home-experiences > * {
+    height: auto;
+    min-height: 0;
+    padding: 1rem;
+  }
+
+  html[data-theme] #app .corridor-home__curation.home-experiences > .corridor-home__object-card {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: .45rem 1rem;
+    min-height: 164px;
+    align-items: start;
+  }
+
+  html[data-theme] #app .corridor-home__object-card > span {
+    position: static;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: start;
+    margin: 0;
+    padding: 0 0 .38rem;
+    border: 0;
+    border-bottom: 1px solid var(--theme-border-strong);
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+  }
+
+  html[data-theme] #app .corridor-home__object-card img {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    width: 112px;
+    height: 140px;
+    margin: 0;
+    align-self: center;
+  }
+
+  html[data-theme] #app .corridor-home__object-card > div {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  html[data-theme] #app .corridor-home__object-card h2 {
+    max-width: 100%;
+    margin: 0 0 .35rem;
+    font-size: 1.08rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-theme] #app .corridor-home__object-card p {
+    min-height: 0;
+    font-size: .72rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  html[data-theme] #app .collection-page .collection-discovery.collection-discovery {
+    min-height: 0;
+    gap: 1.25rem;
+    padding: 1.35rem 1rem 1rem;
+    overflow: hidden;
+    border-radius: 8px !important;
+    box-shadow: 0 10px 24px color-mix(in oklch, var(--theme-text-strong) 8%, transparent) !important;
+  }
+
+  #app .collection-page .collection-discovery::after,
+  #app .collection-page .collection-discovery__sun-rings,
+  #app .collection-page .collection-discovery__cloud,
+  #app .collection-page .collection-discovery__birds {
+    display: none;
+  }
+
+  #app .collection-page .collection-discovery__mountains {
+    right: -24%;
+    bottom: 0;
+    width: 150%;
+    height: 34%;
+    opacity: .14;
+  }
+
+  #app .collection-page .collection-discovery__copy {
+    max-width: none;
+    padding: .15rem .15rem 0;
+  }
+
+  #app .collection-page .collection-discovery__copy .section-label { font-size: .68rem; }
+  #app .collection-page .collection-discovery__copy .section-label::after { width: 42px; }
+
+  #app .collection-page .collection-discovery__copy h1 {
+    max-width: 12ch;
+    margin: .65rem 0 .55rem;
+    font-size: 2.25rem;
+    line-height: 1.16;
+  }
+
+  html[lang="en-US"] #app .collection-page .collection-discovery__copy h1 {
+    max-width: 18ch;
+    font-size: 1.72rem;
+    line-height: 1.2;
+  }
+
+  #app .collection-page .collection-discovery__copy > p:not(.section-label) {
+    max-width: 38ch;
+    font-size: .86rem;
+    line-height: 1.6;
+  }
+
+  html[data-theme] #app .collection-page .collection-discovery__search-card.collection-discovery__search-card {
+    width: 100%;
+    min-height: 0;
+    padding: .85rem;
+    border-radius: 8px !important;
+    box-shadow: none !important;
+  }
+
+  #app .collection-page .collection-discovery__search-card::before,
+  #app .collection-page .collection-discovery__search-mode,
+  #app .collection-page .collection-discovery__search-index { display: none; }
+
+  #app .collection-page .collection-discovery__search-kicker {
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  #app .collection-page .collection-discovery__search { padding: .7rem 0 0; }
+
+  html[data-theme] #app .shop-content {
+    min-height: 0;
+    padding: 1rem 1rem calc(7rem + env(safe-area-inset-bottom));
+  }
+
+  html[data-theme] #app .shop-content .shop-intro {
+    display: grid;
+    width: 100%;
+    min-height: 0;
+    gap: .7rem;
+    padding: .8rem 0 1.15rem;
+    border: 0 !important;
+    border-bottom: 1px solid var(--theme-border-strong) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  html[data-theme] #app .shop-content .shop-intro .pointer-dot-field { display: none; }
+
+  html[data-theme] #app .shop-content .shop-intro .eyebrow {
+    margin: 0;
+    color: var(--theme-action-strong);
+    font: 680 .64rem/1.2 var(--font-body);
+    letter-spacing: 0;
+  }
+
+  html[data-theme] #app .shop-content .shop-intro h1 {
+    max-width: 16ch;
+    margin: .1rem 0 .2rem;
+    color: var(--theme-text-strong);
+    font-size: 2.12rem;
+    line-height: 1.14;
+    letter-spacing: 0;
+    white-space: normal;
+  }
+
+  html[lang="en-US"][data-theme] #app .shop-content .shop-intro h1 {
+    max-width: 19ch;
+    font-size: 1.9rem;
+  }
+
+  html[data-theme] #app .shop-category-nav {
+    display: grid !important;
+    width: 100%;
+    min-height: 46px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    margin-top: .35rem;
+    padding: 1px;
+    overflow: hidden;
+    border: 1px solid var(--theme-border-strong) !important;
+    border-radius: 6px !important;
+    background: var(--theme-border) !important;
+    box-shadow: none !important;
+    scrollbar-width: none;
+  }
+
+  html[data-theme] #app .shop-category-nav > button {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: .65rem .2rem;
+    border: 0 !important;
+    border-radius: 4px !important;
+    background: var(--theme-surface-control) !important;
+    box-shadow: none !important;
+    color: var(--theme-text) !important;
+    font-size: .7rem;
+  }
+
+  html[data-theme] #app .shop-category-nav > button:is(.active, [aria-pressed="true"]) {
+    background: var(--theme-primary-surface) !important;
+    color: var(--theme-primary-text) !important;
+  }
+
+  html[lang="en-US"][data-theme] #app .shop-category-nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  html[lang="en-US"][data-theme] #app .shop-category-nav > button {
+    min-height: 48px;
+    padding: .55rem .4rem;
+    font-size: .68rem;
+    line-height: 1.18;
+    white-space: normal;
+  }
+
+  html[data-theme] #app :is(.shop-category-nav, .collection-filters)::-webkit-scrollbar {
+    display: none;
+  }
+
+  html[data-theme] #app .collection-filters { scrollbar-width: none; }
+}
+
+/* Product imagery carries the shop; the studio remains a quiet backdrop. */
+html[data-theme] #app .shop-content .shop-object-studio-surface { opacity: .12; }
+html[data-theme] #app .shop-content .shop-intro {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+html[data-theme] #app .shop-content .product-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: none;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  width: min(100%, 1180px);
+  min-height: 0;
+  max-width: none;
+  margin: 2rem auto 0;
+  pointer-events: auto;
+}
+
+html[data-theme] #app .shop-content .product-grid > article,
+html[data-theme] #app .shop-content .product-grid > article:first-child,
+html[data-theme] #app .shop-content .product-grid > article:nth-child(2),
+html[data-theme] #app .shop-content .product-grid > article:nth-child(3) {
+  position: relative;
+  inset: auto;
+  display: flex;
+  grid-column: auto;
+  grid-row: auto;
+  width: auto;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--theme-border);
+  border-radius: 8px;
+  background: var(--theme-surface-content);
+  box-shadow: var(--theme-shadow-soft);
+  transform: none;
+  pointer-events: auto;
+}
+
+html[data-theme] #app .shop-content .product-grid .product-image,
+html[data-theme] #app .shop-content .product-grid > article:first-child .product-image,
+html[data-theme] #app .shop-content .product-grid > article:nth-child(2) .product-image,
+html[data-theme] #app .shop-content .product-grid > article:nth-child(3) .product-image {
+  position: relative;
+  inset: auto;
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html[data-theme] #app .shop-content .product-grid .product-image img,
+html[data-theme] #app .shop-content .product-grid > article:not(.featured) .product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+html[data-theme] #app .shop-content .product-grid .product-copy,
+html[data-theme] #app .shop-content .product-grid > article:first-child .product-copy,
+html[data-theme] #app .shop-content .product-grid > article:nth-child(2) .product-copy,
+html[data-theme] #app .shop-content .product-grid > article:nth-child(3) .product-copy {
+  position: static;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  min-height: 196px;
+  flex: 1;
+  align-content: start;
+  padding: 1rem;
+  border: 0 !important;
+  border-top: 0 !important;
+  border-radius: 0 !important;
+  background: var(--theme-surface-content) !important;
+  box-shadow: none !important;
+  transform: none;
+  backdrop-filter: none !important;
+}
+
+html[data-theme] #app .shop-content .product-grid h2 {
+  min-height: 2.7em;
+  margin: 0 0 .4rem;
+  font-size: 1.15rem;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+html[data-theme] #app .shop-content .product-grid .product-meta {
+  display: grid;
+  gap: .25rem;
+  margin-top: auto;
+}
+
+html[data-theme] #app .shop-content .product-grid .fluid-button {
+  width: 100%;
+  min-height: 44px;
+}
+
+@media (max-width: 980px) {
+  html[data-theme] #app .shop-content .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 760px) {
+  html[data-theme] #app .shop-content .product-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: .85rem;
+    margin-top: 1rem;
+  }
+
+  html[data-theme] #app .shop-content .product-grid > article,
+  html[data-theme] #app .shop-content .product-grid > article:first-child,
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(2),
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(3) {
+    display: grid;
+    grid-template-columns: minmax(128px, 42%) minmax(0, 1fr);
+    min-height: 196px;
+  }
+
+  html[data-theme] #app .shop-content .product-grid .product-image,
+  html[data-theme] #app .shop-content .product-grid > article:first-child .product-image,
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(2) .product-image,
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(3) .product-image {
+    width: auto;
+    height: 100%;
+    min-height: 196px;
+    aspect-ratio: auto;
+  }
+
+  html[data-theme] #app .shop-content .product-grid .product-copy,
+  html[data-theme] #app .shop-content .product-grid > article:first-child .product-copy,
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(2) .product-copy,
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(3) .product-copy {
+    min-height: 196px;
+    padding: .85rem;
+    border-top: 0 !important;
+    border-left: 1px solid var(--theme-border) !important;
+  }
+
+  html[data-theme] #app .shop-content .product-grid h2 {
+    min-height: 0;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  html[data-theme] #app .corridor-home__curation.home-experiences > .corridor-home__object-card { grid-template-columns: 96px minmax(0, 1fr); }
+  html[data-theme] #app .corridor-home__object-card img { width: 96px; height: 128px; }
+
+  html[data-theme] #app .shop-content .product-grid > article,
+  html[data-theme] #app .shop-content .product-grid > article:first-child,
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(2),
+  html[data-theme] #app .shop-content .product-grid > article:nth-child(3) { grid-template-columns: minmax(0, 1fr); }
+
+  html[data-theme] #app .shop-content .product-grid .product-image {
+    min-height: 210px;
+    aspect-ratio: 4 / 3;
+  }
+
+  html[data-theme] #app .shop-content .product-grid .product-copy {
+    min-height: 0;
+    border-top: 1px solid var(--theme-border) !important;
+    border-left: 0 !important;
+  }
+}

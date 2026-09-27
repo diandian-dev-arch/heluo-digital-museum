@@ -1,0 +1,1369 @@
+/* High-frequency task pages share the theme geometry and reserve atmosphere
+   for supporting media. Forms and operational data stay on quiet surfaces. */
+
+.booking-page,
+.task-auth-page,
+.profile-page,
+.admin-workspace {
+  color: var(--theme-text);
+}
+
+/* Visit booking: one continuous four-step task with a clearly raised form. */
+.booking-page {
+  gap: 1px;
+  background: var(--theme-border);
+}
+
+.booking-main {
+  background: var(--theme-surface-section);
+  color: var(--theme-text);
+}
+
+.booking-side {
+  border-color: var(--theme-border);
+  background: var(--theme-surface-canvas);
+}
+
+html #app .booking-page .booking-main[data-glass="light"] { background: var(--theme-surface-section); color: var(--theme-text); box-shadow: none; }
+html #app .booking-page .booking-side[data-glass="light"] { border-color: var(--theme-border); background: var(--theme-surface-canvas); color: var(--theme-text); box-shadow: none; }
+
+.booking-intro h1,
+.booking-steps strong,
+.visit-card h2,
+.appointment-form h2 { color: var(--theme-text-strong); }
+
+.booking-intro > p:not(.eyebrow),
+.booking-steps li,
+.slot-note,
+.visit-card p,
+.visit-card footer,
+.form-note,
+.privacy-note { color: var(--theme-text-muted); }
+
+.booking-steps::before { border-color: var(--theme-border-strong); }
+.booking-steps li::after { border-color: var(--theme-surface-section); background: var(--theme-text-muted); box-shadow: 0 0 0 1px var(--theme-border-strong); }
+.booking-steps li.active::after { background: var(--theme-action); box-shadow: 0 0 0 1px var(--theme-action); }
+.booking-steps li.current strong { color: var(--theme-action-strong); }
+
+.date-strip { border-color: var(--theme-border); background: transparent; }
+.mobile-date-picker { display: none; }
+.date-strip > button:not(.date-arrow) { min-height: var(--theme-control-min); border-color: var(--theme-border); color: var(--theme-text-muted); }
+.date-strip > button:not(.date-arrow):hover:not(:disabled) { background: var(--theme-surface-control-hover); color: var(--theme-text-strong); }
+.date-strip > button:not(.date-arrow).active { border-color: var(--theme-primary-surface); background: var(--theme-primary-surface); color: var(--theme-primary-text); box-shadow: var(--theme-control-shadow); }
+.date-strip > button:focus-visible,
+.slot-list button:focus-visible { outline: 2px solid var(--theme-focus); outline-offset: 3px; box-shadow: var(--theme-focus-ring); }
+
+.slot-list button {
+  border-color: var(--theme-border);
+  background: var(--theme-surface-control);
+  color: var(--theme-text);
+  box-shadow: none;
+  transition:
+    border-color var(--theme-motion-duration) var(--ease-out),
+    background-color var(--theme-motion-duration) var(--ease-out),
+    color var(--theme-motion-duration) var(--ease-out),
+    box-shadow var(--theme-motion-duration) var(--ease-out),
+    transform var(--theme-motion-duration) var(--ease-out);
+}
+.slot-list button:hover:not(:disabled) { border-color: var(--theme-border-strong); background: var(--theme-surface-control-hover); }
+.slot-list button:active:not(:disabled) { transform: scale(.98); }
+.slot-list button.active { border-color: var(--theme-action); background: var(--theme-surface-control-active); color: var(--theme-text-strong); }
+.slot-list button i { border-color: var(--theme-border-strong); background: var(--theme-surface-control); }
+.slot-list button.active i { border-color: var(--theme-surface-control); outline-color: var(--theme-action); background: var(--theme-action); }
+.slot-list button small { color: var(--theme-action-strong); }
+
+.visit-card { border-color: var(--theme-border); background: var(--theme-surface-content); box-shadow: var(--theme-shadow-surface); }
+.appointment-form { color: var(--theme-text); }
+.appointment-form h2,
+.booking-summary { border-color: var(--theme-border); }
+.booking-summary dt { color: var(--theme-text-muted); }
+.booking-summary dd { color: var(--theme-text-strong); }
+.appointment-form label,
+.mobile-booking-form label { color: var(--theme-text-strong); }
+.appointment-form :where(input, textarea),
+.mobile-booking-form :where(input, textarea),
+.booking-summary .visitor-count input {
+  min-height: var(--theme-control-min);
+  border-color: var(--theme-border-strong);
+  background: var(--theme-surface-control);
+  color: var(--theme-text-strong);
+  box-shadow: none;
+}
+.appointment-form :where(input, textarea):hover,
+.mobile-booking-form :where(input, textarea):hover { background: var(--theme-surface-control-hover); }
+.appointment-form :where(input, textarea):focus-visible,
+.mobile-booking-form :where(input, textarea):focus-visible,
+.booking-summary .visitor-count input:focus-visible { outline: 0; border-color: var(--theme-focus); background: var(--theme-surface-control-active); box-shadow: var(--theme-focus-ring); }
+.appointment-form :where(input, textarea)::placeholder,
+.mobile-booking-form :where(input, textarea)::placeholder { color: var(--theme-text-muted); opacity: .78; }
+.booking-site-plan { color: var(--theme-text-muted); }
+.booking-site-plan text { fill: var(--theme-text-muted); }
+.booking-site-plan circle { fill: var(--theme-action); }
+
+/* The river wash deliberately extends beyond its SVG viewBox. Contain that
+   decorative bleed locally so narrow viewports never advertise horizontal
+   page overflow to assistive audits or browser chrome. */
+.booking-wash { overflow: hidden; }
+
+/* Account access: atmospheric image remains secondary to a near-solid form. */
+.task-auth-page { background-color: var(--theme-surface-canvas); }
+.task-auth-page .auth-panel {
+  border-color: var(--theme-border-strong);
+  background: color-mix(in oklch, var(--theme-surface-content) 96%, transparent);
+  color: var(--theme-text);
+  box-shadow: var(--theme-shadow-float);
+}
+html #app .task-auth-page .auth-panel[data-glass="dark"] {
+  border-color: var(--theme-border-strong);
+  background: color-mix(in oklch, var(--theme-surface-content) 96%, transparent);
+  color: var(--theme-text);
+  box-shadow: var(--theme-shadow-float);
+}
+.task-auth-page .auth-panel::after { background: none; }
+.task-auth-page .auth-context { color: var(--theme-action-strong); }
+.task-auth-page .auth-context::before,
+.task-auth-page .auth-panel h1::after { background: var(--theme-action); }
+.task-auth-page .auth-panel h1 { color: var(--theme-text-strong); }
+.task-auth-page .auth-panel .auth-intro,
+.task-auth-page .auth-panel label > span { color: var(--theme-text); }
+.task-auth-page .auth-panel label { color: var(--theme-text-strong); }
+.task-auth-page .auth-panel :where(input, textarea, select) {
+  min-height: var(--theme-control-min);
+  border-color: var(--theme-border-strong) !important;
+  background: var(--theme-surface-control) !important;
+  color: var(--theme-text-strong) !important;
+  box-shadow: none !important;
+}
+.task-auth-page .auth-panel :where(input, textarea, select):hover { background: var(--theme-surface-control-hover) !important; }
+.task-auth-page .auth-panel :where(input, textarea, select):focus-visible { outline: 0; border-color: var(--theme-focus) !important; background: var(--theme-surface-control-active) !important; box-shadow: var(--theme-focus-ring) !important; }
+.task-auth-page .auth-panel input:-webkit-autofill,
+.task-auth-page .auth-panel input:-webkit-autofill:hover,
+.task-auth-page .auth-panel input:-webkit-autofill:focus {
+  border-color: var(--theme-border-strong) !important;
+  -webkit-text-fill-color: var(--theme-text-strong);
+  -webkit-box-shadow: 0 0 0 1000px var(--theme-surface-control) inset !important;
+  caret-color: var(--theme-text-strong);
+}
+.task-auth-page .auth-panel .fluid-button { border-color: var(--theme-primary-surface); background: var(--theme-primary-surface); color: var(--theme-primary-text); }
+.task-auth-page .auth-panel .fluid-button:hover:not(:disabled) { border-color: var(--theme-primary-surface-hover); background: var(--theme-primary-surface-hover); }
+.task-auth-page .auth-switch { border-color: var(--theme-border); }
+.task-auth-page .auth-switch button { min-height: var(--theme-control-min); color: var(--theme-action-strong); }
+.task-auth-page .auth-switch button:focus-visible { outline: 2px solid var(--theme-focus); outline-offset: 2px; }
+
+/* Profile was already restructured; this pass only aligns its account fields. */
+.profile-page .profile-account-panel :where(input, textarea, select) {
+  min-height: var(--theme-control-min);
+  border-color: var(--theme-border-strong) !important;
+  background: var(--theme-surface-control) !important;
+  color: var(--theme-text-strong) !important;
+}
+.profile-page .profile-account-panel :where(input, textarea, select):focus-visible { outline: 0; border-color: var(--theme-focus) !important; box-shadow: var(--theme-focus-ring) !important; }
+.profile-page .profile-identity strong { color: var(--theme-text-strong); }
+.profile-page .profile-identity { color: var(--theme-text-muted); }
+.profile-page .secondary-button { min-height: var(--theme-control-min); border-color: var(--theme-border-strong); background: var(--theme-secondary-surface); color: var(--theme-secondary-text); }
+
+/* Admin: quiet, dense operational workspace with only three surface levels. */
+.site-main--admin,
+.admin-workspace { background: var(--theme-surface-canvas); }
+.admin-workspace {
+  --admin-paper: var(--theme-surface-canvas);
+  --admin-panel: var(--theme-surface-content);
+  --admin-sidebar: var(--theme-surface-section);
+  --admin-rule: var(--theme-border);
+  --admin-glass: var(--theme-surface-content);
+  --admin-glass-strong: var(--theme-surface-raised);
+  --admin-glass-border: var(--theme-border);
+  --admin-glass-shadow: none;
+}
+.admin-main::before { display: none; }
+.admin-sidebar { border-color: var(--theme-border); background: var(--theme-surface-section); box-shadow: none; }
+html #app .admin-workspace .admin-sidebar[data-glass="dark"] { border-color: var(--theme-border); background: var(--theme-surface-section); color: var(--theme-text); box-shadow: none; }
+.admin-sidebar__brand,
+.admin-sidebar__exit { border-color: var(--theme-border); }
+.admin-sidebar__brand b,
+.admin-sidebar nav a span,
+.admin-sidebar nav a.active span { color: var(--theme-text-strong); }
+.admin-sidebar__brand small,
+.admin-sidebar nav a small,
+.admin-sidebar__exit { color: var(--theme-text-muted); }
+.admin-sidebar nav a { border-color: transparent; color: var(--theme-text-muted); }
+html #app .admin-workspace .admin-sidebar nav a[data-glass="dark"] { border-color: transparent; background: transparent; color: var(--theme-text-muted); box-shadow: none; }
+.admin-sidebar nav a:hover { border-color: var(--theme-border); background: var(--theme-surface-control-hover); transform: none; }
+html #app .admin-workspace .admin-sidebar nav a[data-glass="dark"]:hover:not(.active) { border-color: var(--theme-border); background: var(--theme-surface-control-hover); color: var(--theme-action-strong); }
+.admin-sidebar nav a.active { border-color: var(--theme-border-strong); background: var(--theme-surface-control-active); box-shadow: none; }
+html #app .admin-workspace .admin-sidebar nav a[data-glass="dark"].active { border-color: var(--theme-border-strong); background: var(--theme-surface-control-active); color: var(--theme-action-strong); box-shadow: none; }
+.admin-sidebar nav a.active::after { background: var(--theme-action); }
+.admin-sidebar__seal { border-color: var(--theme-action); background: transparent; color: var(--theme-action-strong); box-shadow: none; }
+.admin-context-rail { color: var(--theme-text-muted); }
+.admin-context-rail i { background: var(--theme-border); }
+.admin-context-rail b,
+.admin-title-lockup p { color: var(--theme-action-strong); }
+.admin-page-header { border-color: var(--theme-border); }
+html #app .admin-workspace .admin-page-header[data-glass="light"] { border-color: var(--theme-border); background: transparent; color: var(--theme-text); box-shadow: none; }
+.admin-page-header h1 { color: var(--theme-text-strong); }
+.admin-page-header span { color: var(--theme-text-muted); }
+.admin-header-link { min-height: var(--theme-control-min); border-color: var(--theme-border-strong); background: var(--theme-surface-control); color: var(--theme-text-strong); box-shadow: none; }
+.admin-header-link:hover { border-color: var(--theme-action); background: var(--theme-surface-control-hover); color: var(--theme-action-strong); }
+
+.admin-workspace .dashboard-summary,
+.admin-workspace--content .dashboard-summary,
+.admin-workspace--operations .dashboard-summary,
+.admin-create,
+.admin-records,
+.admin-inline-form,
+.admin-operation-panel,
+.admin-list--operations article,
+.admin-insights article {
+  border-color: var(--theme-border);
+  background: var(--theme-surface-content);
+  box-shadow: none;
+}
+.admin-workspace .dashboard-summary { gap: 1px; background: var(--theme-border); }
+html #app .admin-workspace .dashboard-summary[data-glass="light"] { border-color: var(--theme-border); background: var(--theme-border); box-shadow: none; }
+.admin-workspace .dashboard-summary article { min-height: 88px; background: var(--theme-surface-raised); }
+.admin-workspace .dashboard-summary article:hover { background: var(--theme-surface-control-hover); }
+.admin-workspace .dashboard-summary span,
+.admin-workspace .dashboard-summary small { color: var(--theme-text-muted); }
+.admin-workspace .dashboard-summary strong,
+.admin-workspace .dashboard-summary--operations strong { color: var(--theme-text-strong); }
+.admin-toolbar { border-color: var(--theme-border); background: var(--theme-surface-content); box-shadow: none; }
+.admin-workspace .admin-tabs button { min-height: var(--theme-control-min); color: var(--theme-text); }
+.admin-workspace .admin-tabs button:hover { background: var(--theme-surface-control-hover); color: var(--theme-action-strong); }
+.admin-workspace .admin-tabs button.active { background: var(--theme-surface-control-active); color: var(--theme-text-strong); box-shadow: inset 0 0 0 1px var(--theme-border); }
+.admin-workspace .admin-tabs button.active::after { background: var(--theme-action); }
+.admin-text-button { min-height: var(--theme-control-min); color: var(--theme-text); }
+.admin-text-button:hover { background: var(--theme-surface-control-hover); color: var(--theme-action-strong); }
+html #app .admin-workspace .admin-operation-panel[data-glass="light"],
+html #app .admin-workspace .admin-insights[data-glass="light"] { border-color: var(--theme-border); background: var(--theme-surface-content); color: var(--theme-text); box-shadow: none; }
+.admin-count,
+.admin-record-meta,
+.admin-record-copy p,
+.admin-record-category,
+.admin-record-date { color: var(--theme-text-muted); }
+.admin-record-copy h3,
+.admin-create header h2,
+.admin-form-heading h2,
+.admin-records .section-heading h2,
+.admin-insights__header span { color: var(--theme-text-strong); }
+.admin-create label,
+.admin-inline-form label { color: var(--theme-text); }
+.admin-create :where(input, textarea, select, .el-select__wrapper),
+.admin-inline-form :where(input, textarea, select, .el-select__wrapper),
+.admin-list-filters :where(input, select),
+.admin-product-edit :where(input, textarea) {
+  min-height: var(--theme-control-min);
+  border-color: var(--theme-border-strong);
+  background: var(--theme-surface-control);
+  color: var(--theme-text-strong);
+  box-shadow: none;
+}
+html #app .admin-workspace .admin-create :where(input, textarea, select, .el-select__wrapper),
+html #app .admin-workspace .admin-inline-form :where(input, textarea, select, .el-select__wrapper) { min-height: var(--theme-control-min); height: auto; }
+.admin-workspace :where(input, textarea, select):focus-visible { outline: 0; border-color: var(--theme-focus); box-shadow: var(--theme-focus-ring); }
+.admin-list--content article { border-color: var(--theme-border); }
+.admin-list--content article:hover,
+.admin-list--operations article:hover { background: var(--theme-surface-control-hover); box-shadow: none; transform: none; }
+html #app .admin-workspace .admin-list--operations[data-glass-collection] > article { border-color: var(--theme-border); background: var(--theme-surface-raised); color: var(--theme-text); box-shadow: none; }
+.admin-product-edit { border-color: var(--theme-border); background: var(--theme-surface-section); backdrop-filter: none; }
+.admin-insights { background: transparent; }
+.admin-insights__header { border-color: var(--theme-border); }
+.admin-insights article > span { color: var(--theme-text); }
+.admin-insights article > strong,
+.admin-insights__header strong { color: var(--theme-action-strong); }
+.admin-insights article > small { color: var(--theme-text-muted); }
+.admin-insight__signal { border-color: var(--theme-border); background: var(--theme-surface-control); }
+html #app .admin-workspace .admin-insights[data-glass="light"] > article { border-color: var(--theme-border); background: var(--theme-surface-raised); color: var(--theme-text); box-shadow: none; }
+
+/* Light admin atelier: high-contrast jade ink, paper layers and one coherent
+   control language. The sidebar intentionally switches to the light glass
+   layer so its copy never inherits the dark-glass ink used by public cards. */
+html:not([data-theme="dark"]) #app .admin-workspace {
+  --admin-paper: #f3f8f5;
+  --admin-panel: #ffffff;
+  --admin-sidebar: #edf6f1;
+  --admin-rule: #c7ddd4;
+  --admin-glass: #ffffff;
+  --admin-glass-strong: #fbfdfc;
+  --admin-glass-border: #c4d9d0;
+  --admin-glass-shadow: 0 18px 44px rgba(24, 69, 59, .08);
+  background:
+    radial-gradient(circle at 82% 0%, rgba(201, 149, 67, .08), transparent 28%),
+    linear-gradient(135deg, #f1f7f3 0%, #f8fbf9 54%, #eaf3ef 100%);
+  color: #244e46;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar[data-glass="light"] {
+  border-color: #b9d2c7;
+  background: linear-gradient(180deg, #eef7f2 0%, #e7f2ed 100%);
+  color: #1f5047;
+  box-shadow: 8px 0 28px rgba(33, 80, 68, .06), inset -1px 0 0 rgba(255, 255, 255, .7);
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar__brand {
+  border-color: #c9ddd5;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar__brand b,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"] span {
+  color: #123f3b;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar__brand small,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"] small,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar__exit {
+  color: var(--theme-text);
+  opacity: 1;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"] {
+  min-height: 68px;
+  border-color: transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: #2d6258;
+  box-shadow: none;
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"] svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.55;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"]:hover,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"]:focus-visible {
+  border-color: #b8d2c8;
+  background: rgba(255, 255, 255, .56);
+  color: #164d43;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .86), 0 8px 20px rgba(39, 91, 77, .08);
+  transform: translateX(2px);
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"].active {
+  border-color: #a9c8bc;
+  background: linear-gradient(135deg, #e0eee8 0%, #d5e8df 100%);
+  color: #0f5749;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 12px 26px rgba(28, 83, 69, .1);
+  transform: none;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"].active span { color: #123f3b; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"].active small { color: var(--theme-text); }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar nav a[data-glass="light"].active::after {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: -1px;
+  width: 3px;
+  height: auto;
+  margin: 0;
+  border-radius: 0 4px 4px 0;
+  background: #c99543;
+  box-shadow: 0 0 0 1px rgba(201, 149, 67, .12), 0 4px 12px rgba(201, 149, 67, .22);
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar__exit {
+  min-height: 48px;
+  border-color: #c9ddd5;
+  border-radius: 12px;
+  font-size: .74rem;
+}
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar__exit:hover,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-sidebar__exit:focus-visible {
+  background: rgba(255, 255, 255, .56);
+  color: #1c6757;
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-page-header,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-toolbar,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-records,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-inline-form,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-operation-panel,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-insights {
+  border-color: #c7ddd4;
+  background: linear-gradient(145deg, rgba(255, 255, 255, .9), rgba(246, 251, 248, .82));
+  box-shadow: 0 16px 38px rgba(27, 73, 61, .07), inset 0 1px 0 rgba(255, 255, 255, .92);
+}
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-page-header {
+  border-radius: 18px;
+  padding: 1.35rem 1.5rem 1.25rem;
+}
+html:not([data-theme="dark"]) #app .admin-workspace .admin-page-header h1 { color: #123f3b; letter-spacing: -.025em; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-page-header span { color: var(--theme-text); }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-context-rail { color: #52756f; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-context-rail b,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-title-lockup p { color: #8b652d; }
+
+html:not([data-theme="dark"]) #app .admin-workspace .dashboard-summary {
+  overflow: hidden;
+  gap: 1px;
+  border: 1px solid #bfd8cd;
+  border-radius: 16px;
+  background: #bfd8cd;
+  box-shadow: 0 14px 30px rgba(28, 80, 67, .08);
+}
+html:not([data-theme="dark"]) #app .admin-workspace .dashboard-summary article {
+  min-height: 108px;
+  border: 0;
+  background: linear-gradient(145deg, #e3f0ea, #d5e7df);
+}
+html:not([data-theme="dark"]) #app .admin-workspace .dashboard-summary article:hover { background: #eaf5f0; }
+html:not([data-theme="dark"]) #app .admin-workspace .dashboard-summary span,
+html:not([data-theme="dark"]) #app .admin-workspace .dashboard-summary small { color: #52756f; }
+html:not([data-theme="dark"]) #app .admin-workspace .dashboard-summary strong { color: #123f3b; }
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-toolbar {
+  min-height: 64px;
+  border-radius: 14px;
+  padding: .35rem .55rem;
+}
+html:not([data-theme="dark"]) #app .admin-workspace .admin-tabs button { color: #52756f; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-tabs button:hover { color: #1a5d4e; background: #e8f3ee; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-tabs button.active { color: #123f3b; background: #dcebe4; box-shadow: inset 0 0 0 1px #b7d1c6; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-tabs button.active::after { background: #c99543; }
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-records { border-radius: 16px; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create label,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-inline-form label { color: #244e46; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create label em,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create label small { color: #52756f; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create :where(input, textarea, select, .el-select__wrapper),
+html:not([data-theme="dark"]) #app .admin-workspace .admin-inline-form :where(input, textarea, select, .el-select__wrapper) {
+  border-color: #b9d2c8;
+  border-radius: 10px;
+  background: #fbfdfc;
+  color: #123f3b;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 3px 10px rgba(38, 86, 73, .04);
+}
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create :where(input, textarea, select, .el-select__wrapper):focus-within,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create :where(input, textarea, select):focus-visible,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-inline-form :where(input, textarea, select):focus-visible { border-color: #438675; box-shadow: 0 0 0 3px rgba(67, 134, 117, .16); }
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-list--content article,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-list--operations article { border-color: #d3e3dc; background: rgba(255, 255, 255, .58); }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-list--content article:hover,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-list--operations article:hover { background: #f7fbf9; box-shadow: inset 0 0 0 1px #c4dcd1, 0 10px 24px rgba(34, 83, 69, .07); }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-list-head,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-count,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-record-meta,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-record-copy p,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-record-category,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-record-date { color: #52756f; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-record-copy h3,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-records .section-heading h2,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-create header h2 { color: #123f3b; }
+
+html:not([data-theme="dark"]) #app .admin-workspace .admin-header-link,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-text-button,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-action-button,
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--secondary,
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--ghost {
+  border-color: #b6d0c5;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .78);
+  color: #244e46;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 5px 14px rgba(31, 78, 66, .06);
+}
+html:not([data-theme="dark"]) #app .admin-workspace .admin-header-link:hover,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-text-button:hover,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-action-button--secondary:hover:not(:disabled),
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--secondary:hover:not(:disabled),
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--ghost:hover:not(:disabled) { border-color: #57927f; background: #e5f1eb; color: #155b4d; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-action-button,
+html:not([data-theme="dark"]) #app .admin-workspace .admin-actions .admin-action-button { min-height: 44px; padding-inline: .75rem; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-action-button--primary,
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--primary:not(.fluid-button--danger) {
+  border-color: #145848;
+  background: linear-gradient(135deg, #176451, #0e4c40);
+  color: #f4fbf7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .2), 0 9px 20px rgba(20, 83, 68, .18);
+}
+html:not([data-theme="dark"]) #app .admin-workspace .admin-action-button--primary:hover:not(:disabled),
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--primary:hover:not(:disabled) { border-color: #0d4035; background: linear-gradient(135deg, #1d725c, #125442); }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-action-button--danger,
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--danger { border-color: #d7aaa1; background: #fff8f6; color: #9d4439; box-shadow: none; }
+html:not([data-theme="dark"]) #app .admin-workspace .admin-action-button--danger:hover:not(:disabled),
+html:not([data-theme="dark"]) #app .admin-workspace .fluid-button--danger:hover:not(:disabled) { border-color: #b86559; background: #fff0ed; color: #8d352c; }
+html:not([data-theme="dark"]) #app .admin-workspace :is(.admin-action-button, .admin-header-link, .admin-text-button, .fluid-button):focus-visible { outline: 2px solid #438675; outline-offset: 3px; box-shadow: 0 0 0 4px rgba(67, 134, 117, .15), 0 8px 18px rgba(27, 74, 61, .1); }
+
+@media (min-width: 761px) {
+  html #app .booking-page .visit-card {
+    grid-template-columns: minmax(180px, 34%) minmax(0, 1fr);
+    height: 154px;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    box-shadow: var(--theme-control-shadow);
+  }
+
+  html #app .booking-page .visit-card > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  html #app .booking-page .visit-card > div {
+    min-width: 0;
+    padding: 1rem 1.15rem;
+  }
+
+  html #app .booking-page .visit-card h2 {
+    margin-bottom: .55rem;
+    font: 650 1rem/1.25 var(--font-body);
+    letter-spacing: 0;
+  }
+
+  html #app .booking-page .visit-card p,
+  html #app .booking-page .visit-card footer span {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: .42rem;
+    margin: 0;
+    font: 500 .72rem/1.45 var(--font-body);
+  }
+
+  html #app .booking-page .visit-card :is(p, footer) svg {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    margin-top: .05rem;
+    color: var(--theme-action-strong);
+  }
+
+  html #app .booking-page .visit-card footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem 1rem;
+    margin-top: .6rem;
+  }
+}
+
+@media (max-width: 760px) {
+  html[lang="zh-CN"] .booking-page {
+    --booking-cjk-display: "PingFang SC", "Microsoft YaHei UI", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+    --booking-cjk-text: "PingFang SC", "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+    font-family: var(--booking-cjk-text);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  html[lang="zh-CN"] .booking-page .booking-intro h1 {
+    max-width: 9em;
+    font-family: var(--booking-cjk-display);
+    font-size: clamp(2.15rem, 10.6vw, 2.75rem);
+    font-weight: 580;
+    line-height: 1.24;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  html[lang="zh-CN"] .booking-page :is(
+    .booking-intro > p:not(.eyebrow),
+    .booking-steps li,
+    .mobile-date-picker__header h2,
+    .mobile-date-picker__day span,
+    .mobile-date-picker__day small,
+    .mobile-date-picker__selected,
+    .slot-list button,
+    .slot-note,
+    .visit-card
+  ) {
+    font-family: var(--booking-cjk-text);
+    letter-spacing: 0;
+  }
+
+  html[lang="zh-CN"] .booking-page .booking-intro > p:not(.eyebrow) {
+    font-size: .78rem;
+    font-weight: 430;
+    line-height: 1.8;
+  }
+
+  html[lang="zh-CN"] .booking-page .booking-steps li {
+    font-size: .68rem;
+    font-weight: 520;
+    line-height: 1.35;
+  }
+
+  html[lang="zh-CN"] .booking-page .booking-steps li.current span,
+  html[lang="zh-CN"] .booking-page .mobile-date-picker__header h2 {
+    font-weight: 650;
+  }
+
+  html[lang="zh-CN"] .booking-page :is(.mobile-date-picker__day strong, .slot-list button span) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mobile-date-picker {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    min-width: 0;
+    gap: .85rem;
+    margin-inline: -.15rem;
+    padding: 1rem 0 1.05rem;
+    border-block: 1px solid var(--theme-border);
+    color: var(--theme-text);
+  }
+
+  .mobile-date-picker__header {
+    display: flex;
+    min-width: 0;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-inline: .15rem;
+  }
+
+  .mobile-date-picker__eyebrow {
+    display: block;
+    margin-bottom: .2rem;
+    color: var(--theme-action-strong);
+    font: 650 .58rem/1.2 var(--font-body);
+    letter-spacing: 0;
+  }
+
+  .mobile-date-picker__header h2 {
+    margin: 0;
+    color: var(--theme-text-strong);
+    font: 620 1.05rem/1.2 var(--font-display);
+    letter-spacing: 0;
+  }
+
+  .mobile-date-picker__range {
+    flex: 0 0 auto;
+    padding-bottom: .12rem;
+    color: var(--theme-text-muted);
+    font: 600 .66rem/1.2 var(--font-body);
+  }
+
+  .mobile-date-picker__rail {
+    display: grid;
+    grid-auto-columns: 82px;
+    grid-auto-flow: column;
+    gap: .55rem;
+    max-width: 100%;
+    padding: .15rem .15rem .55rem;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline: .15rem;
+    scroll-snap-type: inline mandatory;
+    scrollbar-color: color-mix(in oklch, var(--theme-action) 46%, transparent) transparent;
+    scrollbar-width: thin;
+    touch-action: pan-x;
+  }
+
+  .mobile-date-picker__day {
+    display: grid;
+    width: 82px;
+    min-height: 108px;
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    padding: .65rem .4rem .55rem;
+    border: 1px solid var(--theme-border-strong);
+    border-radius: 7px;
+    background: var(--theme-surface-control);
+    box-shadow: var(--theme-control-shadow);
+    color: var(--theme-text-strong);
+    scroll-snap-align: start;
+    text-align: center;
+    transition: border-color 180ms ease-out, background-color 180ms ease-out, box-shadow 180ms ease-out, transform 180ms ease-out;
+  }
+
+  .mobile-date-picker__day span {
+    color: var(--theme-text-muted);
+    font: 600 .68rem/1.2 var(--font-body);
+  }
+
+  .mobile-date-picker__day strong {
+    align-self: center;
+    color: inherit;
+    font: 650 1.65rem/1 var(--font-display);
+  }
+
+  .mobile-date-picker__day small {
+    color: var(--theme-action-strong);
+    font: 650 .6rem/1.2 var(--font-body);
+  }
+
+  .mobile-date-picker__day.active {
+    border-color: var(--theme-primary-surface);
+    background: var(--theme-primary-surface);
+    box-shadow: var(--theme-control-shadow-hover);
+    color: var(--theme-primary-text);
+  }
+
+  .mobile-date-picker__day.active :is(span, small) { color: inherit; }
+
+  .mobile-date-picker__day:disabled {
+    border-color: var(--theme-border);
+    background: var(--theme-surface-section);
+    box-shadow: none;
+    color: var(--theme-text-muted);
+    cursor: not-allowed;
+    opacity: .62;
+  }
+
+  .mobile-date-picker__day:disabled small { color: var(--theme-text-muted); }
+
+  .mobile-date-picker__day:focus-visible {
+    outline: 2px solid var(--theme-focus);
+    outline-offset: 3px;
+    box-shadow: var(--theme-focus-ring);
+  }
+
+  .mobile-date-picker__day:active:not(:disabled) { transform: scale(.97); }
+
+  .mobile-date-picker__selected {
+    margin: -.2rem .15rem 0;
+    color: var(--theme-text-muted);
+    font: 600 .68rem/1.3 var(--font-body);
+  }
+
+  .task-auth-page { display: block; padding: 1rem; }
+  .task-auth-page .auth-story { display: none; }
+  .task-auth-page .auth-panel { max-height: none; margin: 0 auto; }
+  .admin-workspace .dashboard-summary article { min-height: 78px; }
+  .admin-list-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+  .admin-list-filters :where(input, select) { width: 100%; min-width: 0; }
+}
+
+/* Mobile appointment is a compact task flow: one progress rail, then date,
+   time and details. Keep this route-scoped so the public shell is unchanged. */
+@media (max-width: 760px) {
+  html #app .app-shell--appointment > .site-header {
+    height: 64px;
+    gap: .5rem;
+    padding-inline: .75rem;
+  }
+
+  html #app .app-shell--appointment > .site-header .brand {
+    min-width: 0;
+    gap: .55rem;
+  }
+
+  html #app .app-shell--appointment > .site-header .brand-seal {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+  }
+
+  html #app .app-shell--appointment > .site-header .brand-copy {
+    min-width: 0;
+  }
+
+  html #app .app-shell--appointment > .site-header .brand-copy b {
+    overflow: hidden;
+    font-size: .82rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  html #app .app-shell--appointment > .site-header .brand-copy small { display: none; }
+
+  html #app .app-shell--appointment > .site-header .site-utilities {
+    flex: 0 0 auto;
+    gap: .25rem;
+  }
+
+  html #app .app-shell--appointment > .site-header :is(.theme-toggle, .locale-toggle, .login-link) {
+    width: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: 0;
+  }
+
+  html #app .app-shell--appointment > .site-header .login-link {
+    display: inline-flex;
+    max-width: none;
+  }
+
+  html #app .app-shell--appointment > .site-header .account-icon {
+    display: block;
+    width: 18px;
+    height: 18px;
+  }
+
+  html #app .app-shell--appointment > .site-header :is(.account-label--mobile, .account-label--desktop) { display: none; }
+
+  html #app .booking-page .booking-main[data-glass="light"] {
+    min-height: calc(100dvh - 64px);
+    padding: 2.35rem 1rem calc(6.85rem + env(safe-area-inset-bottom));
+  }
+
+  .booking-page .booking-intro .eyebrow {
+    margin-bottom: .8rem;
+    font-size: .61rem;
+    letter-spacing: 0;
+  }
+
+  html[lang="zh-CN"] .booking-page .booking-intro h1,
+  .booking-page .booking-intro h1 {
+    max-width: 8em;
+    margin-bottom: .9rem;
+    font-size: clamp(2.25rem, 10.6vw, 2.65rem);
+    font-weight: 620;
+    line-height: 1.18;
+    letter-spacing: 0;
+  }
+
+  html[lang="en-US"] .booking-page .booking-intro h1 {
+    max-width: 11em;
+    font-size: clamp(2.08rem, 9.4vw, 2.55rem);
+    line-height: 1.08;
+  }
+
+  html[lang="zh-CN"] .booking-page .booking-intro > p:not(.eyebrow),
+  .booking-page .booking-intro > p:not(.eyebrow) {
+    max-width: 27rem;
+    margin: 0;
+    font-size: .78rem;
+    line-height: 1.72;
+  }
+
+  html #app .booking-page .booking-steps {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin: 1.75rem 0 1.65rem;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid color-mix(in oklch, var(--theme-primary-surface) 35%, var(--theme-border));
+    border-radius: 6px;
+    background: color-mix(in oklch, var(--theme-primary-surface) 92%, var(--theme-surface-content));
+    box-shadow: inset 0 1px 0 color-mix(in oklch, var(--theme-primary-text) 12%, transparent), 0 8px 22px color-mix(in oklch, var(--theme-text-strong) 10%, transparent);
+  }
+
+  html #app .booking-page .booking-steps::before {
+    display: none;
+  }
+
+  html #app .booking-page .booking-steps li,
+  html #app .booking-page .booking-steps li:nth-child(2),
+  html #app .booking-page .booking-steps li:nth-child(3),
+  html #app .booking-page .booking-steps li:last-child {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    min-width: 0;
+    min-height: 62px;
+    grid-template-rows: auto auto;
+    align-content: center;
+    justify-items: start;
+    gap: .25rem;
+    padding: .65rem .45rem .55rem;
+    border: 0 !important;
+    border-right: 1px solid color-mix(in oklch, var(--theme-primary-text) 14%, transparent) !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: color-mix(in oklch, var(--theme-primary-text) 72%, transparent) !important;
+    text-align: left;
+  }
+
+  html #app .booking-page .booking-steps li:last-child { border-right: 0 !important; }
+
+  html #app .booking-page .booking-steps li::after {
+    position: absolute;
+    top: auto;
+    right: .45rem;
+    bottom: 0;
+    left: .45rem;
+    display: block;
+    width: auto;
+    height: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    content: '';
+    transform: none;
+  }
+
+  html #app .booking-page .booking-steps li b {
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: 700 .76rem/1 var(--font-body);
+    font-variant-numeric: tabular-nums;
+  }
+
+  html #app .booking-page .booking-steps li.active b {
+    border-color: transparent;
+    color: color-mix(in oklch, var(--theme-primary-text) 88%, transparent);
+  }
+
+  html #app .booking-page .booking-steps li.active span {
+    color: color-mix(in oklch, var(--theme-primary-text) 92%, transparent) !important;
+  }
+
+  html #app .booking-page .booking-steps li.current {
+    background: color-mix(in oklch, var(--theme-primary-text) 10%, transparent) !important;
+    color: var(--theme-primary-text) !important;
+  }
+
+  html #app .booking-page .booking-steps li.current::after {
+    height: 2px;
+    background: color-mix(in oklch, var(--theme-primary-text) 82%, var(--theme-action));
+  }
+
+  html #app .booking-page .booking-steps li span {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    color: inherit !important;
+    font: 580 .62rem/1.25 var(--font-body);
+    letter-spacing: 0;
+    overflow-wrap: normal;
+    white-space: nowrap;
+  }
+
+  html #app .booking-page .booking-steps li.current span {
+    color: var(--theme-primary-text) !important;
+    font-weight: 680;
+  }
+
+  html #app .booking-page .booking-steps strong { display: none !important; }
+
+  .booking-page .mobile-date-picker {
+    gap: .75rem;
+    margin-inline: 0;
+    padding: 1.05rem 0 1.15rem;
+  }
+
+  .booking-page .mobile-date-picker__header { padding-inline: 0; }
+
+  .booking-page .mobile-date-picker__rail {
+    grid-auto-columns: calc((100% - 1.5rem) / 4);
+    gap: .5rem;
+    margin-inline: 0;
+    max-width: none;
+    padding: .1rem 0 .25rem;
+    scrollbar-width: none;
+  }
+
+  .booking-page .mobile-date-picker__rail::-webkit-scrollbar { display: none; }
+
+  .booking-page .mobile-date-picker__day {
+    width: 100%;
+    border-radius: 6px;
+    box-shadow: 0 5px 14px color-mix(in oklch, var(--theme-text-strong) 7%, transparent);
+    scroll-snap-stop: always;
+  }
+
+  .booking-page .mobile-date-picker__day.active {
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--theme-primary-text) 25%, transparent), 0 8px 18px color-mix(in oklch, var(--theme-primary-surface) 24%, transparent);
+  }
+
+  .booking-page .mobile-date-picker__selected {
+    width: fit-content;
+    margin: 0;
+    padding: .28rem .5rem;
+    border-left: 2px solid var(--theme-action);
+    color: var(--theme-text-muted);
+    background: color-mix(in oklch, var(--theme-surface-control) 72%, transparent);
+  }
+
+  .booking-page .mobile-slot-picker {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    gap: .8rem;
+    padding: 1.15rem 0 .2rem;
+    border-bottom: 1px solid var(--theme-border);
+  }
+
+  .booking-page .mobile-slot-picker__header {
+    display: flex;
+    min-width: 0;
+    align-items: end;
+    justify-content: space-between;
+    gap: .75rem;
+  }
+
+  .booking-page .mobile-slot-picker__header div > span {
+    display: block;
+    margin-bottom: .2rem;
+    color: var(--theme-action-strong);
+    font: 650 .58rem/1.2 var(--font-body);
+  }
+
+  .booking-page .mobile-slot-picker__header h2 {
+    margin: 0;
+    color: var(--theme-text-strong);
+    font: 650 1.05rem/1.2 var(--font-body);
+    letter-spacing: 0;
+  }
+
+  .booking-page .mobile-slot-picker__header small {
+    padding-bottom: .12rem;
+    color: var(--theme-text-muted);
+    font: 600 .66rem/1.2 var(--font-body);
+    font-variant-numeric: tabular-nums;
+  }
+
+  html #app .booking-page .mobile-slot-picker .slot-list {
+    display: grid;
+    gap: .55rem;
+    margin: 0;
+  }
+
+  html #app .booking-page .mobile-slot-picker .slot-list button {
+    display: grid;
+    min-height: 58px;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    gap: .7rem;
+    padding: .65rem .8rem;
+    border-radius: 6px;
+  }
+
+  html #app .booking-page .mobile-slot-picker .slot-list button i {
+    grid-row: 1;
+    width: 14px;
+    height: 14px;
+  }
+
+  html #app .booking-page .mobile-slot-picker .slot-list button span {
+    font: 650 .82rem/1.2 var(--font-body);
+    font-variant-numeric: tabular-nums;
+  }
+
+  html #app .booking-page .mobile-slot-picker .slot-list button small {
+    display: block;
+    grid-column: 3;
+    grid-row: 1;
+    color: var(--theme-text-muted);
+    font: 560 .64rem/1.2 var(--font-body);
+    text-align: right;
+  }
+
+  html #app .booking-page .mobile-slot-picker .slot-list button.active small { color: var(--theme-action-strong); }
+  html #app .booking-page .mobile-slot-picker .slot-list button::after { display: none; }
+
+  html #app .booking-page .mobile-slot-picker .slot-list button.active {
+    border-color: var(--theme-action) !important;
+    background: var(--theme-surface-control-active) !important;
+    color: var(--theme-text-strong) !important;
+    box-shadow: inset 3px 0 0 var(--theme-action) !important;
+  }
+
+  .booking-page .slot-note {
+    position: relative;
+    z-index: 2;
+    margin: .85rem 0 .95rem;
+    font-size: .64rem;
+    line-height: 1.55;
+  }
+
+  html #app .booking-page .mobile-booking-trigger {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    width: 100%;
+    min-height: 52px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 1rem;
+    padding: .75rem .9rem  .75rem 1rem;
+    border: 1px solid var(--theme-primary-surface) !important;
+    border-radius: 6px !important;
+    background: var(--theme-primary-surface) !important;
+    color: var(--theme-primary-text) !important;
+    box-shadow: var(--theme-control-shadow-hover) !important;
+    font: 680 .8rem/1 var(--font-body);
+  }
+
+  html #app .booking-page .mobile-booking-trigger svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  html #app .booking-page .mobile-booking-trigger:disabled {
+    border-color: var(--theme-border) !important;
+    background: var(--theme-surface-control) !important;
+    color: var(--theme-text-muted) !important;
+    box-shadow: none !important;
+    cursor: not-allowed;
+    opacity: .72;
+  }
+
+  html #app .booking-page .visit-card {
+    grid-template-columns: minmax(96px, 34%) minmax(0, 1fr);
+    min-height: 146px;
+    margin: 0;
+    border-radius: 6px;
+    box-shadow: var(--theme-control-shadow);
+  }
+
+  html #app .booking-page .visit-card > img {
+    height: 100%;
+    min-height: 146px;
+  }
+
+  html #app .booking-page .visit-card > div {
+    min-width: 0;
+    padding: .85rem .8rem;
+  }
+
+  html #app .booking-page .visit-card h2 {
+    margin-bottom: .55rem;
+    font: 650 .92rem/1.25 var(--font-body);
+    letter-spacing: 0;
+  }
+
+  html #app .booking-page .visit-card p,
+  html #app .booking-page .visit-card footer span {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: .38rem;
+    margin: 0;
+    font: 500 .63rem/1.5 var(--font-body);
+  }
+
+  html #app .booking-page .visit-card p svg,
+  html #app .booking-page .visit-card footer svg {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+    margin-top: .08rem;
+    color: var(--theme-action-strong);
+  }
+
+  html #app .booking-page .visit-card footer {
+    display: grid;
+    gap: .28rem;
+    margin-top: .55rem;
+  }
+
+  html #app .app-shell--appointment .mobile-tab-bar {
+    right: .55rem;
+    bottom: calc(.55rem + env(safe-area-inset-bottom));
+    left: .55rem;
+    min-height: 62px;
+    padding: .35rem .3rem;
+    border-radius: 12px;
+  }
+
+  html #app .app-shell--appointment .mobile-tab-bar a {
+    min-height: 50px;
+    border-radius: 8px;
+    font-size: .62rem;
+    letter-spacing: 0;
+  }
+
+  html #app .app-shell--appointment .mobile-tab-bar a.router-link-exact-active {
+    background: color-mix(in oklch, var(--theme-action) 12%, transparent);
+    color: var(--theme-action-strong);
+  }
+
+  html #app .app-shell--appointment .mobile-tab-bar a.router-link-exact-active svg { stroke-width: 1.9; }
+
+  .appointment-bottom-sheet.bottom-sheet {
+    border-color: var(--theme-border-strong) !important;
+    border-radius: 12px 12px 0 0;
+    background: color-mix(in oklch, var(--theme-surface-content) 98%, var(--theme-surface-canvas)) !important;
+    color: var(--theme-text);
+    box-shadow: 0 -18px 52px color-mix(in oklch, var(--theme-text-strong) 22%, transparent) !important;
+    backdrop-filter: blur(12px) saturate(108%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(108%) !important;
+  }
+
+  .appointment-bottom-sheet .bottom-sheet-handle i { background: var(--theme-border-strong); }
+
+  .appointment-bottom-sheet .bottom-sheet-header {
+    border-color: var(--theme-border);
+    padding-bottom: .65rem;
+  }
+
+  .appointment-bottom-sheet .bottom-sheet-header h2 {
+    color: var(--theme-text-strong);
+    font: 680 1.12rem/1.2 var(--font-body);
+    letter-spacing: 0;
+  }
+
+  .appointment-bottom-sheet .bottom-sheet-close {
+    background: var(--theme-surface-control);
+    color: var(--theme-text-strong);
+  }
+
+  .appointment-bottom-sheet .bottom-sheet-content {
+    display: grid;
+    gap: 1rem;
+    padding: .9rem 1rem calc(1.25rem + env(safe-area-inset-bottom));
+  }
+
+  .appointment-bottom-sheet .booking-summary {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: .35rem .75rem;
+    border: 1px solid var(--theme-border);
+    border-radius: 7px;
+    background: var(--theme-surface-section);
+    box-shadow: none;
+  }
+
+  .appointment-bottom-sheet .booking-summary > div {
+    display: grid;
+    min-height: 46px;
+    grid-template-columns: 5.6rem minmax(0, 1fr);
+    align-items: center;
+    padding: .45rem 0;
+    border-bottom: 1px solid var(--theme-border);
+    border-radius: 0;
+  }
+
+  .appointment-bottom-sheet .booking-summary > div:last-child { border-bottom: 0; }
+  .appointment-bottom-sheet .booking-summary > div:hover { background: transparent; }
+  .appointment-bottom-sheet .booking-summary dt { color: var(--theme-text-muted); font: 560 .7rem/1.3 var(--font-body); }
+  .appointment-bottom-sheet .booking-summary dd { margin: 0; color: var(--theme-text-strong); font: 620 .72rem/1.35 var(--font-body); }
+
+  .appointment-bottom-sheet .booking-summary .visitor-count {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .4rem;
+  }
+
+  .appointment-bottom-sheet .visitor-stepper {
+    display: inline-grid;
+    width: 140px;
+    min-height: 44px;
+    grid-template-columns: 44px 52px 44px;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid var(--theme-border-strong);
+    border-radius: 7px;
+    background: var(--theme-surface-control);
+  }
+
+  .appointment-bottom-sheet .visitor-stepper button {
+    display: grid;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--theme-action-strong);
+  }
+
+  .appointment-bottom-sheet .visitor-stepper button:disabled { color: var(--theme-text-muted); opacity: .42; }
+  .appointment-bottom-sheet .visitor-stepper button svg { width: 17px; height: 17px; }
+
+  .appointment-bottom-sheet .visitor-stepper__input[type="number"] {
+    width: 52px !important;
+    min-width: 52px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    border-width: 0 1px !important;
+    border-color: var(--theme-border) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: var(--theme-text-strong);
+    text-align: center;
+  }
+
+  .appointment-bottom-sheet .visitor-count__unit { color: var(--theme-text-muted); }
+
+  .appointment-bottom-sheet .mobile-booking-form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .appointment-bottom-sheet .mobile-booking-form .form-field {
+    display: grid;
+    gap: .45rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .appointment-bottom-sheet .mobile-booking-form .form-field:hover,
+  .appointment-bottom-sheet .mobile-booking-form .form-field:focus-within {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .appointment-bottom-sheet .mobile-booking-form .form-field > span {
+    min-height: 1rem;
+    color: var(--theme-text-strong);
+    font: 620 .71rem/1.2 var(--font-body);
+  }
+
+  .appointment-bottom-sheet .mobile-booking-form .form-field :where(input, textarea) {
+    width: 100%;
+    min-height: 48px;
+    padding: .7rem .75rem;
+    border: 1px solid var(--theme-border-strong);
+    border-radius: 6px;
+    background: var(--theme-surface-control);
+    color: var(--theme-text-strong);
+    box-shadow: none;
+  }
+
+  .appointment-bottom-sheet .mobile-booking-form .form-field textarea {
+    min-height: 84px;
+    resize: vertical;
+  }
+}
+
+@media (max-width: 360px) {
+  html #app .app-shell--appointment > .site-header { padding-inline: .5rem; }
+  html #app .app-shell--appointment > .site-header .brand { gap: .42rem; }
+  html #app .app-shell--appointment > .site-header .brand-copy b { max-width: 6.6rem; font-size: .76rem; }
+  html #app .app-shell--appointment > .site-header .theme-toggle span { display: none; }
+  html #app .booking-page .booking-main[data-glass="light"] { padding-inline: .85rem; }
+  .booking-page .mobile-date-picker__rail { margin-inline: 0; padding-inline: 0; }
+  html #app .booking-page .booking-steps li span { font-size: .61rem; }
+  html #app .booking-page .mobile-slot-picker .slot-list button { gap: .55rem; padding-inline: .7rem; }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .booking-main,
+  .booking-side,
+  .task-auth-page .auth-panel,
+  .admin-sidebar,
+  .admin-workspace :where(.dashboard-summary, .admin-create, .admin-records, .admin-inline-form, .admin-operation-panel, .admin-list--operations article, .admin-insights article) {
+    background: var(--theme-surface-content);
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot-list button {
+    transition-duration: 0ms !important;
+  }
+
+  .slot-list button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .booking-page,
+  .task-auth-page,
+  .admin-workspace { background: Canvas; color: CanvasText; }
+  .date-strip > button:focus-visible,
+  .slot-list button:focus-visible,
+  .task-auth-page .auth-switch button:focus-visible { outline-color: Highlight; }
+}

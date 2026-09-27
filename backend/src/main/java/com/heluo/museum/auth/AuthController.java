@@ -141,9 +141,13 @@ public class AuthController {
         if (userIds.isEmpty()) {
             throw new ResourceNotFoundException("重置链接无效或已过期");
         }
+        int consumed = jdbc.update("update password_reset_tokens set used_at=current_timestamp(3) "
+                + "where token_hash=? and used_at is null and expires_at>current_timestamp(3)", tokenHash);
+        if (consumed != 1) {
+            throw new ResourceNotFoundException("重置链接无效或已过期");
+        }
         long userId = userIds.get(0);
         jdbc.update("update users set password_hash=? where id=?", encoder.encode(body.newPassword()), userId);
-        jdbc.update("update password_reset_tokens set used_at=current_timestamp(3) where token_hash=?", tokenHash);
         jdbc.update("update auth_sessions set revoked_at=current_timestamp(3) where user_id=? and revoked_at is null", userId);
         operationLogService.record(userId, "AUTH", "PASSWORD_RESET_CONFIRM", "USER", String.valueOf(userId));
         return ApiResponse.ok(Map.of("status", "password_reset"), "password-reset-confirm");

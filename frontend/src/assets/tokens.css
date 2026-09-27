@@ -1,0 +1,113 @@
+:root {
+  --theme-canvas: var(--color-paper);
+  --theme-canvas-raised: var(--color-paper-2);
+  --theme-surface: var(--color-surface);
+  --theme-surface-raised: color-mix(in oklch, var(--color-surface) 92%, var(--color-paper-2));
+  --theme-text: var(--color-text);
+  --theme-text-strong: var(--color-ink);
+  --theme-text-muted: var(--color-muted);
+  --theme-border: var(--color-rule);
+  --theme-border-strong: var(--color-rule-strong);
+  --theme-action: var(--color-action);
+  --theme-action-strong: var(--color-action-strong);
+  --theme-action-ink: var(--color-action-ink);
+  --theme-accent: var(--color-accent);
+  --theme-focus: var(--color-focus);
+  --theme-control-min: 44px;
+  --theme-control-radius: 8px;
+  --theme-card-radius: var(--radius-md);
+  --theme-glass-blur: 18px;
+  --theme-glass-saturation: 130%;
+  --theme-shadow-surface: 0 18px 44px color-mix(in oklch, var(--color-ink) 10%, transparent);
+  --theme-shadow-float: 0 22px 58px color-mix(in oklch, var(--color-ink) 16%, transparent);
+  --theme-surface-canvas: var(--theme-canvas);
+  --theme-surface-section: var(--theme-canvas-raised);
+  --theme-surface-content: var(--theme-surface);
+  --theme-surface-control: var(--theme-surface-raised);
+  --theme-surface-control-hover: color-mix(in oklch, var(--theme-action) 7%, var(--theme-surface-control));
+  --theme-surface-control-active: color-mix(in oklch, var(--theme-action) 12%, var(--theme-surface-control));
+  --theme-primary-surface: var(--theme-action);
+  --theme-primary-surface-hover: var(--theme-action-strong);
+  --theme-primary-text: var(--theme-action-ink);
+  --theme-secondary-surface: color-mix(in oklch, var(--theme-surface-control) 94%, transparent);
+  --theme-secondary-surface-hover: var(--theme-surface-control-hover);
+  --theme-secondary-text: var(--theme-text-strong);
+  --theme-danger: var(--color-danger);
+  --theme-danger-surface: color-mix(in oklch, var(--color-danger) 9%, var(--theme-surface-content));
+  --theme-danger-surface-hover: color-mix(in oklch, var(--color-danger) 15%, var(--theme-surface-content));
+  --theme-success: var(--color-success);
+  --theme-success-surface: color-mix(in oklch, var(--color-success) 9%, var(--theme-surface-content));
+  --theme-warning: var(--color-warning);
+  --theme-warning-surface: color-mix(in oklch, var(--color-warning) 11%, var(--theme-surface-content));
+  --theme-info: var(--theme-action);
+  --theme-info-surface: color-mix(in oklch, var(--theme-action) 8%, var(--theme-surface-content));
+  --theme-focus-ring: 0 0 0 3px color-mix(in oklch, var(--theme-focus) 24%, transparent);
+  --theme-control-shadow: 0 2px 6px color-mix(in oklch, var(--theme-text-strong) 8%, transparent);
+  --theme-control-shadow-hover: 0 4px 10px color-mix(in oklch, var(--theme-text-strong) 12%, transparent);
+  --theme-disabled-opacity: .56;
+  /* Moonstone Tactile: shared display-plinth depth for controls and cards. */
+  --theme-tactile-surface: color-mix(in oklch, var(--theme-surface-control) 88%, var(--theme-surface-content));
+  --theme-tactile-surface-hover: color-mix(in oklch, var(--theme-action) 6%, var(--theme-tactile-surface));
+  --theme-tactile-recess: color-mix(in oklch, var(--theme-surface-content) 76%, var(--theme-surface-control));
+  --theme-tactile-edge: color-mix(in oklch, var(--theme-border-strong) 76%, var(--theme-surface-content));
+  --theme-tactile-card-edge: color-mix(in oklch, var(--theme-border-strong) 68%, var(--theme-surface-content));
+  --theme-tactile-highlight: color-mix(in oklch, var(--theme-surface-content) 82%, transparent);
+  --theme-tactile-inset: color-mix(in oklch, var(--theme-text-strong) 11%, transparent);
+  --theme-tactile-action-edge: color-mix(in oklch, var(--theme-primary-surface-hover) 74%, var(--theme-primary-surface));
+  --theme-tactile-action-highlight: color-mix(in oklch, var(--theme-primary-text) 22%, transparent);
+  --theme-tactile-control-shadow: var(--theme-control-shadow);
+  --theme-tactile-control-shadow-raised: var(--theme-control-shadow-hover);
+  --theme-tactile-control-shadow-pressed: none;
+  --theme-tactile-action-shadow: var(--theme-control-shadow);
+  --theme-tactile-action-shadow-raised: var(--theme-control-shadow-hover);
+  --theme-tactile-action-shadow-pressed: none;
+  --theme-tactile-card-shadow: 0 3px 12px color-mix(in oklch, var(--theme-text-strong) 6%, transparent);
+  --theme-tactile-card-shadow-raised: 0 6px 18px color-mix(in oklch, var(--theme-text-strong) 10%, transparent);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --theme-canvas: var(--dark-reference-canvas, oklch(11% .008 78));
+  --theme-canvas-raised: var(--dark-reference-canvas-raised, oklch(15% .009 78));
+  --theme-surface: var(--dark-reference-surface, oklch(19% .010 78));
+  --theme-surface-raised: var(--dark-reference-surface-strong, oklch(24% .012 78));
+  --theme-text: var(--dark-reference-text, oklch(84% .018 160));
+  --theme-text-strong: var(--dark-reference-ivory, oklch(94% .012 90));
+  --theme-text-muted: var(--dark-reference-muted, oklch(68% .02 160));
+  --theme-border: var(--dark-reference-border, oklch(70% .045 78 / .26));
+  --theme-border-strong: var(--dark-reference-border-strong, oklch(76% .08 78 / .52));
+  --theme-action: var(--dark-reference-bronze, oklch(70% .1 78));
+  --theme-action-strong: var(--dark-reference-bronze-strong, oklch(79% .105 78));
+  --theme-action-ink: oklch(14% .016 170);
+  --theme-accent: var(--dark-reference-bronze, oklch(70% .1 78));
+  --theme-focus: var(--dark-reference-bronze-strong, oklch(82% .11 78));
+  --theme-shadow-surface: 0 18px 44px oklch(2% .014 170 / .3);
+  --theme-shadow-float: 0 22px 58px oklch(2% .014 170 / .42);
+  --theme-surface-control-hover: color-mix(in oklch, var(--theme-action) 8%, var(--theme-surface-control));
+  --theme-surface-control-active: color-mix(in oklch, var(--theme-action) 14%, var(--theme-surface-control));
+  --theme-secondary-surface: color-mix(in oklch, var(--theme-surface-control) 88%, transparent);
+  --theme-danger-surface: color-mix(in oklch, var(--color-danger) 14%, var(--theme-surface-content));
+  --theme-danger-surface-hover: color-mix(in oklch, var(--color-danger) 20%, var(--theme-surface-content));
+  --theme-success-surface: color-mix(in oklch, var(--color-success) 13%, var(--theme-surface-content));
+  --theme-warning-surface: color-mix(in oklch, var(--color-warning) 14%, var(--theme-surface-content));
+  --theme-info-surface: color-mix(in oklch, var(--theme-action) 11%, var(--theme-surface-content));
+  --theme-focus-ring: 0 0 0 3px color-mix(in oklch, var(--theme-focus) 28%, transparent);
+  --theme-control-shadow: 0 2px 6px oklch(2% .014 170 / .24);
+  --theme-control-shadow-hover: 0 4px 10px oklch(2% .014 170 / .34);
+  --theme-tactile-surface: color-mix(in oklch, var(--theme-surface-control) 92%, var(--theme-surface-section));
+  --theme-tactile-surface-hover: color-mix(in oklch, var(--theme-action) 9%, var(--theme-tactile-surface));
+  --theme-tactile-recess: color-mix(in oklch, var(--theme-surface-section) 74%, var(--theme-surface-control));
+  --theme-tactile-edge: color-mix(in oklch, var(--theme-border-strong) 82%, var(--theme-surface-section));
+  --theme-tactile-card-edge: color-mix(in oklch, var(--theme-border-strong) 74%, var(--theme-surface-section));
+  --theme-tactile-highlight: color-mix(in oklch, var(--theme-text-strong) 13%, transparent);
+  --theme-tactile-inset: color-mix(in oklch, var(--theme-canvas) 68%, transparent);
+  --theme-tactile-action-highlight: color-mix(in oklch, var(--theme-text-strong) 16%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --theme-motion-duration: 120ms; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root { --theme-motion-duration: var(--motion-ui-duration); }
+}

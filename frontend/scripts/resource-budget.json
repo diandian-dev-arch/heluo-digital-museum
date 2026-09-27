@@ -1,0 +1,8 @@
+{
+  "baselineDate": "2026-09-08",
+  "baselineHead": "d222c2269da68bc18ca863aaaff71fbfd8cefab3",
+  "baselineDescription": "Pre-optimization working tree, archived in artifacts/sitewide-quality/baseline-dist",
+  "maxGrowthRatio": 1.05,
+  "javascriptGzipBytes": 497082,
+  "cssGzipBytes": 115027
+}

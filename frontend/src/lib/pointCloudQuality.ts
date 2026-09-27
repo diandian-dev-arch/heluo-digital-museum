@@ -1,4 +1,5 @@
 export type PointCloudQuality = 'high' | 'medium' | 'mobile' | 'fallback'
+export type PointCloudTheme = 'light' | 'dark'
 
 export interface PointCloudPalette {
   jade: readonly [number, number, number]
@@ -11,7 +12,7 @@ export interface PointCloudPalette {
 export const POINT_COUNTS: Record<Exclude<PointCloudQuality, 'fallback'>, number> = {
   high: 120_000,
   medium: 60_000,
-  mobile: 24_000,
+  mobile: 18_000,
 }
 
 export interface PointCloudCapabilities {
@@ -19,6 +20,30 @@ export interface PointCloudCapabilities {
   coarsePointer: boolean
   cores?: number
   memoryGiB?: number
+}
+
+const DEEP_JADE_POINT_CLOUD_PALETTE: PointCloudPalette = {
+  jade: [.008, .07, .045],
+  copper: [.32, .12, .02],
+  copperBase: .08,
+  copperRange: .1,
+  opacity: .9,
+}
+
+const MOBILE_JADE_POINT_CLOUD_PALETTE: PointCloudPalette = {
+  jade: [.018, .18, .105],
+  copper: [.48, .24, .055],
+  copperBase: .07,
+  copperRange: .08,
+  opacity: .78,
+}
+
+const MOBILE_DARK_POINT_CLOUD_PALETTE: PointCloudPalette = {
+  jade: [.09, .58, .31],
+  copper: [.92, .46, .09],
+  copperBase: .16,
+  copperRange: .18,
+  opacity: .94,
 }
 
 export function selectPointCloudQuality(capabilities: PointCloudCapabilities): PointCloudQuality {
@@ -35,24 +60,49 @@ export function downgradePointCloudQuality(quality: PointCloudQuality): PointClo
   return 'fallback'
 }
 
-export function selectPointCloudPalette(quality: PointCloudQuality): PointCloudPalette {
-  if (quality === 'mobile') {
-    return {
-      jade: [.12, .48, .3],
-      copper: [.78, .5, .16],
-      copperBase: .12,
-      copperRange: .22,
-      opacity: 1,
-    }
+export function createPointCloudPerformanceMonitor() {
+  let stableSince: number | undefined
+  let windowStart: number | undefined
+  let frames = 0
+  let slowWindows = 0
+  let cooldownUntil = 0
+  const reset = () => {
+    stableSince = undefined
+    windowStart = undefined
+    frames = 0
+    slowWindows = 0
   }
-
   return {
-    jade: [.008, .07, .045],
-    copper: [.32, .12, .02],
-    copperBase: .08,
-    copperRange: .1,
-    opacity: .9,
+    reset,
+    // Call only after an actual renderer.render submission, never from bare RAF ticks.
+    record(time: number, eligible: boolean, quality: PointCloudQuality): { fps: number; quality?: PointCloudQuality } | undefined {
+      if (!eligible || time < cooldownUntil) { reset(); return }
+      stableSince ??= time
+      if (time - stableSince < 1000) return
+      if (windowStart === undefined) { windowStart = time; return }
+      frames += 1
+      const duration = time - windowStart
+      if (duration < 2500) return
+      const fps = frames * 1000 / duration
+      frames = 0
+      windowStart = time
+      slowWindows = fps < 35 ? slowWindows + 1 : 0
+      if (slowWindows < 2 || quality === 'fallback') return { fps }
+      cooldownUntil = time + 6000
+      reset()
+      return { fps, quality: downgradePointCloudQuality(quality) }
+    },
   }
+}
+
+export function selectPointCloudPalette(quality: PointCloudQuality, theme: PointCloudTheme = 'light'): PointCloudPalette {
+  if (quality !== 'mobile' && quality !== 'fallback') return DEEP_JADE_POINT_CLOUD_PALETTE
+  return theme === 'dark' ? MOBILE_DARK_POINT_CLOUD_PALETTE : MOBILE_JADE_POINT_CLOUD_PALETTE
+}
+
+export function selectPointCloudPointSize(quality: PointCloudQuality, theme: PointCloudTheme = 'light'): number {
+  if (quality !== 'mobile' && quality !== 'fallback') return 1.25
+  return theme === 'dark' ? 1.16 : .92
 }
 
 export function qualityLabel(quality: PointCloudQuality): string {

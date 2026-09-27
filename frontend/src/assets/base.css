@@ -1,0 +1,23 @@
+:where(button, input, textarea, select) {
+  accent-color: var(--theme-action);
+}
+
+:where(button, [role="button"], input, textarea, select, a):focus-visible {
+  outline: 2px solid var(--theme-focus);
+  outline-offset: 3px;
+}
+
+:where(button, [role="button"]) {
+  min-height: max(var(--theme-control-min), var(--control-height, 44px));
+}
+
+:where(input, textarea, select) {
+  border-color: var(--theme-border);
+  color: var(--theme-text-strong);
+}
+
+:where(button, [role="button"]):disabled,
+:where(input, textarea, select):disabled {
+  cursor: not-allowed;
+  opacity: .56;
+}

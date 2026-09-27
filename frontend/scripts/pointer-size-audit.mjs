@@ -25,9 +25,10 @@ const result = await build({
         if (id !== resolvedVirtualEntry) return undefined
         return [
           "import PointerCursor from '/src/components/PointerCursor.vue'",
+          "import PointerDotField from '/src/components/PointerDotField.vue'",
           "import { pointerSurface } from '/src/directives/pointerSurface.ts'",
           "import '/src/assets/pointer-motion.css'",
-          'export { PointerCursor, pointerSurface }',
+          'export { PointerCursor, PointerDotField, pointerSurface }',
         ].join('\n')
       },
     },
@@ -66,8 +67,8 @@ const measure = (source) => ({
 const summary = {
   generatedAt: new Date().toISOString(),
   budgets: {
-    jsMinifiedBytes: 12_000,
-    jsGzipBytes: 5_000,
+    jsMinifiedBytes: 18_000,
+    jsGzipBytes: 7_000,
   },
   js: measure(js),
   css: measure(css),

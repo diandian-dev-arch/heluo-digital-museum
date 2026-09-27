@@ -1,5 +1,6 @@
 package com.heluo.museum.content;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.heluo.museum.common.api.ApiResponse;
 import com.heluo.museum.common.error.ConflictException;
 import com.heluo.museum.common.error.ContentPage;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -74,16 +76,23 @@ public class AdminContentController {
     public ApiResponse<ContentPage<ArtifactAdminView>> artifacts(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "false") boolean deleted) {
+            @RequestParam(defaultValue = "false") boolean deleted,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status) {
         ArtifactController.PageRequest normalized = ArtifactController.PageRequest.of(page, size);
-        String where = deleted ? " where a.deleted_at is not null" : " where a.deleted_at is null";
-        long total = jdbc.queryForObject("select count(*) from artifacts a" + where, Long.class);
+        List<Object> arguments = new ArrayList<>();
+        StringBuilder where = new StringBuilder(deleted ? " where a.deleted_at is not null" : " where a.deleted_at is null");
+        appendContentFilters(where, arguments, keyword, status, "a", false);
+        long total = jdbc.queryForObject("select count(*) from artifacts a" + where, Long.class, arguments.toArray());
+        List<Object> listArguments = new ArrayList<>(arguments);
+        listArguments.add(normalized.size());
+        listArguments.add(normalized.offset());
         List<ArtifactAdminView> items = jdbc.query(
-                "select a.id,a.category_id,a.accession_no,a.title,a.slug,a.period,a.material,a.dimensions,"
-                        + "a.collection_location,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,a.status,a.deleted_at,"
+                "select a.title_en,a.summary_en,a.id,a.category_id,a.accession_no,a.title,a.slug,a.period,a.material,a.dimensions,"
+                        + "a.collection_location,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,a.status,a.deleted_at,a.updated_at,"
                         + "c.code category_code,c.name category_name from artifacts a join categories c on c.id=a.category_id"
                         + where + " order by a.updated_at desc,a.id desc limit ? offset ?",
-                (rs, rowNum) -> artifactView(rs), normalized.size(), normalized.offset());
+                (rs, rowNum) -> artifactView(rs), listArguments.toArray());
         return ApiResponse.ok(ContentPage.of(items, normalized.page(), normalized.size(), total), "admin-artifacts");
     }
 
@@ -101,10 +110,10 @@ public class AdminContentController {
         }
         long actorId = actorId(authentication);
         jdbc.update("insert into artifacts(category_id,accession_no,title,slug,period,material,dimensions,collection_location,"
-                        + "cover_image_url,cover_asset_ref,summary,content,created_by,updated_by) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                        + "cover_image_url,cover_asset_ref,summary,content,created_by,updated_by,title_en,summary_en) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 input.categoryId(), blank(input.accessionNo()), input.title(), input.slug(), blank(input.period()),
                 blank(input.material()), blank(input.dimensions()), blank(input.collectionLocation()),
-                blank(input.coverImageUrl()), blank(input.coverAssetRef()), blank(input.summary()), input.content(), actorId, actorId);
+                blank(input.coverImageUrl()), blank(input.coverAssetRef()), blank(input.summary()), input.content(), actorId, actorId, blank(input.titleEn()), blank(input.summaryEn()));
         long id = jdbc.queryForObject("select id from artifacts where slug=?", Long.class, input.slug());
         return ApiResponse.ok(findArtifact(id), "admin-artifact-create");
     }
@@ -112,19 +121,10 @@ public class AdminContentController {
     @PatchMapping("/artifacts/{id}")
     @Transactional
     public ApiResponse<ArtifactAdminView> updateArtifact(Authentication authentication, @PathVariable long id,
-                                                          @Valid @RequestBody ArtifactInput input) {
+                                                          @RequestBody JsonNode input) {
         ArtifactAdminView existing = findArtifact(id);
         ensureNotDeleted(existing.deleted());
-        requireEnabledCategory(input.categoryId());
-        if (count("select count(*) from artifacts where slug=? and id<>?", input.slug(), id) > 0) {
-            throw new ConflictException("文物 URL 标识已存在");
-        }
-        jdbc.update("update artifacts set category_id=?,accession_no=?,title=?,slug=?,period=?,material=?,dimensions=?,"
-                        + "collection_location=?,cover_image_url=?,cover_asset_ref=?,summary=?,content=?,updated_by=? where id=?",
-                input.categoryId(), blank(input.accessionNo()), input.title(), input.slug(), blank(input.period()),
-                blank(input.material()), blank(input.dimensions()), blank(input.collectionLocation()),
-                blank(input.coverImageUrl()), blank(input.coverAssetRef()), blank(input.summary()), input.content(),
-                actorId(authentication), id);
+        updateArtifactFields(id, actorId(authentication), input);
         return ApiResponse.ok(findArtifact(id), "admin-artifact-update");
     }
 
@@ -172,16 +172,23 @@ public class AdminContentController {
     public ApiResponse<ContentPage<ArticleAdminView>> articles(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(defaultValue = "false") boolean deleted) {
+            @RequestParam(defaultValue = "false") boolean deleted,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String status) {
         ArtifactController.PageRequest normalized = ArtifactController.PageRequest.of(page, size);
-        String where = deleted ? " where a.deleted_at is not null" : " where a.deleted_at is null";
-        long total = jdbc.queryForObject("select count(*) from articles a" + where, Long.class);
+        List<Object> arguments = new ArrayList<>();
+        StringBuilder where = new StringBuilder(deleted ? " where a.deleted_at is not null" : " where a.deleted_at is null");
+        appendContentFilters(where, arguments, keyword, status, "a", true);
+        long total = jdbc.queryForObject("select count(*) from articles a" + where, Long.class, arguments.toArray());
+        List<Object> listArguments = new ArrayList<>(arguments);
+        listArguments.add(normalized.size());
+        listArguments.add(normalized.offset());
         List<ArticleAdminView> items = jdbc.query(
-                "select a.id,a.category_id,a.title,a.slug,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,"
-                        + "a.author_display,a.status,a.deleted_at,c.code category_code,c.name category_name "
+                "select a.title_en,a.summary_en,a.id,a.category_id,a.title,a.slug,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,"
+                        + "a.author_display,a.status,a.deleted_at,a.updated_at,c.code category_code,c.name category_name "
                         + "from articles a join categories c on c.id=a.category_id" + where
                         + " order by a.updated_at desc,a.id desc limit ? offset ?",
-                (rs, rowNum) -> articleView(rs), normalized.size(), normalized.offset());
+                (rs, rowNum) -> articleView(rs), listArguments.toArray());
         return ApiResponse.ok(ContentPage.of(items, normalized.page(), normalized.size(), total), "admin-articles");
     }
 
@@ -199,26 +206,19 @@ public class AdminContentController {
         }
         long actorId = actorId(authentication);
         jdbc.update("insert into articles(category_id,title,slug,cover_image_url,cover_asset_ref,summary,content,author_display,"
-                        + "created_by,updated_by) values(?,?,?,?,?,?,?,?,?,?)",
+                        + "created_by,updated_by,title_en,summary_en) values(?,?,?,?,?,?,?,?,?,?,?,?)",
                 input.categoryId(), input.title(), input.slug(), blank(input.coverImageUrl()), blank(input.coverAssetRef()),
-                input.summary(), input.content(), blank(input.authorDisplay()), actorId, actorId);
+                input.summary(), input.content(), blank(input.authorDisplay()), actorId, actorId, blank(input.titleEn()), blank(input.summaryEn()));
         long id = jdbc.queryForObject("select id from articles where slug=?", Long.class, input.slug());
         return ApiResponse.ok(findArticle(id), "admin-article-create");
     }
 
     @PatchMapping("/articles/{id}")
     public ApiResponse<ArticleAdminView> updateArticle(Authentication authentication, @PathVariable long id,
-                                                        @Valid @RequestBody ArticleInput input) {
+                                                        @RequestBody JsonNode input) {
         ArticleAdminView existing = findArticle(id);
         ensureNotDeleted(existing.deleted());
-        requireEnabledCategory(input.categoryId());
-        if (count("select count(*) from articles where slug=? and id<>?", input.slug(), id) > 0) {
-            throw new ConflictException("文章 URL 标识已存在");
-        }
-        jdbc.update("update articles set category_id=?,title=?,slug=?,cover_image_url=?,cover_asset_ref=?,summary=?,content=?,"
-                        + "author_display=?,updated_by=? where id=?", input.categoryId(), input.title(), input.slug(),
-                blank(input.coverImageUrl()), blank(input.coverAssetRef()), input.summary(), input.content(),
-                blank(input.authorDisplay()), actorId(authentication), id);
+        updateArticleFields(id, actorId(authentication), input);
         return ApiResponse.ok(findArticle(id), "admin-article-update");
     }
 
@@ -262,6 +262,117 @@ public class AdminContentController {
         return ApiResponse.ok(findArticle(id), "admin-article-restore");
     }
 
+    /** PATCH only touches keys present in the JSON object; omitted metadata is never rewritten as blank. */
+    private void updateArtifactFields(long id, long actorId, JsonNode input) {
+        requireObject(input);
+        List<String> sets = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        if (input.has("categoryId")) {
+            long categoryId = requiredLong(input, "categoryId");
+            requireEnabledCategory(categoryId);
+            sets.add("category_id=?"); values.add(categoryId);
+        }
+        addPatchText(input, sets, values, "accessionNo", "accession_no", 64, false, null);
+        addPatchText(input, sets, values, "title", "title", 150, true, null);
+        addPatchText(input, sets, values, "slug", "slug", 180, true, "[a-z0-9-]{3,180}");
+        addPatchText(input, sets, values, "period", "period", 100, false, null);
+        addPatchText(input, sets, values, "material", "material", 100, false, null);
+        addPatchText(input, sets, values, "dimensions", "dimensions", 150, false, null);
+        addPatchText(input, sets, values, "collectionLocation", "collection_location", 150, false, null);
+        addPatchText(input, sets, values, "coverImageUrl", "cover_image_url", 500, false, null);
+        addPatchText(input, sets, values, "coverAssetRef", "cover_asset_ref", 128, false, null);
+        addPatchText(input, sets, values, "summary", "summary", 500, false, null);
+        addPatchText(input, sets, values, "titleEn", "title_en", 300, false, null);
+        addPatchText(input, sets, values, "summaryEn", "summary_en", 1000, false, null);
+        addPatchText(input, sets, values, "content", "content", Integer.MAX_VALUE, true, null);
+        finishPatch("artifacts", id, actorId, sets, values, textValue(input, "slug"));
+    }
+
+    private void updateArticleFields(long id, long actorId, JsonNode input) {
+        requireObject(input);
+        List<String> sets = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        if (input.has("categoryId")) {
+            long categoryId = requiredLong(input, "categoryId");
+            requireEnabledCategory(categoryId);
+            sets.add("category_id=?"); values.add(categoryId);
+        }
+        addPatchText(input, sets, values, "title", "title", 200, true, null);
+        addPatchText(input, sets, values, "slug", "slug", 220, true, "[a-z0-9-]{3,220}");
+        addPatchText(input, sets, values, "coverImageUrl", "cover_image_url", 500, false, null);
+        addPatchText(input, sets, values, "coverAssetRef", "cover_asset_ref", 128, false, null);
+        addPatchText(input, sets, values, "summary", "summary", 500, true, null);
+        addPatchText(input, sets, values, "titleEn", "title_en", 300, false, null);
+        addPatchText(input, sets, values, "summaryEn", "summary_en", 1000, false, null);
+        addPatchText(input, sets, values, "content", "content", Integer.MAX_VALUE, true, null);
+        addPatchText(input, sets, values, "authorDisplay", "author_display", 100, false, null);
+        finishPatch("articles", id, actorId, sets, values, textValue(input, "slug"));
+    }
+
+    private void finishPatch(String entity, long id, long actorId, List<String> sets, List<Object> values, String slug) {
+        if (sets.isEmpty()) throw new IllegalArgumentException("PATCH 至少需要一个可更新字段");
+        if (slug != null) {
+            String table = "artifacts".equals(entity) ? "artifacts" : "articles";
+            if (count("select count(*) from " + table + " where slug=? and id<>?", slug, id) > 0) {
+                throw new ConflictException("artifacts".equals(entity) ? "文物 URL 标识已存在" : "文章 URL 标识已存在");
+            }
+        }
+        values.add(actorId);
+        values.add(id);
+        jdbc.update("update " + entity + " set " + String.join(",", sets) + ",updated_by=? where id=?", values.toArray());
+    }
+
+    private static void addPatchText(JsonNode input, List<String> sets, List<Object> values, String jsonName,
+                                     String column, int maxLength, boolean required, String pattern) {
+        if (!input.has(jsonName)) return;
+        JsonNode value = input.get(jsonName);
+        if (value == null || value.isNull()) {
+            if (required) throw new IllegalArgumentException(jsonName + " 不能为空");
+            sets.add(column + "=?"); values.add(null); return;
+        }
+        if (!value.isTextual()) throw new IllegalArgumentException(jsonName + " 必须是文本");
+        String text = value.asText().trim();
+        if (required && text.isBlank()) throw new IllegalArgumentException(jsonName + " 不能为空");
+        if (text.length() > maxLength) throw new IllegalArgumentException(jsonName + " 超出长度限制");
+        if (pattern != null && !text.matches(pattern)) throw new IllegalArgumentException(jsonName + " 格式不合法");
+        sets.add(column + "=?"); values.add(required ? text : blank(text));
+    }
+
+    private static long requiredLong(JsonNode input, String field) {
+        JsonNode value = input.get(field);
+        if (value == null || !value.canConvertToLong()) throw new IllegalArgumentException(field + " 不合法");
+        return value.longValue();
+    }
+
+    private static String textValue(JsonNode input, String field) {
+        JsonNode value = input.get(field);
+        return value != null && value.isTextual() ? value.asText().trim() : null;
+    }
+
+    private static void requireObject(JsonNode input) {
+        if (input == null || !input.isObject()) throw new IllegalArgumentException("请求体必须是 JSON 对象");
+    }
+
+    private static void appendContentFilters(StringBuilder where, List<Object> arguments, String keyword,
+                                             String status, String alias, boolean article) {
+        if (keyword != null && !keyword.isBlank()) {
+            String query = "%" + keyword.trim() + "%";
+            where.append(article
+                    ? " and (" + alias + ".title like ? or " + alias + ".slug like ? or " + alias + ".author_display like ?)"
+                    : " and (" + alias + ".title like ? or " + alias + ".slug like ? or " + alias + ".accession_no like ?)");
+            arguments.add(query);
+            arguments.add(query);
+            arguments.add(query);
+        }
+        if (status != null && !status.isBlank()) {
+            if (!Set.of("DRAFT", "PUBLISHED", "WITHDRAWN").contains(status.trim())) {
+                throw new IllegalArgumentException("status 不合法");
+            }
+            where.append(" and ").append(alias).append(".status=?");
+            arguments.add(status.trim());
+        }
+    }
+
     private CategoryAdminView categoryById(long id) {
         List<CategoryAdminView> result = jdbc.query(
                 "select id,code,name,description,sort_order,enabled from categories where id=?",
@@ -275,8 +386,8 @@ public class AdminContentController {
 
     private ArtifactAdminView findArtifact(long id) {
         List<ArtifactAdminView> result = jdbc.query(
-                "select a.id,a.category_id,a.accession_no,a.title,a.slug,a.period,a.material,a.dimensions,"
-                        + "a.collection_location,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,a.status,a.deleted_at,"
+                "select a.title_en,a.summary_en,a.id,a.category_id,a.accession_no,a.title,a.slug,a.period,a.material,a.dimensions,"
+                        + "a.collection_location,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,a.status,a.deleted_at,a.updated_at,"
                         + "c.code category_code,c.name category_name from artifacts a join categories c on c.id=a.category_id where a.id=?",
                 (rs, rowNum) -> artifactView(rs), id);
         if (result.isEmpty()) {
@@ -287,8 +398,8 @@ public class AdminContentController {
 
     private ArticleAdminView findArticle(long id) {
         List<ArticleAdminView> result = jdbc.query(
-                "select a.id,a.category_id,a.title,a.slug,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,"
-                        + "a.author_display,a.status,a.deleted_at,c.code category_code,c.name category_name "
+                "select a.title_en,a.summary_en,a.id,a.category_id,a.title,a.slug,a.cover_image_url,a.cover_asset_ref,a.summary,a.content,"
+                        + "a.author_display,a.status,a.deleted_at,a.updated_at,c.code category_code,c.name category_name "
                         + "from articles a join categories c on c.id=a.category_id where a.id=?",
                 (rs, rowNum) -> articleView(rs), id);
         if (result.isEmpty()) {
@@ -303,7 +414,7 @@ public class AdminContentController {
                 empty(rs.getString("period")), empty(rs.getString("material")), empty(rs.getString("dimensions")),
                 empty(rs.getString("collection_location")), empty(rs.getString("cover_image_url")),
                 empty(rs.getString("cover_asset_ref")), empty(rs.getString("summary")), rs.getString("content"),
-                rs.getString("status"), rs.getTimestamp("deleted_at") != null);
+                rs.getString("status"), rs.getTimestamp("deleted_at") != null, rs.getTimestamp("updated_at").toInstant().toString(), rs.getString("title_en"), rs.getString("summary_en"));
     }
 
     private ArticleAdminView articleView(java.sql.ResultSet rs) throws java.sql.SQLException {
@@ -311,7 +422,7 @@ public class AdminContentController {
                 rs.getString("category_name"), rs.getString("title"), rs.getString("slug"),
                 empty(rs.getString("cover_image_url")), empty(rs.getString("cover_asset_ref")), rs.getString("summary"),
                 rs.getString("content"), empty(rs.getString("author_display")), rs.getString("status"),
-                rs.getTimestamp("deleted_at") != null);
+                rs.getTimestamp("deleted_at") != null, rs.getTimestamp("updated_at").toInstant().toString(), rs.getString("title_en"), rs.getString("summary_en"));
     }
 
     private void requireCategory(long id) {
@@ -354,12 +465,12 @@ public class AdminContentController {
     public record ArtifactAdminView(long id, long categoryId, String categoryCode, String categoryName,
                                     String accessionNo, String title, String slug, String period, String material,
                                     String dimensions, String collectionLocation, String coverImageUrl, String coverAssetRef,
-                                    String summary, String content, String status, boolean deleted) {
+                                    String summary, String content, String status, boolean deleted, String updatedAt, String titleEn, String summaryEn) {
     }
 
     public record ArticleAdminView(long id, long categoryId, String categoryCode, String categoryName,
                                    String title, String slug, String coverImageUrl, String coverAssetRef,
-                                   String summary, String content, String authorDisplay, String status, boolean deleted) {
+                                   String summary, String content, String authorDisplay, String status, boolean deleted, String updatedAt, String titleEn, String summaryEn) {
     }
 
     public record CategoryInput(
@@ -382,7 +493,9 @@ public class AdminContentController {
             @Size(max = 500) String coverImageUrl,
             @Size(max = 128) String coverAssetRef,
             @Size(max = 500) String summary,
-            @NotBlank String content) {
+            @NotBlank String content,
+            @Size(max = 300) String titleEn,
+            @Size(max = 1000) String summaryEn) {
     }
 
     public record ArticleInput(
@@ -393,6 +506,8 @@ public class AdminContentController {
             @Size(max = 128) String coverAssetRef,
             @NotBlank @Size(max = 500) String summary,
             @NotBlank String content,
-            @Size(max = 100) String authorDisplay) {
+            @Size(max = 100) String authorDisplay,
+            @Size(max = 300) String titleEn,
+            @Size(max = 1000) String summaryEn) {
     }
 }

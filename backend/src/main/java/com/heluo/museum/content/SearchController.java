@@ -31,25 +31,27 @@ public class SearchController {
             throw new IllegalArgumentException("type 必须是 all、artifact 或 article");
         }
         ArtifactController.PageRequest normalized = ArtifactController.PageRequest.of(page, size);
-        String query = "%" + keyword.trim() + "%";
+        String query = ContentSearch.pattern(keyword);
         List<Result> allResults = new ArrayList<>();
         if (!"article".equals(type)) {
             allResults.addAll(jdbc.query(
-                    "select a.slug,a.title,a.summary,a.cover_image_url,c.name category_name from artifacts a "
+                    "select a.slug,a.title,a.summary,a.title_en,a.summary_en,a.cover_image_url,c.name category_name from artifacts a "
                             + "join categories c on c.id=a.category_id where a.status='PUBLISHED' and a.deleted_at is null "
-                            + "and c.enabled=1 and (a.title like ? or a.summary like ?) order by a.published_at desc,a.id desc",
+                            + "and c.enabled=1 and " + ContentSearch.PREDICATE + " order by a.published_at desc,a.id desc",
                     (rs, rowNum) -> new Result("artifact", rs.getString("slug"), rs.getString("title"),
-                            empty(rs.getString("summary")), empty(rs.getString("cover_image_url")), rs.getString("category_name")),
-                    query, query));
+                            empty(rs.getString("summary")), empty(rs.getString("cover_image_url")), rs.getString("category_name"),
+                            rs.getString("title_en"), rs.getString("summary_en")),
+                    query, query, query, query));
         }
         if (!"artifact".equals(type)) {
             allResults.addAll(jdbc.query(
-                    "select a.slug,a.title,a.summary,a.cover_image_url,c.name category_name from articles a "
+                    "select a.slug,a.title,a.summary,a.title_en,a.summary_en,a.cover_image_url,c.name category_name from articles a "
                             + "join categories c on c.id=a.category_id where a.status='PUBLISHED' and a.deleted_at is null "
-                            + "and c.enabled=1 and (a.title like ? or a.summary like ?) order by a.published_at desc,a.id desc",
+                            + "and c.enabled=1 and " + ContentSearch.PREDICATE + " order by a.published_at desc,a.id desc",
                     (rs, rowNum) -> new Result("article", rs.getString("slug"), rs.getString("title"),
-                            empty(rs.getString("summary")), empty(rs.getString("cover_image_url")), rs.getString("category_name")),
-                    query, query));
+                            empty(rs.getString("summary")), empty(rs.getString("cover_image_url")), rs.getString("category_name"),
+                            rs.getString("title_en"), rs.getString("summary_en")),
+                    query, query, query, query));
         }
         int from = Math.min(normalized.offset(), allResults.size());
         int to = Math.min(from + normalized.size(), allResults.size());
@@ -62,6 +64,6 @@ public class SearchController {
     }
 
     public record Result(String type, String slug, String title, String summary, String coverImageUrl,
-                         String categoryName) {
+                         String categoryName, String titleEn, String summaryEn) {
     }
 }

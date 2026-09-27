@@ -1,8 +1,14 @@
 # 数据模型与权限
 
-- 文档版本：v0.2
-- 最后更新：2026-08-01
-- 本次范围：只完成用户、角色、权限模型设计；不创建数据库、不生成迁移、不写后端代码。
+## 2026-09-17 双语标题与摘要
+
+`artifacts`、`articles` 保留中文 `title/summary`，各新增可空 `title_en VARCHAR(300)`、`summary_en VARCHAR(1000)`，由 V25 添加结构、V26 对已知 slug 的空译文回填。新演示内容首次初始化时带相同译文；已有内容不被初始化器覆盖，主动清空后重启不会复填。
+
+译文与原记录共用分类、发布状态、软删除和管理员权限；没有独立的公开权限。后台创建/PATCH 仅允许 ADMIN，PATCH 省略字段保持原值，显式 null/空白清除。公开搜索范围为四字段，缺译不会隐去中文内容。详见 [ADR-004](decisions/ADR-004-bilingual-content-search.md)。
+
+- 文档版本：v0.3
+- 最后更新：2026-08-16
+- 本次同步：补充已由 Flyway `V23__add_mobile_exhibit_model.sql` 落地的移动 3D 模型字段及后端校验规则；其余字段仍以当前迁移和代码为准。
 - 技术依据：[ADR-001：技术栈选择](decisions/ADR-001-tech-stack.md)、[ADR-003：内容与商品采用软删除](decisions/ADR-003-content-soft-deletion.md)。
 - 关联需求：F-04、F-06、F-07、F-08、F-10、F-11、N-01、N-02。
 
@@ -302,6 +308,8 @@ users 1 ── N artifacts/articles/exhibits_3d（创建、更新、删除操作
 | `model_source_ref` | `VARCHAR(128)` | 是 | — | 唯一 `uq_exhibits_3d_model_source_ref` | 自创模型源文件的资产逻辑编号，不向前台返回真实存储路径。 |
 | `model_format` | `VARCHAR(16)` | 是 | `GLB` | — | 第一版仅允许 `GLB` 或 `GLTF`。 |
 | `model_size_bytes` | `BIGINT UNSIGNED` | 是 | — | — | 导出模型文件大小，用于加载性能检查。 |
+| `mobile_model_url` | `VARCHAR(500)` | 否 | `NULL` | — | 面向受限性能档或移动设备的可选 GLB/GLTF 路径；为空时客户端回退 `model_url`。 |
+| `mobile_model_size_bytes` | `BIGINT UNSIGNED` | 否 | `NULL` | — | 移动模型文件大小；与 `mobile_model_url` 同时填写或同时留空。 |
 | `cover_image_url` | `VARCHAR(500)` | 否 | `NULL` | — | 自创封面图访问路径。 |
 | `cover_asset_ref` | `VARCHAR(128)` | 否 | `NULL` | `idx_exhibits_3d_cover_asset_ref` | 自创封面图片资产逻辑编号。 |
 | `status` | `VARCHAR(16)` | 是 | `DRAFT` | 可见性复合索引 | 仅允许 `DRAFT`、`PUBLISHED`、`WITHDRAWN`。 |
@@ -323,6 +331,8 @@ users 1 ── N artifacts/articles/exhibits_3d（创建、更新、删除操作
 索引：idx_exhibits_3d_visibility (status, deleted_at, published_at, id)
 索引：idx_exhibits_3d_artifact_visibility (artifact_id, status, deleted_at, published_at, id)
 ```
+
+`mobile_model_url` 与 `mobile_model_size_bytes` 是应用层成对字段：管理端创建或编辑展项时，只填写其中一个会被拒绝；提供大小时必须为正整数。`V23` 为 `heluo-bronze-ding-3d` 回填 `/media/models/heluo-bronze-ding-v5.5-mobile.glb` 与 `837720` 字节，其他既有展项保持两个字段均为 `NULL`。
 
 ### 8.6 发布、撤回与软删除规则
 
@@ -361,7 +371,7 @@ AND published_at <= 当前时间
 |---|---|---|
 | 文物封面图 | `artifacts.cover_image_url`、`cover_asset_ref` | 使用自创 Web 导出图；`cover_asset_ref` 能追溯到原始或可编辑源文件、制作人、用途和许可说明。 |
 | 文章封面图 | `articles.cover_image_url`、`cover_asset_ref` | 同上；文章正文内额外图片应在内容编辑规则中登记资产编号。 |
-| 3D 模型 | `exhibits_3d.model_url`、`model_source_ref`、`model_format`、`model_size_bytes` | `model_url` 供浏览器加载；`model_source_ref` 指向自创建模源文件与资产说明，源文件不公开。 |
+| 3D 模型 | `exhibits_3d.model_url`、`model_source_ref`、`model_format`、`model_size_bytes`、`mobile_model_url`、`mobile_model_size_bytes` | `model_url` 是默认模型；可选移动模型字段成对记录移动 LOD 路径和大小。`model_source_ref` 指向自创建模源文件与资产说明，源文件不公开。 |
 | 3D 封面图 | `exhibits_3d.cover_image_url`、`cover_asset_ref` | 使用自创渲染图或自创摄影图。 |
 
 第一版采用“资产逻辑编号 + 项目资产清单”方式，不额外新建 `assets` 数据表。若后续一件内容需要多张图片、视频、多个模型版本或复杂授权信息，再设计独立媒体资源表。

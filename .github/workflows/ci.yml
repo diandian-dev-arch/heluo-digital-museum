@@ -40,6 +40,64 @@ jobs:
           cache: maven
       - run: mvn -B test
 
+  business-mysql:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: museum_quality
+          MYSQL_USER: museum_quality
+          MYSQL_PASSWORD: ${{ github.run_id }}-${{ github.run_attempt }}-ci
+          MYSQL_ROOT_PASSWORD: ${{ github.run_id }}-${{ github.run_attempt }}-root-ci
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 --silent"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    env:
+      MUSEUM_DB_URL: jdbc:mysql://127.0.0.1:3306/museum_quality?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+      MUSEUM_DB_USERNAME: museum_quality
+      MUSEUM_DB_PASSWORD: ${{ github.run_id }}-${{ github.run_attempt }}-ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: frontend/pnpm-lock.yaml
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+      - run: mvn -B -f backend/pom.xml -DskipTests package
+      - run: pnpm --dir frontend install --frozen-lockfile
+      - run: pnpm --dir frontend exec playwright install --with-deps chromium
+      - run: pnpm --dir frontend build
+      - run: pnpm --dir frontend exec tsc -p e2e/tsconfig.json
+      - run: node frontend/e2e/start-ci.mjs
+      - run: pnpm --dir frontend exec playwright test --workers=1
+      - name: Stop isolated application
+        if: always()
+        run: node frontend/e2e/start-ci.mjs --stop
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: business-mysql-results
+          path: |
+            artifacts/sitewide-quality/business-results.json
+            artifacts/sitewide-quality/business-results/
+            artifacts/sitewide-quality/ci-api.log
+            artifacts/sitewide-quality/ci-web.log
+          retention-days: 7
+
   compose-config:
     runs-on: ubuntu-latest
     steps:

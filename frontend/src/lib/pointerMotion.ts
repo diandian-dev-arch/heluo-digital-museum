@@ -131,8 +131,7 @@ export function resolveCursorIntent(target: EventTarget | null): CursorIntent {
     element = element.parentElement
   }
 
-  if (intent !== 'idle') return intent
-  return target.closest('p, h1, h2, h3, h4, h5, h6, li, dt, dd, blockquote, pre, code') ? 'native' : 'idle'
+  return intent
 }
 
 export function readPointerMotionCapabilities(): PointerMotionCapabilities {
@@ -140,17 +139,28 @@ export function readPointerMotionCapabilities(): PointerMotionCapabilities {
     deviceMemory?: number
     connection?: { saveData?: boolean }
   }
-  const rootFontSize = Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16
+  const finePointer = window.matchMedia('(pointer: fine)').matches
+  const hover = window.matchMedia('(hover: hover)').matches
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const moreContrast = window.matchMedia('(prefers-contrast: more)').matches
+  const forcedColors = window.matchMedia('(forced-colors: active)').matches
+  const deviceMagnified = window.devicePixelRatio >= 2 || (window.visualViewport?.scale ?? 1) >= 1.8
+  const tierAlreadyStatic = !finePointer || !hover || reducedMotion || moreContrast || forcedColors || document.hidden
+  // Reading computed style forces layout. Coarse/reduced modes are already
+  // static, so a root-font magnification check cannot change their policy.
+  const rootFontSize = tierAlreadyStatic || deviceMagnified
+    ? 16
+    : Number.parseFloat(window.getComputedStyle(document.documentElement).fontSize) || 16
   return {
-    finePointer: window.matchMedia('(pointer: fine)').matches,
-    hover: window.matchMedia('(hover: hover)').matches,
-    reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    moreContrast: window.matchMedia('(prefers-contrast: more)').matches,
-    forcedColors: window.matchMedia('(forced-colors: active)').matches,
+    finePointer,
+    hover,
+    reducedMotion,
+    moreContrast,
+    forcedColors,
     hidden: document.hidden,
     saveData: nav.connection?.saveData,
     cores: nav.hardwareConcurrency,
     memoryGiB: nav.deviceMemory,
-    magnified: window.devicePixelRatio >= 2 || (window.visualViewport?.scale ?? 1) >= 1.8 || rootFontSize >= 24,
+    magnified: deviceMagnified || rootFontSize >= 24,
   }
 }

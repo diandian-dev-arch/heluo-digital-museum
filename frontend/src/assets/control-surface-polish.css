@@ -1,0 +1,2455 @@
+/* Hallmark · control-surface polish: one quiet material language for search,
+   route boards, segmented filters and the operational desk. */
+
+/* -------- Search: the field owns focus; the native input stays visually flat. -------- */
+html[data-theme] #app .collection-page .museum-search-field {
+  width: min(100%, 660px);
+  max-width: 660px;
+  margin-top: 1.1rem;
+  padding: 0;
+  gap: .45rem;
+}
+
+html[data-theme] #app .collection-page .museum-search-field__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__control {
+  min-height: 54px;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  gap: 0;
+  padding: 3px;
+  border: 1px solid var(--theme-tactile-edge) !important;
+  border-radius: 12px !important;
+  background: var(--theme-tactile-recess) !important;
+  box-shadow: var(--theme-tactile-control-shadow) !important;
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__control.has-clear {
+  grid-template-columns: 40px minmax(0, 1fr) 40px auto;
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__control:focus-within {
+  border-color: var(--theme-focus) !important;
+  background: var(--theme-tactile-surface-hover) !important;
+  box-shadow: var(--theme-focus-ring), var(--theme-tactile-control-shadow) !important;
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__leading {
+  display: grid;
+  width: 40px;
+  min-height: 46px;
+  place-items: center;
+  border: 0;
+  color: var(--theme-action);
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] input,
+html[data-theme] #app .collection-page [data-tactile-search] input:focus {
+  grid-column: 2;
+  height: 46px !important;
+  min-height: 46px !important;
+  padding: 0 .7rem !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text-strong);
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__clear {
+  grid-column: 3;
+  width: 36px;
+  min-height: 46px;
+  border: 0 !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text-muted);
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__clear:is(:hover, :focus-visible) {
+  background: var(--theme-surface-control-hover) !important;
+  color: var(--theme-action-strong);
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__submit,
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__control:not(.has-clear) .museum-search-field__submit {
+  grid-column: 3;
+  min-width: 102px;
+  min-height: 46px;
+  height: 46px;
+  margin: 0;
+  padding-inline: .8rem;
+  border: 1px solid var(--theme-tactile-action-edge) !important;
+  border-radius: 8px !important;
+  background: var(--theme-primary-surface) !important;
+  box-shadow: var(--theme-tactile-action-shadow) !important;
+  color: var(--theme-primary-text) !important;
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__control.has-clear .museum-search-field__submit {
+  grid-column: 4;
+}
+
+html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__submit:is(:hover, :focus-visible):not(:disabled) {
+  border-color: var(--theme-primary-surface-hover) !important;
+  background: var(--theme-primary-surface-hover) !important;
+  box-shadow: var(--theme-tactile-action-shadow-raised) !important;
+}
+
+/* -------- Explore theme path: reference-led paper, jade river and ink landscape. -------- */
+html[data-theme] #app .collection-page .collection-theme-path {
+  --theme-path-paper: color-mix(in oklch, var(--theme-surface-content) 94%, oklch(.97 .018 88));
+  --theme-path-ink: color-mix(in oklch, var(--theme-text-strong) 88%, oklch(.31 .07 166));
+  --theme-path-jade: color-mix(in oklch, var(--theme-action-strong) 82%, oklch(.43 .08 164));
+  --theme-path-bronze: color-mix(in oklch, var(--theme-accent) 82%, oklch(.61 .11 74));
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  min-height: clamp(360px, 32vw, 520px);
+  grid-template-columns: minmax(270px, .47fr) 1px minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  margin: clamp(3.75rem, 7vw, 6rem) 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--theme-path-bronze) 42%, var(--theme-border)) !important;
+  border-radius: 18px !important;
+  background:
+    radial-gradient(circle at 16% 8%, color-mix(in oklch, white 26%, transparent), transparent 34%),
+    radial-gradient(circle at 72% 42%, color-mix(in oklch, var(--theme-path-bronze) 4%, transparent), transparent 42%),
+    var(--theme-path-paper) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 88%, transparent),
+    inset 0 0 0 1px color-mix(in oklch, var(--theme-path-bronze) 16%, transparent),
+    0 24px 46px color-mix(in oklch, var(--theme-text-strong) 13%, transparent) !important;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path::after {
+  position: absolute;
+  z-index: 8;
+  inset: 5px;
+  pointer-events: none;
+  border: 1px solid color-mix(in oklch, white 54%, transparent);
+  border-radius: 13px;
+  content: '';
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__copy {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(2rem, 4vw, 4rem) clamp(1.65rem, 3.5vw, 3.4rem);
+  overflow: hidden;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__brand {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: .72rem;
+  color: var(--theme-path-ink);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__seal {
+  width: clamp(36px, 3.2vw, 48px);
+  height: clamp(36px, 3.2vw, 48px);
+  flex: 0 0 auto;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__brand > span {
+  display: grid;
+  min-width: 0;
+  gap: .14rem;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__brand b {
+  color: inherit;
+  font: 650 clamp(.92rem, 1.4vw, 1.24rem)/1.15 var(--font-display);
+  white-space: nowrap;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__brand small {
+  overflow: hidden;
+  color: color-mix(in oklch, var(--theme-path-ink) 65%, transparent);
+  font: 560 clamp(.52rem, .72vw, .67rem)/1.15 var(--font-body);
+  letter-spacing: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__heading {
+  position: relative;
+  z-index: 2;
+  margin: auto 0;
+  padding: clamp(1.4rem, 3vw, 2.8rem) 0 clamp(.65rem, 1.5vw, 1.25rem);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__heading .section-label {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  color: var(--theme-path-jade);
+  font-size: clamp(.74rem, 1.05vw, .92rem);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__heading .section-label::before {
+  width: clamp(22px, 2.5vw, 36px);
+  height: 1px;
+  flex: 0 0 auto;
+  background: currentColor;
+  content: '';
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__copy h2 {
+  max-width: 9ch;
+  margin: clamp(1rem, 1.8vw, 1.5rem) 0 .35rem;
+  color: var(--theme-path-ink);
+  font: 560 clamp(2rem, 3.15vw, 3.2rem)/1.1 var(--font-display);
+  letter-spacing: 0;
+  text-wrap: balance;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__copy h2:lang(zh-CN) {
+  white-space: nowrap;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__title-ornament {
+  display: block;
+  width: clamp(112px, 12vw, 176px);
+  height: auto;
+  margin: .15rem 0 clamp(.8rem, 1.6vw, 1.3rem);
+  object-fit: contain;
+  object-position: left center;
+  opacity: .84;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__heading > p:last-child {
+  max-width: 16ch;
+  margin: 0;
+  color: color-mix(in oklch, var(--theme-path-ink) 74%, var(--theme-text-muted));
+  font: 430 clamp(.88rem, 1.25vw, 1.08rem)/1.8 var(--font-body);
+  letter-spacing: 0;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__corner-ornament {
+  position: absolute;
+  z-index: 1;
+  bottom: -9%;
+  left: -9%;
+  width: 70%;
+  max-width: 330px;
+  height: auto;
+  pointer-events: none;
+  opacity: .28;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__divider {
+  position: relative;
+  z-index: 4;
+  width: 1px;
+  background: color-mix(in oklch, var(--theme-path-bronze) 52%, transparent);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__divider img {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  width: 58px;
+  height: 92%;
+  max-width: none;
+  object-fit: contain;
+  transform: translateX(-50%);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__visual {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  height: auto;
+  min-height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__mountains {
+  position: absolute;
+  z-index: 0;
+  bottom: -3%;
+  left: -7%;
+  width: 114%;
+  height: 43%;
+  max-width: none;
+  object-fit: fill;
+  pointer-events: none;
+  opacity: .47;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__bamboo {
+  position: absolute;
+  z-index: 1;
+  right: -2%;
+  bottom: -5%;
+  width: 28%;
+  height: 72%;
+  object-fit: contain;
+  object-position: right bottom;
+  pointer-events: none;
+  opacity: .34;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__river-stage {
+  position: absolute;
+  z-index: 3;
+  inset: 6% 1.8% 8% 2.2%;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__river-layer {
+  --theme-path-main-node-x: 54.067%;
+  --theme-path-main-node-y: 63.345%;
+  position: absolute;
+  top: 14%;
+  left: 1%;
+  width: 97%;
+  aspect-ratio: 1500 / 562;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__river-artwork {
+  position: absolute;
+  inset: 0;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__river {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  pointer-events: none;
+  filter: saturate(.82) contrast(1.04);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__compass {
+  position: absolute;
+  z-index: 0;
+  top: var(--theme-path-main-node-y);
+  left: var(--theme-path-main-node-x);
+  width: clamp(108px, 15vw, 192px);
+  height: auto;
+  pointer-events: none;
+  opacity: .66;
+  transform: translate(-50%, -48.85%);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__nodes {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__node {
+  position: absolute;
+  display: grid;
+  width: 0;
+  height: 0;
+  place-items: center;
+  color: var(--theme-path-jade);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__node--1 { top: 61.6%; left: 9.7%; }
+html[data-theme] #app .collection-page .collection-theme-path__node--2 { top: 32.9%; left: 30.7%; }
+html[data-theme] #app .collection-page .collection-theme-path__node--3 { top: var(--theme-path-main-node-y); left: var(--theme-path-main-node-x); color: var(--theme-path-bronze); }
+html[data-theme] #app .collection-page .collection-theme-path__node--4 { top: 43.2%; left: 72.1%; }
+html[data-theme] #app .collection-page .collection-theme-path__node--5 { top: 30.4%; left: 86.2%; }
+
+html[data-theme] #app .collection-page .collection-theme-path__node-pin {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 0;
+  height: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__node-pin::after {
+  position: absolute;
+  top: clamp(9px, 1.2vw, 18px);
+  left: 50%;
+  height: clamp(30px, 4.5vw, 64px);
+  border-left: 2px dotted currentColor;
+  content: '';
+  opacity: .8;
+  transform: translateX(-50%);
+}
+
+html[data-theme] #app .collection-page :is(.collection-theme-path__node--2, .collection-theme-path__node--5) .collection-theme-path__node-pin::after {
+  top: auto;
+  bottom: clamp(9px, 1.2vw, 18px);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__node--3 .collection-theme-path__node-pin::after {
+  top: clamp(22px, 2.1vw, 34px);
+  height: clamp(24px, 3vw, 44px);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__node-label {
+  position: absolute;
+  top: clamp(64px, 6.5vw, 86px);
+  left: 0;
+  color: currentColor;
+  font: 650 clamp(.78rem, 1.25vw, 1.1rem)/1.25 var(--font-body);
+  letter-spacing: 0;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+html[data-theme] #app .collection-page :is(.collection-theme-path__node--2, .collection-theme-path__node--5) .collection-theme-path__node-label {
+  top: auto;
+  bottom: clamp(64px, 6.5vw, 86px);
+}
+
+html[data-theme] #app .collection-page .collection-theme-path__node--1 .collection-theme-path__node-label { transform: translateX(-36%); }
+html[data-theme] #app .collection-page .collection-theme-path__node--3 .collection-theme-path__node-label { transform: translateX(-74%); }
+html[data-theme] #app .collection-page .collection-theme-path__node--4 .collection-theme-path__node-label { transform: translateX(-8%); }
+html[data-theme] #app .collection-page .collection-theme-path__node--5 .collection-theme-path__node-label { transform: translateX(-72%); }
+
+html[data-theme='dark'] #app .collection-page .collection-theme-path {
+  --theme-path-paper: oklch(.205 .018 154);
+  --theme-path-ink: oklch(.9 .026 84);
+  --theme-path-jade: oklch(.76 .078 162);
+  --theme-path-bronze: oklch(.74 .095 76);
+  border-color: oklch(.62 .065 76 / .62) !important;
+  background:
+    radial-gradient(ellipse at 64% 56%, oklch(.46 .045 158 / .11), transparent 47%),
+    linear-gradient(90deg, oklch(.255 .018 92) 0 32.2%, var(--theme-path-paper) 32.2% 100%) !important;
+  box-shadow:
+    inset 0 1px 0 oklch(.9 .03 84 / .1),
+    inset 0 0 0 1px oklch(.7 .07 76 / .12),
+    0 28px 58px oklch(.08 .015 155 / .46) !important;
+}
+
+html[data-theme='dark'] #app .collection-page .collection-theme-path::after {
+  border-color: oklch(.78 .055 78 / .2);
+}
+
+html[data-theme='dark'] #app .collection-page .collection-theme-path__divider {
+  background: oklch(.64 .07 76 / .38);
+}
+
+html[data-theme='dark'] #app .collection-page :is(
+  .collection-theme-path__corner-ornament,
+  .collection-theme-path__title-ornament,
+  .collection-theme-path__divider img
+) {
+  filter: brightness(.72) saturate(.76) sepia(.08) contrast(1.05);
+}
+
+html[data-theme='dark'] #app .collection-page .collection-theme-path__river {
+  filter: brightness(.84) saturate(.9) contrast(1.08) drop-shadow(0 8px 16px oklch(.08 .025 158 / .38));
+}
+
+html[data-theme='dark'] #app .collection-page .collection-theme-path__compass {
+  filter: brightness(.7) saturate(.82) sepia(.24) contrast(1.08);
+  opacity: .54;
+}
+
+html[data-theme='dark'] #app .collection-page .collection-theme-path__mountains {
+  filter: brightness(.62) saturate(.46) sepia(.04) hue-rotate(18deg) contrast(.96);
+  opacity: .29;
+}
+
+html[data-theme='dark'] #app .collection-page .collection-theme-path__bamboo {
+  filter: brightness(.66) saturate(.42) sepia(.04) hue-rotate(18deg);
+  opacity: .21;
+}
+
+/* -------- Appointment route board: a quiet ticket map with one focal gallery seal. -------- */
+html[data-theme] #app .appointment-form .booking-site-plan {
+  --booking-route-paper: color-mix(in oklch, var(--theme-surface-control) 94%, var(--theme-surface-content));
+  --booking-route-paper-deep: color-mix(in oklch, var(--theme-surface-content) 84%, var(--theme-surface-control));
+  --booking-route-ink: var(--theme-text-strong);
+  --booking-route-muted: var(--theme-text-muted);
+  --booking-route-jade: var(--theme-action-strong);
+  --booking-route-jade-deep: color-mix(in oklch, var(--theme-action-strong) 84%, var(--theme-text-strong));
+  --booking-route-bronze: color-mix(in oklch, var(--theme-accent) 76%, var(--theme-border-strong));
+  --booking-route-scenery: color-mix(in oklch, var(--theme-action-strong) 58%, var(--theme-border));
+  display: block;
+  width: 100%;
+  height: clamp(164px, 14.25vw, 204px);
+  margin: .45rem 0 1rem;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--booking-route-bronze) 48%, var(--theme-border)) !important;
+  border-radius: 12px !important;
+  background:
+    radial-gradient(ellipse at 78% 100%, color-mix(in oklch, var(--booking-route-scenery) 12%, transparent), transparent 48%),
+    linear-gradient(145deg, var(--booking-route-paper), var(--booking-route-paper-deep)) !important;
+  box-shadow:
+    inset 0 1px 0 var(--theme-tactile-highlight),
+    inset 0 0 0 3px color-mix(in oklch, var(--booking-route-paper) 72%, transparent),
+    0 8px 20px color-mix(in oklch, var(--theme-text-strong) 8%, transparent) !important;
+}
+
+html[data-theme="dark"] #app .appointment-form .booking-site-plan {
+  --booking-route-paper: color-mix(in oklch, var(--theme-surface-control) 90%, var(--theme-surface-section));
+  --booking-route-paper-deep: color-mix(in oklch, var(--theme-surface-content) 76%, var(--theme-surface-control));
+  --booking-route-jade: color-mix(in oklch, var(--theme-action) 86%, oklch(.73 .06 164));
+  --booking-route-jade-deep: color-mix(in oklch, var(--theme-action) 82%, oklch(.91 .025 88));
+  --booking-route-bronze: color-mix(in oklch, var(--theme-accent) 82%, oklch(.88 .04 88));
+  --booking-route-scenery: color-mix(in oklch, var(--theme-action) 68%, var(--theme-text-muted));
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__river,
+html[data-theme] #app .appointment-form .booking-site-plan__axis,
+html[data-theme] #app .appointment-form .booking-site-plan__route-shadow,
+html[data-theme] #app .appointment-form .booking-site-plan__route-underlay,
+html[data-theme] #app .appointment-form .booking-site-plan__route,
+html[data-theme] #app .appointment-form .booking-site-plan__trees {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__river {
+  stroke: var(--booking-route-scenery);
+  stroke-width: .8;
+  opacity: .2;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__river--near {
+  stroke-width: 1.1;
+  opacity: .28;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__museum {
+  fill: var(--booking-route-scenery);
+  opacity: .12;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__trees {
+  stroke: var(--booking-route-scenery);
+  stroke-width: 1.1;
+  opacity: .18;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__axis {
+  stroke: var(--booking-route-bronze);
+  stroke-width: .7;
+  stroke-dasharray: 1 4;
+  opacity: .34;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__route-shadow {
+  stroke: color-mix(in oklch, var(--booking-route-jade) 16%, transparent);
+  stroke-width: 12;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__route-underlay {
+  stroke: var(--booking-route-bronze);
+  stroke-width: 4.4;
+  stroke-dasharray: 2.8 4.2;
+  opacity: .72;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__route {
+  stroke: var(--booking-route-jade);
+  stroke-width: 2.3;
+  stroke-dasharray: 2.8 4.2;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room .booking-site-plan__halo {
+  fill: color-mix(in oklch, var(--booking-route-bronze) 8%, transparent);
+  stroke: color-mix(in oklch, var(--booking-route-bronze) 54%, transparent);
+  stroke-width: .7;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room .booking-site-plan__medallion {
+  fill: var(--booking-route-paper);
+  stroke: var(--booking-route-bronze);
+  stroke-width: 1.25;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room .booking-site-plan__node {
+  fill: color-mix(in oklch, var(--booking-route-paper) 84%, white);
+  stroke: color-mix(in oklch, var(--booking-route-jade) 48%, var(--booking-route-bronze));
+  stroke-width: .85;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room--gallery .booking-site-plan__medallion {
+  fill: color-mix(in oklch, var(--booking-route-paper) 82%, var(--booking-route-bronze));
+  stroke-width: 1.45;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room--gallery .booking-site-plan__node {
+  fill: var(--booking-route-jade-deep);
+  stroke: var(--booking-route-bronze);
+  stroke-width: 1.25;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__icon {
+  fill: none;
+  stroke: var(--booking-route-jade-deep);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__icon--gallery {
+  stroke: var(--booking-route-paper);
+  stroke-width: 2.15;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__pendant {
+  fill: var(--booking-route-bronze);
+  stroke: color-mix(in oklch, var(--booking-route-paper) 64%, var(--booking-route-bronze));
+  stroke-width: 1;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room text {
+  fill: var(--booking-route-ink);
+  font-family: var(--font-body);
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room .booking-site-plan__station {
+  font-size: 10px;
+  font-weight: 680;
+  letter-spacing: .025em;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room--gallery .booking-site-plan__station {
+  fill: var(--booking-route-jade-deep);
+  font-size: 11px;
+  font-weight: 720;
+}
+
+html[data-theme] #app .appointment-form .booking-site-plan__room .booking-site-plan__hint {
+  fill: var(--booking-route-muted);
+  font-size: 7.6px;
+  font-weight: 500;
+  letter-spacing: .025em;
+}
+
+/* -------- Store categories: compact segmented navigation with a clear active item. -------- */
+html[data-theme] #app .shop-category-nav {
+  width: fit-content;
+  max-width: 100%;
+  min-height: 52px;
+  flex-wrap: wrap;
+  gap: .3rem;
+  padding: .3rem;
+  border: 1px solid var(--theme-tactile-edge) !important;
+  border-radius: 12px !important;
+  background: var(--theme-surface-section) !important;
+  box-shadow: var(--theme-tactile-control-shadow) !important;
+}
+
+html[data-theme] #app .shop-category-nav > button {
+  min-width: 92px;
+  min-height: 44px;
+  padding-inline: .95rem;
+  border: 1px solid transparent !important;
+  border-radius: 8px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--theme-text-muted) !important;
+  white-space: nowrap;
+}
+
+html[data-theme] #app .shop-category-nav > button:is(:hover, :focus-visible):not(.active) {
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-control-hover) !important;
+  color: var(--theme-text-strong) !important;
+}
+
+html[data-theme] #app .shop-category-nav > button.active,
+html[data-theme] #app .shop-category-nav > button[aria-pressed="true"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  border-color: var(--theme-primary-surface) !important;
+  background: var(--theme-primary-surface) !important;
+  box-shadow: var(--theme-tactile-action-shadow) !important;
+  color: var(--theme-primary-text) !important;
+}
+
+html[data-theme] #app .shop-category-nav > button:focus-visible {
+  outline: 2px solid var(--theme-focus) !important;
+  outline-offset: 2px;
+}
+
+/* -------- Admin filters and tabs: separate navigation from query controls. -------- */
+html[data-theme] #app .admin-workspace .admin-toolbar--operations {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: .7rem .9rem;
+}
+
+html[data-theme] #app .admin-workspace .admin-toolbar--operations .admin-tabs {
+  grid-column: 1 / -1;
+}
+
+html[data-theme] #app .admin-workspace .admin-toolbar--operations .admin-list-filters {
+  grid-column: 1;
+}
+
+html[data-theme] #app .admin-workspace .admin-toolbar--operations .admin-count {
+  grid-column: 2;
+  align-self: end;
+  padding-bottom: .7rem;
+}
+
+html[data-theme] #app .admin-workspace .admin-tabs {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  flex-wrap: wrap;
+  gap: .3rem;
+  padding: .25rem;
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  overflow: visible;
+}
+
+html[data-theme] #app .admin-workspace .admin-tabs button {
+  min-width: 76px;
+  min-height: 44px;
+  padding-inline: .82rem;
+  border: 1px solid var(--theme-border) !important;
+  border-radius: 8px !important;
+  background: var(--theme-surface-control) !important;
+  box-shadow: var(--theme-tactile-control-shadow) !important;
+  color: var(--theme-text) !important;
+  white-space: nowrap;
+}
+
+html[data-theme] #app .admin-workspace .admin-tabs button:is(:hover, :focus-visible):not([aria-selected="true"]) {
+  border-color: var(--theme-action) !important;
+  background: var(--theme-surface-control-hover) !important;
+  color: var(--theme-text-strong) !important;
+}
+
+html[data-theme] #app .admin-workspace .admin-tabs button[aria-selected="true"],
+html[data-theme] #app .admin-workspace .admin-tabs button[aria-selected="true"]:is(:hover, :focus-visible) {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+  border-color: var(--theme-primary-surface) !important;
+  background: var(--theme-primary-surface) !important;
+  box-shadow: var(--theme-tactile-action-shadow) !important;
+  color: var(--theme-primary-text) !important;
+}
+
+html[data-theme] #app .admin-workspace .admin-tabs button[aria-selected="true"]::after {
+  display: none;
+}
+
+html[data-theme] #app .admin-workspace .admin-tabs button:focus-visible {
+  outline: 2px solid var(--theme-focus) !important;
+  outline-offset: 2px;
+}
+
+html[data-theme] #app .admin-workspace .admin-list-filters {
+  display: flex;
+  min-width: 0;
+  align-items: end;
+  gap: .65rem;
+  padding: .2rem 0;
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  gap: .22rem;
+  color: var(--theme-text-muted);
+  font: 600 .62rem/1.2 var(--font-body);
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field--search {
+  width: min(22rem, 35vw);
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field:not(.admin-filter-field--search) {
+  width: 9.5rem;
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field__label {
+  padding-inline: .2rem;
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field :is(input, select) {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 .75rem;
+  border: 1px solid var(--theme-border-strong) !important;
+  border-radius: 8px !important;
+  background: var(--theme-surface-control) !important;
+  box-shadow: var(--theme-tactile-control-shadow) !important;
+  color: var(--theme-text-strong) !important;
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field select {
+  appearance: none;
+  padding-right: 2rem;
+  cursor: pointer;
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field:not(.admin-filter-field--search)::after {
+  position: absolute;
+  right: .78rem;
+  bottom: .88rem;
+  width: .45rem;
+  height: .45rem;
+  border-right: 1.5px solid var(--theme-text-muted);
+  border-bottom: 1.5px solid var(--theme-text-muted);
+  content: '';
+  pointer-events: none;
+  transform: rotate(45deg);
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field :is(input, select):is(:hover, :focus-visible) {
+  border-color: var(--theme-focus) !important;
+  background: var(--theme-surface-control-hover) !important;
+  box-shadow: var(--theme-focus-ring), var(--theme-tactile-control-shadow) !important;
+  outline: 0;
+}
+
+html[data-theme] #app .admin-workspace .admin-filter-field :is(input, select):disabled {
+  cursor: not-allowed;
+  opacity: .56;
+}
+
+html[data-theme] #app .admin-workspace .admin-list-filters > .admin-text-button {
+  min-height: 44px;
+  padding-inline: .72rem;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--theme-text-muted);
+  white-space: nowrap;
+}
+
+html[data-theme] #app .admin-workspace .admin-list-filters > .admin-text-button:is(:hover, :focus-visible) {
+  border-color: var(--theme-border);
+  background: var(--theme-surface-control-hover);
+  color: var(--theme-action-strong);
+}
+
+@media (max-width: 760px) {
+  html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__control {
+    grid-template-columns: 34px minmax(0, 1fr) auto;
+  }
+
+  html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__control.has-clear {
+    grid-template-columns: 34px minmax(0, 1fr) 36px auto;
+  }
+
+  html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__leading {
+    width: 34px;
+  }
+
+  html[data-theme] #app .collection-page [data-tactile-search] .museum-search-field__submit {
+    min-width: 82px;
+    padding-inline: .58rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1px 360px;
+    gap: 0;
+    min-height: 0;
+    margin: 3rem 0;
+    padding: 0;
+    border-radius: 16px !important;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__copy {
+    min-height: 300px;
+    padding: 1.5rem 1.35rem 1.65rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__brand b {
+    font-size: .96rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__heading {
+    padding: 2rem 0 .35rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__copy h2 {
+    max-width: none;
+    margin-top: .9rem;
+    font-size: clamp(2rem, 10vw, 2.7rem);
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__heading > p:last-child {
+    max-width: 24ch;
+    font-size: .9rem;
+    line-height: 1.7;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__title-ornament {
+    width: 124px;
+    margin-bottom: .7rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__corner-ornament {
+    bottom: -14%;
+    left: -12%;
+    width: 64%;
+    opacity: .22;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__divider {
+    width: auto;
+    height: 1px;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__divider img {
+    top: 50%;
+    width: 42px;
+    height: 280px;
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__visual {
+    min-height: 0;
+    height: 360px;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__mountains {
+    left: -17%;
+    width: 134%;
+    height: 42%;
+    opacity: .4;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__bamboo {
+    right: -7%;
+    width: 38%;
+    height: 64%;
+    opacity: .27;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__river-stage {
+    inset: 1rem .8rem 1.1rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__river-layer {
+    inset: 0;
+    width: auto;
+    aspect-ratio: auto;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__river-artwork {
+    top: 0;
+    right: auto;
+    bottom: auto;
+    left: -4%;
+    width: 108%;
+    height: auto;
+    aspect-ratio: 1500 / 562;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__river {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__compass {
+    top: var(--theme-path-main-node-y);
+    left: var(--theme-path-main-node-x);
+    width: 116px;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__nodes {
+    top: auto;
+    right: .2rem;
+    bottom: .1rem;
+    left: .2rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .65rem 1rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__node,
+  html[data-theme] #app .collection-page :is(
+    .collection-theme-path__node--1,
+    .collection-theme-path__node--2,
+    .collection-theme-path__node--3,
+    .collection-theme-path__node--4,
+    .collection-theme-path__node--5
+  ) {
+    position: relative;
+    top: auto;
+    left: auto;
+    display: flex;
+    width: auto;
+    height: auto;
+    align-items: center;
+    gap: .48rem;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__node--5 {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__node-pin,
+  html[data-theme] #app .collection-page .collection-theme-path__node--3 .collection-theme-path__node-pin {
+    width: 11px;
+    height: 11px;
+    flex: 0 0 auto;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    background: var(--theme-path-paper);
+    box-shadow: none;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__node-pin::after {
+    display: none;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__node-label,
+  html[data-theme] #app .collection-page :is(
+    .collection-theme-path__node--1,
+    .collection-theme-path__node--2,
+    .collection-theme-path__node--3,
+    .collection-theme-path__node--4,
+    .collection-theme-path__node--5
+  ) .collection-theme-path__node-label {
+    position: static;
+    color: currentColor;
+    font-size: .78rem;
+    white-space: normal;
+    transform: none;
+  }
+
+  html[data-theme] #app .appointment-form .booking-site-plan {
+    height: 158px;
+  }
+
+  html[data-theme] #app .shop-category-nav {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  html[data-theme] #app .shop-category-nav > button {
+    flex: 0 0 auto;
+  }
+
+  html[data-theme] #app .shop-content .product-grid article .product-copy {
+    border: 0 !important;
+    border-left: 1px solid var(--theme-border) !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  html[data-theme] #app .admin-workspace .admin-toolbar--operations {
+    grid-template-columns: 1fr;
+  }
+
+  html[data-theme] #app .admin-workspace .admin-toolbar--operations .admin-tabs,
+  html[data-theme] #app .admin-workspace .admin-toolbar--operations .admin-list-filters,
+  html[data-theme] #app .admin-workspace .admin-toolbar--operations .admin-count {
+    grid-column: 1;
+  }
+
+  html[data-theme] #app .admin-workspace .admin-tabs {
+    width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  html[data-theme] #app .admin-workspace .admin-tabs button {
+    flex: 0 0 auto;
+  }
+
+  html[data-theme] #app .admin-workspace .admin-list-filters {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(7.5rem, .55fr) auto;
+    align-items: end;
+    gap: .5rem;
+  }
+
+  html[data-theme] #app .admin-workspace .admin-filter-field--search,
+  html[data-theme] #app .admin-workspace .admin-filter-field:not(.admin-filter-field--search) {
+    width: auto;
+  }
+
+  html[data-theme] #app .admin-workspace .admin-filter-field__label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] #app :is(
+    .collection-page [data-tactile-search] .museum-search-field__control,
+    .collection-page [data-tactile-search] .museum-search-field__submit,
+    .shop-category-nav > button,
+    .admin-workspace .admin-tabs button,
+    .admin-workspace .admin-filter-field :is(input, select)
+  ) {
+    transition-duration: 0ms !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  html[data-theme] #app :is(
+    .collection-page [data-tactile-search] .museum-search-field__control,
+    .collection-page .collection-theme-path,
+    .collection-page .collection-theme-path__visual,
+    .appointment-form .booking-site-plan,
+    .shop-category-nav,
+    .admin-workspace .admin-tabs button,
+    .admin-workspace .admin-filter-field :is(input, select)
+  ) {
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme] #app .collection-page :is(
+    .collection-theme-path__corner-ornament,
+    .collection-theme-path__mountains,
+    .collection-theme-path__bamboo,
+    .collection-theme-path__compass
+  ) {
+    opacity: .16;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-theme] #app :is(
+    .collection-page [data-tactile-search] .museum-search-field__control,
+    .collection-page .collection-theme-path,
+    .collection-page .collection-theme-path__visual,
+    .appointment-form .booking-site-plan,
+    .shop-category-nav,
+    .admin-workspace .admin-tabs button,
+    .admin-workspace .admin-filter-field :is(input, select)
+  ) {
+    border-color: CanvasText !important;
+    background: Canvas !important;
+    box-shadow: none !important;
+    color: CanvasText !important;
+  }
+
+  html[data-theme] #app :is(
+    .collection-page [data-tactile-search] .museum-search-field__submit,
+    .shop-category-nav > button.active,
+    .admin-workspace .admin-tabs button[aria-selected="true"]
+  ) {
+    border-color: ButtonText !important;
+    background: ButtonFace !important;
+    color: ButtonText !important;
+  }
+
+  html[data-theme] #app .collection-page :is(
+    .collection-theme-path__corner-ornament,
+    .collection-theme-path__mountains,
+    .collection-theme-path__bamboo,
+    .collection-theme-path__title-ornament,
+    .collection-theme-path__divider img,
+    .collection-theme-path__river,
+    .collection-theme-path__compass
+  ) {
+    display: none;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__divider {
+    background: CanvasText;
+  }
+
+  html[data-theme] #app .collection-page :is(
+    .collection-theme-path__brand,
+    .collection-theme-path__copy h2,
+    .collection-theme-path__heading .section-label,
+    .collection-theme-path__heading > p:last-child,
+    .collection-theme-path__node
+  ) {
+    color: CanvasText;
+  }
+
+  html[data-theme] #app .collection-page .collection-theme-path__node-pin {
+    border-color: CanvasText;
+    background: Canvas;
+    box-shadow: none;
+  }
+
+  html[data-theme] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__river,
+    .booking-site-plan__axis,
+    .booking-site-plan__route-shadow,
+    .booking-site-plan__route-underlay,
+    .booking-site-plan__route,
+    .booking-site-plan__trees,
+    .booking-site-plan__icon
+  ) {
+    stroke: CanvasText;
+  }
+
+  html[data-theme] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__museum,
+    .booking-site-plan__halo,
+    .booking-site-plan__medallion,
+    .booking-site-plan__node,
+    .booking-site-plan__pendant
+  ) {
+    fill: Canvas;
+    stroke: CanvasText;
+  }
+
+  html[data-theme] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__station,
+    .booking-site-plan__hint
+  ) {
+    fill: CanvasText;
+  }
+}
+
+@media (min-width: 761px) {
+  html[data-theme] #app .booking-page {
+    grid-template-columns: minmax(0, 64%) minmax(405px, 36%);
+  }
+
+  html[data-theme] #app .booking-side.booking-side-desktop {
+    padding: clamp(1.2rem, 2.4vw, 2rem) clamp(.85rem, 1.65vw, 1.55rem) 3rem;
+    background: color-mix(in oklch, var(--theme-surface-canvas) 92%, var(--theme-surface-section));
+  }
+}
+
+html[data-theme] #app .appointment-form {
+  --booking-ticket-paper: oklch(.968 .015 86);
+  --booking-ticket-paper-deep: oklch(.946 .016 84);
+  --booking-ticket-ink: var(--theme-text-strong);
+  --booking-ticket-muted: var(--theme-text-muted);
+  --booking-ticket-bronze: color-mix(in oklch, var(--theme-accent) 76%, var(--theme-border-strong));
+  --booking-ticket-bronze-soft: color-mix(in oklch, var(--booking-ticket-bronze) 46%, var(--theme-border));
+  --booking-ticket-jade: color-mix(in oklch, var(--theme-action-strong) 88%, var(--theme-text-strong));
+  display: grid;
+  max-width: 620px;
+  gap: 1.25rem;
+  margin: 0 auto;
+  padding: 0;
+  color: var(--booking-ticket-ink);
+}
+
+html[data-theme] #app .appointment-form .booking-ticket {
+  position: relative;
+  isolation: isolate;
+  padding: clamp(1.2rem, 2.1vw, 2.1rem) clamp(1.2rem, 2.1vw, 2.1rem) clamp(1.65rem, 2.8vw, 2.7rem);
+  border: 1px solid var(--booking-ticket-bronze) !important;
+  border-radius: 10px !important;
+  background:
+    radial-gradient(circle at 50% 0%, color-mix(in oklch, white 58%, transparent), transparent 37%),
+    repeating-linear-gradient(25deg, color-mix(in oklch, var(--booking-ticket-paper) 96%, transparent) 0 2px, transparent 2px 7px),
+    var(--booking-ticket-paper) !important;
+  box-shadow:
+    0 18px 30px color-mix(in oklch, var(--theme-text-strong) 13%, transparent),
+    0 2px 5px color-mix(in oklch, var(--booking-ticket-bronze) 20%, transparent) !important;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket::before {
+  position: absolute;
+  z-index: -1;
+  inset: 5px;
+  border: 1px solid color-mix(in oklch, var(--booking-ticket-bronze) 64%, var(--booking-ticket-paper));
+  border-radius: 5px;
+  content: '';
+  pointer-events: none;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket__header {
+  position: relative;
+  padding: .125rem .5rem 0;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .section-label,
+html[data-theme] #app .appointment-form .booking-contact-details .section-label {
+  margin: 0;
+  color: var(--booking-ticket-bronze);
+  font-family: var(--font-display);
+  font-size: .68rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket h2 {
+  margin: .45rem 0 0;
+  padding: 0;
+  border: 0;
+  color: var(--booking-ticket-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 2.75vw, 3rem);
+  font-weight: 720;
+  letter-spacing: 0;
+  line-height: 1.08;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-divider {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 4.1rem minmax(0, 1fr);
+  align-items: center;
+  gap: .7rem;
+  margin: .6rem .35rem 0;
+  color: var(--booking-ticket-bronze);
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-divider > span {
+  height: 1px;
+  background: color-mix(in oklch, var(--booking-ticket-bronze) 72%, var(--theme-border));
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-divider svg {
+  width: 100%;
+  height: 1.15rem;
+  overflow: visible;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-divider path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.15;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan {
+  --booking-route-paper: color-mix(in oklch, var(--booking-ticket-paper-deep) 86%, var(--booking-ticket-paper));
+  --booking-route-paper-deep: color-mix(in oklch, var(--booking-ticket-paper) 80%, var(--theme-surface-content));
+  --booking-route-ink: var(--booking-ticket-ink);
+  --booking-route-muted: var(--booking-ticket-muted);
+  --booking-route-jade: color-mix(in oklch, var(--booking-ticket-jade) 84%, var(--booking-ticket-bronze));
+  --booking-route-jade-deep: var(--booking-ticket-jade);
+  --booking-route-bronze: var(--booking-ticket-bronze);
+  --booking-route-scenery: color-mix(in oklch, var(--booking-ticket-jade) 42%, var(--theme-border));
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--booking-ticket-bronze) 48%, var(--theme-border)) !important;
+  border-radius: 9px !important;
+  background:
+    radial-gradient(circle at 50% 26%, color-mix(in oklch, white 52%, transparent), transparent 27%),
+    repeating-linear-gradient(14deg, color-mix(in oklch, var(--booking-route-paper) 94%, transparent) 0 3px, transparent 3px 9px),
+    var(--booking-route-paper) !important;
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 45%, transparent),
+    inset 0 0 0 4px color-mix(in oklch, var(--booking-route-paper) 74%, transparent),
+    0 7px 14px color-mix(in oklch, var(--booking-ticket-ink) 7%, transparent) !important;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__river {
+  stroke: var(--booking-route-scenery);
+  stroke-width: 1.15;
+  opacity: .24;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__river--mid {
+  stroke-width: 1.45;
+  opacity: .3;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__river--near {
+  stroke-width: 1.7;
+  opacity: .36;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__museum {
+  fill: var(--booking-route-scenery);
+  opacity: .2;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__trees {
+  stroke: var(--booking-route-scenery);
+  stroke-width: 1.35;
+  opacity: .26;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__axis {
+  stroke: var(--booking-route-bronze);
+  stroke-width: .8;
+  stroke-dasharray: 1.5 5.5;
+  opacity: .34;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__route-shadow {
+  stroke: color-mix(in oklch, var(--booking-route-jade) 20%, transparent);
+  stroke-width: 18;
+  opacity: .42;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__route-underlay {
+  stroke: var(--booking-route-bronze);
+  stroke-width: 5.6;
+  stroke-dasharray: 4.5 7.5;
+  opacity: .84;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__route {
+  stroke: var(--booking-route-jade);
+  stroke-width: 2.7;
+  stroke-dasharray: 4.5 7.5;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__halo {
+  fill: color-mix(in oklch, var(--booking-route-bronze) 8%, transparent);
+  stroke: color-mix(in oklch, var(--booking-route-bronze) 56%, transparent);
+  stroke-width: 1;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__medallion {
+  fill: color-mix(in oklch, var(--booking-route-paper) 92%, white);
+  stroke: var(--booking-route-bronze);
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 2px color-mix(in oklch, var(--booking-ticket-ink) 13%, transparent));
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__node {
+  fill: color-mix(in oklch, var(--booking-route-paper) 84%, white);
+  stroke: color-mix(in oklch, var(--booking-route-jade) 52%, var(--booking-route-bronze));
+  stroke-width: 1.1;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__halo {
+  fill: color-mix(in oklch, var(--booking-route-bronze) 12%, transparent);
+  stroke-width: 1.15;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__medallion {
+  fill: color-mix(in oklch, var(--booking-route-paper) 68%, var(--booking-route-bronze));
+  stroke-width: 1.8;
+  filter: drop-shadow(0 4px 5px color-mix(in oklch, var(--booking-ticket-ink) 18%, transparent));
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__node {
+  fill: var(--booking-route-jade-deep);
+  stroke: var(--booking-route-bronze);
+  stroke-width: 1.55;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__icon {
+  stroke: var(--booking-route-jade-deep);
+  stroke-width: 2.55;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__icon--gallery {
+  stroke: var(--booking-route-paper);
+  stroke-width: 2.9;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__pendant {
+  fill: var(--booking-route-bronze);
+  stroke: color-mix(in oklch, var(--booking-route-paper) 62%, var(--booking-route-bronze));
+  stroke-width: 1;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__station {
+  fill: var(--booking-route-ink);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__station {
+  fill: var(--booking-route-jade-deep);
+  font-size: 19px;
+  font-weight: 720;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__hint {
+  fill: var(--booking-route-muted);
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 550;
+  letter-spacing: 0;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__hint {
+  font-size: 12px;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary {
+  display: grid;
+  gap: 0;
+  margin: .85rem 0 0;
+  padding: .25rem clamp(.75rem, 2vw, 1.2rem);
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--booking-ticket-bronze) 60%, var(--theme-border)) !important;
+  border-radius: 9px !important;
+  background:
+    repeating-linear-gradient(30deg, color-mix(in oklch, var(--booking-ticket-paper-deep) 94%, transparent) 0 2px, transparent 2px 8px),
+    var(--booking-ticket-paper-deep) !important;
+  box-shadow: inset 0 1px 0 color-mix(in oklch, white 42%, transparent) !important;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__row {
+  display: grid;
+  grid-template-columns: minmax(7.3rem, .82fr) minmax(0, 1.18fr);
+  align-items: center;
+  min-height: 3.35rem;
+  margin: 0;
+  border-bottom: 1px solid color-mix(in oklch, var(--booking-ticket-bronze) 30%, var(--theme-border));
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__row:last-child {
+  border-bottom: 0;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary dt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: .55rem;
+  padding-right: .6rem;
+  color: var(--booking-ticket-ink);
+  font-family: var(--font-display);
+  font-size: clamp(.84rem, 1.5vw, 1rem);
+  font-weight: 650;
+  line-height: 1.25;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary dt::after {
+  position: absolute;
+  top: 18%;
+  right: 0;
+  bottom: 18%;
+  border-right: 1px dashed color-mix(in oklch, var(--booking-ticket-bronze) 54%, var(--theme-border));
+  content: '';
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__icon {
+  display: inline-grid;
+  width: 1.95rem;
+  height: 1.95rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid color-mix(in oklch, var(--booking-ticket-bronze) 30%, transparent);
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--booking-ticket-bronze) 15%, var(--booking-ticket-paper));
+  color: var(--booking-ticket-jade);
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 1.85;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary dd {
+  min-width: 0;
+  margin: 0;
+  padding-left: clamp(.8rem, 2vw, 1.35rem);
+  color: var(--booking-ticket-ink);
+  font-family: var(--font-display);
+  font-size: clamp(.94rem, 1.35vw, 1.08rem);
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary dd small {
+  color: var(--booking-ticket-muted);
+  font: 550 .82em var(--font-body);
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__row:first-child dd {
+  white-space: nowrap;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__placeholder {
+  color: var(--booking-ticket-muted);
+  font-family: var(--font-body);
+  font-size: .85rem;
+  font-weight: 520;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-count {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper {
+  display: inline-grid;
+  grid-template-columns: 2.75rem minmax(2.45rem, 1fr) 2.75rem;
+  align-items: center;
+  width: min(100%, 10.7rem);
+  min-height: 2.75rem;
+  overflow: hidden;
+  border: 1px solid var(--booking-ticket-bronze);
+  border-radius: 9px;
+  background: color-mix(in oklch, var(--booking-ticket-paper) 76%, var(--theme-surface-control));
+  box-shadow: inset 0 1px 0 color-mix(in oklch, white 40%, transparent);
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper button {
+  display: grid;
+  width: 2.75rem;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  min-height: 2.75rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--booking-ticket-bronze);
+  cursor: pointer;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper button:hover:not(:disabled) {
+  background: color-mix(in oklch, var(--booking-ticket-bronze) 15%, transparent);
+  color: var(--booking-ticket-jade);
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper button:focus-visible {
+  outline: 2px solid var(--theme-focus);
+  outline-offset: -3px;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper button:disabled {
+  cursor: not-allowed;
+  opacity: .36;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  stroke-width: 1.8;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper input {
+  width: 100% !important;
+  min-width: 0;
+  min-height: 2.75rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: var(--booking-ticket-ink) !important;
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 700;
+  text-align: center;
+  -moz-appearance: textfield;
+}
+
+html[data-theme] #app .booking-page .appointment-form .booking-ticket .booking-ticket-summary .visitor-stepper {
+  grid-template-columns: 44px minmax(44px, 1fr) 44px;
+  min-width: 134px;
+  min-height: 46px;
+  border-radius: 8px;
+}
+
+html[data-theme] #app .booking-page .appointment-form .booking-ticket .booking-ticket-summary .visitor-stepper > :is(button, input.visitor-stepper__input[type="number"]) {
+  min-width: 44px;
+  width: 100%;
+  height: 44px;
+  min-height: 44px !important;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper input::-webkit-inner-spin-button,
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper input::-webkit-outer-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-count__unit {
+  color: var(--booking-ticket-ink);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+html[data-theme] #app .appointment-form .booking-contact-details {
+  display: grid;
+  gap: .85rem;
+  padding-top: 1.35rem;
+  border-top: 1px solid color-mix(in oklch, var(--booking-ticket-bronze) 42%, var(--theme-border));
+}
+
+html[data-theme] #app .appointment-form .booking-contact-details h3 {
+  margin: -.45rem 0 .2rem;
+  color: var(--booking-ticket-ink);
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 680;
+  letter-spacing: 0;
+}
+
+html[data-theme] #app .appointment-form .booking-contact-details .form-field {
+  display: grid;
+  gap: .42rem;
+  margin: 0;
+  color: var(--booking-ticket-ink);
+}
+
+html[data-theme] #app .appointment-form .booking-contact-details .form-field > span {
+  display: flex;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+html[data-theme] #app .appointment-form .booking-contact-details .form-field input,
+html[data-theme] #app .appointment-form .booking-contact-details .form-field textarea {
+  border-color: color-mix(in oklch, var(--booking-ticket-bronze) 34%, var(--theme-border)) !important;
+  border-radius: 6px !important;
+  background: var(--theme-surface-control) !important;
+  box-shadow: inset 0 1px 0 color-mix(in oklch, white 30%, transparent) !important;
+}
+
+html[data-theme] #app .appointment-form .booking-contact-details .form-field :is(input, textarea):focus-visible {
+  border-color: var(--theme-focus) !important;
+  box-shadow: var(--theme-focus-ring) !important;
+}
+
+html[data-theme] #app .appointment-form > .fluid-button {
+  margin-top: -.1rem;
+}
+
+html[data-theme] #app .appointment-form :is(.form-note, .privacy-note) {
+  margin: 0;
+  color: var(--booking-ticket-muted);
+}
+
+html[data-theme="dark"] #app .booking-side.booking-side-desktop {
+  background: color-mix(in oklch, var(--theme-surface-canvas) 84%, oklch(.17 .02 161));
+}
+
+html[data-theme="dark"] #app .appointment-form {
+  --booking-ticket-paper: color-mix(in oklch, var(--theme-surface-content) 89%, oklch(.22 .02 160));
+  --booking-ticket-paper-deep: color-mix(in oklch, var(--theme-surface-control) 86%, oklch(.17 .02 158));
+  --booking-ticket-ink: color-mix(in oklch, var(--theme-text-strong) 94%, oklch(.91 .025 88));
+  --booking-ticket-muted: color-mix(in oklch, var(--theme-text-muted) 88%, oklch(.78 .025 96));
+  --booking-ticket-bronze: color-mix(in oklch, var(--theme-accent) 82%, oklch(.8 .07 81));
+  --booking-ticket-jade: color-mix(in oklch, var(--theme-action) 82%, oklch(.74 .06 165));
+}
+
+@media (max-width: 1120px) and (min-width: 761px) {
+  html[data-theme] #app .appointment-form .booking-ticket {
+    padding: 1.1rem 1.1rem 1.65rem;
+    border-radius: 10px !important;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket::before {
+    inset: 4px;
+    border-radius: 5px;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket-divider {
+    margin-top: .6rem;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__row {
+    grid-template-columns: minmax(7.3rem, .82fr) minmax(0, 1.18fr);
+    min-height: 3.35rem;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__icon {
+    width: 1.95rem;
+    height: 1.95rem;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper {
+    grid-template-columns: 2.75rem minmax(2.15rem, 1fr) 2.75rem;
+    width: min(100%, 10rem);
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper button {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  html[data-theme] #app .appointment-form :is(.booking-ticket, .booking-ticket .booking-site-plan, .booking-ticket-summary) {
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-theme] #app .appointment-form :is(.booking-ticket, .booking-ticket .booking-site-plan, .booking-ticket-summary, .visitor-stepper) {
+    border-color: CanvasText !important;
+    background: Canvas !important;
+    box-shadow: none !important;
+    color: CanvasText !important;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket::before,
+  html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__row {
+    border-color: CanvasText;
+  }
+
+  html[data-theme] #app .appointment-form :is(.booking-ticket-divider > span, .booking-ticket-divider path) {
+    background: CanvasText;
+    stroke: CanvasText;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket-summary :is(dt, dd, .booking-summary__icon, .visitor-count__unit) {
+    color: CanvasText;
+  }
+
+  html[data-theme] #app .appointment-form .booking-ticket-summary .booking-summary__icon,
+  html[data-theme] #app .appointment-form .booking-ticket-summary .visitor-stepper button {
+    border-color: CanvasText;
+    background: Canvas;
+    color: CanvasText;
+  }
+}
+
+/* -------- Asset-backed appointment ticket: the light reference keeps its real paper and metal work. -------- */
+@media (min-width: 761px) {
+  html[data-theme] #app .booking-page {
+    grid-template-columns: minmax(0, 52%) minmax(380px, 48%);
+  }
+
+  html[data-theme] #app .booking-side.booking-side-desktop {
+    padding: clamp(1rem, 2vw, 1.5rem) clamp(.85rem, 1.7vw, 1.35rem) 3rem;
+  }
+
+  html[data-theme] #app .appointment-form {
+    width: 100%;
+    max-width: 540px;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 960px) {
+  html[data-theme] #app .booking-page {
+    grid-template-columns: minmax(0, 55%) minmax(450px, 45%);
+  }
+}
+
+html[data-theme="light"] #app .booking-side.booking-side-desktop {
+  background: #f5f1e8 !important;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket {
+  position: relative;
+  isolation: isolate;
+  display: block;
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 1049 / 1333;
+  padding: 0 !important;
+  overflow: visible;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: url('/media/appointment-ticket/ticket-shell-v2.webp') center / 100% 100% no-repeat !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket::before {
+  display: none;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket__header {
+  position: absolute;
+  z-index: 2;
+  top: 6.5%;
+  left: 11.15%;
+  width: 76%;
+  padding: 0;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket .section-label {
+  color: #a46128;
+  font-size: clamp(.62rem, 1.06vw, .82rem);
+  letter-spacing: .08em;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket h2 {
+  margin: .3em 0 0;
+  color: #0b4034;
+  font-size: clamp(1.85rem, 3.1vw, 2.6rem);
+  line-height: 1.06;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-divider {
+  display: none;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan {
+  position: absolute;
+  z-index: 2;
+  top: 21.6%;
+  left: 7.2%;
+  width: 85.5%;
+  height: 32.75% !important;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 3.5% !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-site-plan__route-artwork {
+  display: block;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-site-plan__medallion-artwork {
+  display: block;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-site-plan :is(
+  .booking-site-plan__scenery,
+  .booking-site-plan__route-shadow,
+  .booking-site-plan__route-underlay,
+  .booking-site-plan__route,
+  .booking-site-plan__halo,
+  .booking-site-plan__medallion,
+  .booking-site-plan__node,
+  .booking-site-plan__pendant
+) {
+  display: none;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__icon {
+  display: initial;
+  filter: drop-shadow(0 1px 1px rgb(45 63 51 / .18));
+}
+
+html[data-theme="light"] #app .appointment-form .booking-site-plan__axis {
+  fill: none;
+  stroke: #b58a48;
+  stroke-linecap: round;
+  stroke-width: 1.25;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__station {
+  fill: #173e34;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__station {
+  fill: #0c4a3a;
+  font-size: 19px;
+  font-weight: 720;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__hint {
+  fill: #68706b;
+  font-family: var(--font-body);
+  font-size: 10.5px;
+  font-weight: 560;
+  letter-spacing: 0;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__hint {
+  font-size: 12px;
+}
+
+html[lang="en-US"][data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__station {
+  font-size: 10px;
+}
+
+html[lang="en-US"][data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__station {
+  font-size: 13px;
+}
+
+html[lang="en-US"][data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__hint {
+  font-size: 8px;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary {
+  position: absolute;
+  z-index: 2;
+  top: 56.55%;
+  left: 7.2%;
+  display: grid;
+  grid-template-rows: 34% 31% 35%;
+  width: 85.5%;
+  height: 35.8%;
+  margin: 0;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 3.5% !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .booking-summary__row {
+  display: grid;
+  grid-template-columns: 39.5% 60.5%;
+  min-height: 0;
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid rgb(167 118 58 / .22);
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .booking-summary__row:last-child {
+  border-bottom: 0;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary dt {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: clamp(.35rem, .7vw, .55rem);
+  padding: 0 clamp(.4rem, 1vw, .75rem) 0 clamp(.6rem, 1.2vw, .95rem);
+  color: #173e34;
+  font-family: var(--font-display);
+  font-size: clamp(.77rem, 1.05vw, .95rem);
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary dt::after {
+  position: absolute;
+  top: 24%;
+  right: 0;
+  bottom: 24%;
+  border-right: 1px dashed rgb(167 118 58 / .56);
+  content: '';
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .booking-summary__icon {
+  display: inline-grid;
+  width: clamp(1.85rem, 3vw, 2.2rem);
+  height: clamp(1.85rem, 3vw, 2.2rem);
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(167 118 58 / .22);
+  border-radius: 50%;
+  background: rgb(177 146 89 / .16);
+  color: #0c4a3a;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .booking-summary__icon svg {
+  width: 62%;
+  height: 62%;
+  stroke-width: 1.8;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary dd {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  padding: 0 clamp(.55rem, 1.15vw, .95rem);
+  color: #103b31;
+  font-family: var(--font-display);
+  font-size: clamp(.84rem, 1.25vw, 1.08rem);
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary dd small,
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .booking-summary__placeholder {
+  color: #69716b;
+  font-family: var(--font-body);
+  font-size: .78em;
+  font-weight: 520;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .booking-summary__row:first-child dd {
+  white-space: nowrap;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .visitor-count {
+  gap: clamp(.3rem, .75vw, .55rem);
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .visitor-stepper {
+  display: inline-grid;
+  grid-template-columns: 2.5rem minmax(2.1rem, 1fr) 2.5rem;
+  align-items: center;
+  width: min(100%, 8.35rem);
+  min-height: 2.7rem;
+  overflow: hidden;
+  border: 1px solid #bb8a43;
+  border-radius: 1rem;
+  background: rgb(255 253 247 / .64);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / .7);
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .visitor-stepper:focus-within {
+  border-color: var(--theme-focus);
+  box-shadow: var(--theme-focus-ring);
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .visitor-stepper button {
+  display: grid;
+  width: 2.5rem;
+  min-width: 2.5rem;
+  height: 2.7rem;
+  min-height: 2.7rem;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #b57e32;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .visitor-stepper button:hover:not(:disabled) {
+  background: rgb(181 126 50 / .13);
+  color: #0c4a3a;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .visitor-stepper button:focus-visible {
+  outline: 2px solid var(--theme-focus);
+  outline-offset: -3px;
+}
+
+html[data-theme="light"] #app .booking-page .appointment-form .booking-ticket .booking-ticket-summary .visitor-stepper > input.visitor-stepper__input[type="number"] {
+  width: 100% !important;
+  min-width: 0;
+  min-height: 2.7rem !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  outline: 0;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #103b31 !important;
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 700;
+  text-align: center;
+  appearance: textfield !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+}
+
+html[data-theme="light"] #app .booking-page .appointment-form .booking-ticket .booking-ticket-summary .visitor-stepper > input.visitor-stepper__input[type="number"]:is(:hover, :focus, :focus-visible) {
+  border: 0 !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+}
+
+html[data-theme="light"] #app .appointment-form .booking-ticket-summary .visitor-count__unit {
+  color: #103b31;
+  font-family: var(--font-display);
+  font-size: clamp(.82rem, 1.1vw, 1rem);
+  font-weight: 650;
+}
+
+html[data-theme="dark"] #app .appointment-form :is(.booking-site-plan__route-artwork, .booking-site-plan__medallion-artwork) {
+  display: none;
+}
+
+/* Keep the dark fallback on the same ticket canvas as the light reference. */
+@media (min-width: 761px) {
+  html[data-theme="dark"] #app .appointment-form .booking-ticket {
+    display: block;
+    width: 100%;
+    min-height: 0;
+    aspect-ratio: 1049 / 1333;
+    padding: 0 !important;
+    overflow: visible;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket__header {
+    position: absolute;
+    z-index: 2;
+    top: 6.5%;
+    left: 11.15%;
+    width: 76%;
+    padding: 0;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket h2 {
+    margin: .3em 0 0;
+    font-size: clamp(1.85rem, 3.1vw, 2.6rem);
+    line-height: 1.06;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-divider {
+    position: absolute;
+    z-index: 2;
+    top: 17.5%;
+    left: 7.2%;
+    width: 85.5%;
+    margin: 0;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket .booking-site-plan {
+    position: absolute;
+    z-index: 2;
+    top: 21.6%;
+    left: 7.2%;
+    width: 85.5%;
+    height: 32.75% !important;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: 3.5% !important;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary {
+    position: absolute;
+    z-index: 2;
+    top: 56.55%;
+    left: 7.2%;
+    grid-template-rows: 34% 31% 35%;
+    width: 85.5%;
+    height: 35.8%;
+    margin: 0;
+    padding: 0 !important;
+    border-radius: 3.5% !important;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .booking-summary__row {
+    grid-template-columns: 39.5% 60.5%;
+    min-height: 0;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary dt {
+    gap: clamp(.35rem, .7vw, .55rem);
+    padding: 0 clamp(.4rem, 1vw, .75rem) 0 clamp(.6rem, 1.2vw, .95rem);
+    font-size: clamp(.77rem, 1.05vw, .95rem);
+    line-height: 1.2;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary dt::after {
+    top: 24%;
+    bottom: 24%;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .booking-summary__icon {
+    width: clamp(1.85rem, 3vw, 2.2rem);
+    height: clamp(1.85rem, 3vw, 2.2rem);
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .booking-summary__icon svg {
+    width: 62%;
+    height: 62%;
+    stroke-width: 1.8;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary dd {
+    display: flex;
+    align-items: center;
+    padding: 0 clamp(.55rem, 1.15vw, .95rem);
+    font-size: clamp(.84rem, 1.25vw, 1.08rem);
+    line-height: 1.25;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary dd small,
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .booking-summary__placeholder {
+    font-size: .78em;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .visitor-count {
+    gap: clamp(.3rem, .75vw, .55rem);
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .visitor-stepper {
+    grid-template-columns: 2.5rem minmax(2.1rem, 1fr) 2.5rem;
+    width: min(100%, 8.35rem);
+    min-height: 2.7rem;
+    border-radius: 1rem;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .visitor-stepper button {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.7rem;
+    min-height: 2.7rem;
+  }
+
+  html[data-theme="dark"] #app .appointment-form .booking-ticket-summary .visitor-stepper input {
+    min-height: 2.7rem !important;
+  }
+
+  html[lang="en-US"][data-theme="dark"] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__station {
+    font-size: 10px;
+  }
+
+  html[lang="en-US"][data-theme="dark"] #app .appointment-form .booking-ticket .booking-site-plan__room--gallery .booking-site-plan__station {
+    font-size: 13px;
+  }
+
+  html[lang="en-US"][data-theme="dark"] #app .appointment-form .booking-ticket .booking-site-plan__room .booking-site-plan__hint {
+    font-size: 8px;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  html[data-theme="light"] #app .appointment-form .booking-ticket {
+    aspect-ratio: auto;
+    padding: clamp(1.1rem, 2vw, 1.8rem) !important;
+    border: 1px solid var(--booking-ticket-bronze) !important;
+    border-radius: 8px !important;
+    background: var(--booking-ticket-paper) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket__header,
+  html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan,
+  html[data-theme="light"] #app .appointment-form .booking-ticket-summary {
+    position: static;
+    width: auto;
+    height: auto !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket__header {
+    padding: 0;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket-divider {
+    display: grid;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan {
+    aspect-ratio: 2 / 1;
+    margin: .8rem 0;
+    border: 1px solid var(--booking-ticket-bronze) !important;
+    border-radius: 8px !important;
+    background: var(--booking-ticket-paper-deep) !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket-summary {
+    grid-template-rows: none;
+    margin: 0;
+    padding: .2rem .8rem !important;
+    border: 1px solid var(--booking-ticket-bronze) !important;
+    border-radius: 8px !important;
+    background: var(--booking-ticket-paper-deep) !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket-summary .booking-summary__row {
+    min-height: 3.35rem;
+    border-bottom: 1px solid var(--booking-ticket-bronze);
+  }
+
+  html[data-theme="light"] #app .appointment-form :is(.booking-site-plan__route-artwork, .booking-site-plan__medallion-artwork) {
+    display: none;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__scenery,
+    .booking-site-plan__route-shadow,
+    .booking-site-plan__route-underlay,
+    .booking-site-plan__route,
+    .booking-site-plan__halo,
+    .booking-site-plan__medallion,
+    .booking-site-plan__node,
+    .booking-site-plan__icon,
+    .booking-site-plan__pendant
+  ) {
+    display: initial;
+  }
+}
+
+@media (forced-colors: active) {
+  html[data-theme="light"] #app .appointment-form :is(.booking-site-plan__route-artwork, .booking-site-plan__medallion-artwork) {
+    display: none;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__scenery,
+    .booking-site-plan__route-shadow,
+    .booking-site-plan__route-underlay,
+    .booking-site-plan__route,
+    .booking-site-plan__halo,
+    .booking-site-plan__medallion,
+    .booking-site-plan__node,
+    .booking-site-plan__icon,
+    .booking-site-plan__pendant
+  ) {
+    display: initial;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__river,
+    .booking-site-plan__axis,
+    .booking-site-plan__route-shadow,
+    .booking-site-plan__route-underlay,
+    .booking-site-plan__route,
+    .booking-site-plan__trees,
+    .booking-site-plan__icon
+  ) {
+    stroke: CanvasText !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__museum,
+    .booking-site-plan__halo,
+    .booking-site-plan__medallion,
+    .booking-site-plan__node,
+    .booking-site-plan__pendant
+  ) {
+    fill: Canvas !important;
+    stroke: CanvasText !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-site-plan :is(
+    .booking-site-plan__station,
+    .booking-site-plan__hint
+  ) {
+    fill: CanvasText !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket {
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+
+  html[data-theme="light"] #app .appointment-form .booking-ticket-summary,
+  html[data-theme="light"] #app .appointment-form .booking-ticket .booking-site-plan {
+    background: Canvas !important;
+    color: CanvasText !important;
+  }
+}
+
+/* -------- Appointment ticket: full reference-led ticket, not an isolated route board. -------- */

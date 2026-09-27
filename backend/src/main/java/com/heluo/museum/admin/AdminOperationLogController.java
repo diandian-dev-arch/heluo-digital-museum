@@ -19,7 +19,7 @@ public class AdminOperationLogController {
 
     @GetMapping
     public ApiResponse<ContentPage<OperationLogView>> list(@RequestParam(defaultValue = "1") int page,
-                                                            @RequestParam(defaultValue = "50") int size,
+                                                            @RequestParam(defaultValue = "20") int size,
                                                             @RequestParam(required = false) String module) {
         if (page < 1 || size < 1 || size > 100) throw new IllegalArgumentException("page 必须大于 0，size 必须在 1 到 100 之间");
         String where = module == null || module.isBlank() ? "" : " where l.module=?";

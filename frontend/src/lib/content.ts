@@ -1,3 +1,5 @@
+import type { BilingualContent } from './contentLocale'
+
 export interface Category {
   id: number
   code: string
@@ -6,7 +8,7 @@ export interface Category {
   sortOrder: number
 }
 
-export interface ArtifactCard {
+export interface ArtifactCard extends BilingualContent {
   slug: string
   title: string
   summary: string
@@ -17,7 +19,7 @@ export interface ArtifactCard {
   categoryName: string
 }
 
-export interface ArticleCard {
+export interface ArticleCard extends BilingualContent {
   slug: string
   title: string
   summary: string
@@ -48,7 +50,7 @@ export interface ArticleDetail extends ArticleCard {
   category: { code: string; name: string }
 }
 
-export interface SearchResult {
+export interface SearchResult extends BilingualContent {
   type: 'artifact' | 'article'
   slug: string
   title: string

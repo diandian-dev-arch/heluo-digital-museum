@@ -25,6 +25,7 @@ export function usePointerCapabilities() {
     const next = selectFpsDowngrade(performanceTier.value, fps, criticalFpsWindows)
     performanceTier.value = next.tier
     criticalFpsWindows = next.criticalWindows
+    return next.tier
   }
 
   onMounted(() => {
