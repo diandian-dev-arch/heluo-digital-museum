@@ -29,7 +29,13 @@
 
 ## 页面掠影
 
-以下为项目历史验收中保存的真实完整页面截图，覆盖主页、Explore 和 3D 展厅，非概念设计图，也非本次线上实时截图。统一采用 1440 像素桌面宽度，保留页面从顶部到末尾的内容；点击图片可查看原尺寸。线上内容可能随版本更新而变化。
+深色展馆中的暖金灯光，让器物成为视觉中心。以下图片于 **2026-09-27 从线上网站重新采集**，以深色与英文界面为主，保留中文浅色作为对照，并展示真实登录后的商城与后台工作台。采用 1440 / 1680 像素宽的完整桌面页面，已关闭平台反馈广告；点击图片查看原尺寸。[截图来源与采集说明](docs/showcase/SOURCES.md)。
+
+### One object, a living story · 英文深色首页
+
+[![英文深色首页完整页面：新版中央青铜鼎展廊、器物故事与策展入口](docs/showcase/home-dark-en.png)](docs/showcase/home-dark-en.png)
+
+### 同一座展馆，两种光线
 
 <table>
   <tr>
@@ -41,24 +47,59 @@
     <td width="50%"><a href="docs/showcase/home-dark-zh.png"><img src="docs/showcase/home-dark-zh.png" alt="中文深色首页完整页面：深色展馆、器物介绍与主题入口" /></a></td>
   </tr>
   <tr>
-    <td width="50%" align="center"><strong>首页 · 英文深色</strong></td>
-    <td width="50%" align="center"><strong>Explore · 英文深色</strong></td>
-  </tr>
-  <tr>
-    <td width="50%"><a href="docs/showcase/home-dark-en.png"><img src="docs/showcase/home-dark-en.png" alt="英文深色首页完整页面" /></a></td>
-    <td width="50%"><a href="docs/showcase/explore-dark-en.png"><img src="docs/showcase/explore-dark-en.png" alt="Explore 双语藏品浏览页" /></a></td>
-  </tr>
-  <tr>
-    <td align="center"><sub>主页 · One object, a living story</sub></td>
-    <td align="center"><sub>Explore · Search the collection</sub></td>
-  </tr>
-  <tr>
-    <td colspan="2"><a href="docs/showcase/digital-exhibit.png"><img src="docs/showcase/digital-exhibit.png" alt="河洛数字博物馆 3D 数字展厅" /></a></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center"><sub>3D Gallery · 旋转、缩放与多视角观察青铜器数字模型</sub></td>
+    <td colspan="2" align="center"><sub>中文浅色与深色 · 从顶部展廊到页尾的完整对照</sub></td>
   </tr>
 </table>
+
+### Explore · 英文深色馆藏
+
+从六件器物，到主题线索与延伸阅读，让浏览形成一条自然的发现路径。部分尚无译文的内容保留中文回退。
+
+[![英文深色 Explore 完整页面：馆藏、主题与延伸阅读](docs/showcase/explore-dark-en.png)](docs/showcase/explore-dark-en.png)
+
+### Museum Store · 英文深色文创商城
+
+把器物纹样带进日常：茶具、织物与文具，在统一的深色界面中呈现。
+
+[![英文深色文创商城完整页面：登录后的商品、购物袋与模拟结算](docs/showcase/shop-dark-en.png)](docs/showcase/shop-dark-en.png)
+
+### 3D Gallery · 让器物来到眼前
+
+真实加载的青铜鼎模型，配合多视角控件、器物来源与展项说明，呈现从浏览到近观的体验。
+
+[![英文深色 3D 展厅：已加载实体模型与完整控制面板](docs/showcase/digital-exhibit-dark-en.png)](docs/showcase/digital-exhibit-dark-en.png)
+
+<details>
+<summary>展开查看：英文深色展厅入口与预约完整页面</summary>
+
+[![英文深色数字展厅入口](docs/showcase/gallery-dark-en.png)](docs/showcase/gallery-dark-en.png)
+
+[![英文深色预约参观完整页面](docs/showcase/booking-dark-en.png)](docs/showcase/booking-dark-en.png)
+
+</details>
+
+### Behind the scenes · 后台管理工作台
+
+前台负责讲故事，后台负责让内容持续更新。以下为管理员登录后的线上实页，展示内容编辑、发布状态、商品库存与 3D 展项管理。后台当前以中文为主。
+
+<table>
+  <tr><td width="50%" align="center"><strong>内容管理 · 深色</strong></td><td width="50%" align="center"><strong>内容管理 · 浅色</strong></td></tr>
+  <tr>
+    <td><a href="docs/showcase/admin-content-dark-zh.png"><img src="docs/showcase/admin-content-dark-zh.png" alt="深色内容管理完整工作台" /></a></td>
+    <td><a href="docs/showcase/admin-content-light-zh.png"><img src="docs/showcase/admin-content-light-zh.png" alt="浅色内容管理完整工作台" /></a></td>
+  </tr>
+</table>
+
+**商品运营 · 深色**
+
+[![深色商品管理：统计、库存、创建表单与完整商品列表](docs/showcase/admin-products-dark-zh.png)](docs/showcase/admin-products-dark-zh.png)
+
+<details>
+<summary>展开查看：深色 3D 展项管理</summary>
+
+[![深色 3D 展项管理完整工作台](docs/showcase/admin-exhibits-dark-zh.png)](docs/showcase/admin-exhibits-dark-zh.png)
+
+</details>
 
 ## 当前实现
 
